@@ -3,14 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Paltro-SD01 | Git Operations & Work Order Release Suite</title>
+  <title>Paltro-SD01 | Engineering & Git Operations Command Center</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Lucide Icons CDN -->
-  <script src="https://unpkg.com/lucide@latest"></script>
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- SF Pro / Inter Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
   <script>
     tailwind.config = {
@@ -18,290 +22,374 @@
       theme: {
         extend: {
           colors: {
-            brand: {
-              50: '#ecfdf5',
-              100: '#d1fae5',
-              400: '#34d399',
-              500: '#10b981',
-              600: '#059669',
-              700: '#047857'
-            },
-            cyan: {
-              400: '#22d3ee',
-              500: '#06b6d4',
-              600: '#0891b2'
-            },
-            slate: {
-              850: '#131b2e',
-              900: '#0b1120',
-              950: '#060913'
+            ios: {
+              blue: '#0A84FF',
+              green: '#30D158',
+              indigo: '#5E5CE6',
+              orange: '#FF9F0A',
+              pink: '#FF375F',
+              purple: '#BF5AF2',
+              red: '#FF453A',
+              teal: '#64D2FF',
+              yellow: '#FFD60A',
+              bg: '#000000',
+              card: 'rgba(28, 28, 30, 0.65)',
+              elevated: 'rgba(44, 44, 46, 0.75)'
             }
           },
           fontFamily: {
-            sans: ['Inter', 'Plus Jakarta Sans', 'system-ui', 'sans-serif'],
-            mono: ['Fira Code', 'JetBrains Mono', 'Consolas', 'monospace']
-          },
-          boxShadow: {
-            'glow-emerald': '0 0 35px -5px rgba(16, 185, 129, 0.3)',
-            'glow-cyan': '0 0 35px -5px rgba(6, 182, 212, 0.3)',
-            'glow-purple': '0 0 35px -5px rgba(139, 92, 246, 0.25)',
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'Fira Code', 'monospace']
           }
         }
       }
     }
   </script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  
+
   <style>
     body {
-      background-color: #060913;
-      color: #f1f5f9;
-      background-image: 
-        radial-gradient(circle at 15% 15%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
-        radial-gradient(circle at 85% 25%, rgba(6, 182, 212, 0.08) 0%, transparent 40%),
-        radial-gradient(circle at 50% 85%, rgba(99, 102, 241, 0.06) 0%, transparent 45%);
-      background-attachment: fixed;
+      background-color: #05070D;
+      color: #F5F5F7;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow-x: hidden;
     }
 
-    /* Ultra Glassmorphism */
-    .glass-panel {
-      background: rgba(11, 17, 32, 0.72);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-    }
-    .glass-panel:hover {
-      border-color: rgba(16, 185, 129, 0.25);
-    }
-
-    .glass-card-interactive {
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .glass-card-interactive:hover {
-      transform: translateY(-3px);
-      border-color: rgba(16, 185, 129, 0.4);
-      box-shadow: 0 16px 36px -10px rgba(16, 185, 129, 0.25);
+    /* Ambient Fluid Color Meshes */
+    .mesh-gradient-1 {
+      position: fixed;
+      top: -15%;
+      left: -10%;
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle, rgba(10, 132, 255, 0.22) 0%, rgba(94, 92, 230, 0.12) 45%, transparent 70%);
+      filter: blur(120px);
+      pointer-events-none;
+      z-index: -1;
+      animation: floatMesh1 25s ease-in-out infinite alternate;
     }
 
-    .badge-closed {
-      background: rgba(16, 185, 129, 0.15);
-      color: #34d399;
-      border: 1px solid rgba(16, 185, 129, 0.35);
-    }
-    .badge-testing {
-      background: rgba(245, 158, 11, 0.15);
-      color: #fbbf24;
-      border: 1px solid rgba(245, 158, 11, 0.35);
-    }
-    .badge-active {
-      background: rgba(59, 130, 246, 0.15);
-      color: #60a5fa;
-      border: 1px solid rgba(59, 130, 246, 0.35);
-    }
-    .badge-discontinued {
-      background: rgba(239, 68, 68, 0.15);
-      color: #f87171;
-      border: 1px solid rgba(239, 68, 68, 0.35);
+    .mesh-gradient-2 {
+      position: fixed;
+      top: 25%;
+      right: -10%;
+      width: 750px;
+      height: 750px;
+      background: radial-gradient(circle, rgba(48, 209, 88, 0.18) 0%, rgba(100, 210, 255, 0.12) 50%, transparent 70%);
+      filter: blur(130px);
+      pointer-events-none;
+      z-index: -1;
+      animation: floatMesh2 30s ease-in-out infinite alternate;
     }
 
-    /* Custom glowing code block */
-    pre, code {
-      font-family: 'Fira Code', monospace;
+    .mesh-gradient-3 {
+      position: fixed;
+      bottom: -15%;
+      left: 20%;
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(191, 90, 242, 0.15) 0%, rgba(255, 55, 95, 0.08) 50%, transparent 70%);
+      filter: blur(140px);
+      pointer-events-none;
+      z-index: -1;
+      animation: floatMesh3 28s ease-in-out infinite alternate;
     }
+
+    @keyframes floatMesh1 {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(120px, 100px) scale(1.15); }
+    }
+    @keyframes floatMesh2 {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(-100px, 80px) scale(1.1); }
+    }
+    @keyframes floatMesh3 {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(60px, -90px) scale(1.2); }
+    }
+
+    /* Apple Fluid Glassmorphism */
+    .fluid-glass {
+      background: rgba(20, 24, 38, 0.55);
+      backdrop-filter: blur(28px) saturate(190%);
+      -webkit-backdrop-filter: blur(28px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.45), inset 0 1px 1px 0 rgba(255, 255, 255, 0.12);
+    }
+
+    .fluid-glass-card {
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .fluid-glass-card:hover {
+      transform: translateY(-4px) scale(1.006);
+      background: rgba(28, 34, 52, 0.65);
+      border-color: rgba(255, 255, 255, 0.22);
+      box-shadow: 0 28px 50px -15px rgba(10, 132, 255, 0.25), inset 0 1px 2px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    /* Smooth iOS Pill Switch */
+    .pill-active {
+      background: rgba(255, 255, 255, 0.18);
+      color: #FFFFFF;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+    }
+
+    /* Custom scrollbars */
     ::-webkit-scrollbar {
-      width: 7px;
-      height: 7px;
+      width: 6px;
+      height: 6px;
     }
     ::-webkit-scrollbar-track {
-      background: #060913;
+      background: transparent;
     }
     ::-webkit-scrollbar-thumb {
-      background: #1e293b;
+      background: rgba(255, 255, 255, 0.15);
       border-radius: 9999px;
     }
     ::-webkit-scrollbar-thumb:hover {
-      background: #334155;
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Status Badges */
+    .badge-closed {
+      background: rgba(48, 209, 88, 0.16);
+      color: #30D158;
+      border: 1px solid rgba(48, 209, 88, 0.35);
+      box-shadow: 0 0 16px -4px rgba(48, 209, 88, 0.4);
+    }
+    .badge-testing {
+      background: rgba(255, 159, 10, 0.16);
+      color: #FF9F0A;
+      border: 1px solid rgba(255, 159, 10, 0.35);
+      box-shadow: 0 0 16px -4px rgba(255, 159, 10, 0.4);
+    }
+    .badge-active {
+      background: rgba(10, 132, 255, 0.16);
+      color: #64D2FF;
+      border: 1px solid rgba(10, 132, 255, 0.35);
+      box-shadow: 0 0 16px -4px rgba(10, 132, 255, 0.4);
+    }
+    .badge-discontinued {
+      background: rgba(255, 69, 58, 0.16);
+      color: #FF453A;
+      border: 1px solid rgba(255, 69, 58, 0.35);
+    }
+
+    /* File Type Badges */
+    .file-badge-vi {
+      background: rgba(255, 214, 10, 0.15);
+      color: #FFD60A;
+      border: 1px solid rgba(255, 214, 10, 0.3);
+    }
+    .file-badge-py {
+      background: rgba(100, 210, 255, 0.15);
+      color: #64D2FF;
+      border: 1px solid rgba(100, 210, 255, 0.3);
+    }
+    .file-badge-doc {
+      background: rgba(191, 90, 242, 0.15);
+      color: #BF5AF2;
+      border: 1px solid rgba(191, 90, 242, 0.3);
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased selection:bg-emerald-500 selection:text-black">
+<body class="min-h-screen flex flex-col selection:bg-ios-blue selection:text-white">
 
-  <!-- Ambient background glow elements -->
-  <div class="fixed top-0 left-1/4 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[140px] pointer-events-none -z-10"></div>
-  <div class="fixed top-1/3 right-10 w-[550px] h-[550px] bg-cyan-500/10 rounded-full blur-[150px] pointer-events-none -z-10"></div>
-  <div class="fixed bottom-10 left-1/3 w-[600px] h-[600px] bg-purple-500/5 rounded-full blur-[160px] pointer-events-none -z-10"></div>
+  <!-- Ambient Fluid Mesh Background Glows -->
+  <div class="mesh-gradient-1"></div>
+  <div class="mesh-gradient-2"></div>
+  <div class="mesh-gradient-3"></div>
 
-  <!-- Header Navigation -->
-  <header class="sticky top-0 z-50 glass-panel border-b border-slate-800/90 bg-slate-950/85">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+  <!-- Apple Floating Island Header -->
+  <header class="sticky top-4 z-40 max-w-7xl mx-auto px-4 w-full">
+    <div class="fluid-glass rounded-3xl px-6 py-3.5 flex items-center justify-between shadow-2xl">
       
-      <!-- Logo & Profile branding -->
-      <div class="flex items-center space-x-4">
+      <!-- Brand & Profile -->
+      <div class="flex items-center space-x-3.5">
         <div class="relative">
-          <div class="h-12 w-12 rounded-2xl bg-gradient-to-tr from-emerald-500 via-teal-500 to-cyan-500 flex items-center justify-center text-slate-950 font-black text-2xl shadow-glow-emerald">
-            <i class="fa-solid fa-code-branch text-slate-950"></i>
+          <div class="h-11 w-11 rounded-2xl bg-gradient-to-tr from-ios-blue via-ios-indigo to-ios-purple flex items-center justify-center text-white font-black text-xl shadow-lg shadow-ios-blue/30">
+            <i class="fa-solid fa-layer-group"></i>
           </div>
-          <span class="absolute -bottom-1 -right-1 flex h-4 w-4">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-slate-950"></span>
+          <span class="absolute -bottom-0.5 -right-0.5 flex h-3.5 w-3.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-ios-green opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-ios-green border-2 border-black"></span>
           </span>
         </div>
         <div>
-          <div class="flex items-center space-x-3">
-            <h1 class="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
-              <span>Paltro-SD01</span>
-              <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
-                PROD RIGS
-              </span>
-            </h1>
+          <div class="flex items-center space-x-2">
+            <h1 class="text-base font-extrabold text-white tracking-tight">Paltro-SD01</h1>
+            <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-ios-blue/15 text-ios-blue border border-ios-blue/30">
+              Live Production
+            </span>
           </div>
-          <p class="text-xs text-slate-400">Industrial Rig Automation & LabVIEW Git Release Suite</p>
+          <p class="text-xs text-slate-400 font-medium">Engineering Rigs & LabVIEW Release Suite</p>
         </div>
       </div>
 
-      <!-- Live Info Pills & Quick Actions -->
-      <div class="flex items-center space-x-3">
-        <!-- Workstation Directory Pill -->
-        <div class="hidden lg:flex items-center px-3.5 py-2 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-slate-300 font-mono shadow-inner">
-          <i class="fa-solid fa-hard-drive mr-2 text-cyan-400"></i>
-          <span>D:\Projects\Software Repo</span>
-        </div>
-
-        <!-- Share & Access Link Pill -->
-        <button onclick="openHostingModal()" class="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white text-xs font-bold shadow-glow-cyan transition-all active:scale-95">
-          <i class="fa-solid fa-globe"></i>
-          <span>Get Public Link</span>
+      <!-- Quick Action Buttons -->
+      <div class="flex items-center space-x-2.5">
+        <!-- Floating Work Order Suite Drawer Trigger -->
+        <button onclick="toggleSuiteDrawer(true)" class="flex items-center space-x-2 px-4 py-2 rounded-2xl bg-gradient-to-r from-ios-blue to-ios-indigo hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold shadow-lg shadow-ios-blue/25 transition-all active:scale-95">
+          <i class="fa-solid fa-terminal"></i>
+          <span>Work Order Automator</span>
+          <span class="bg-white/20 text-[10px] px-1.5 py-0.5 rounded font-mono">⌘K</span>
         </button>
 
-        <!-- GitHub Profile Outbound -->
-        <a href="https://github.com/Paltro-SD01" target="_blank" rel="noopener noreferrer" 
-           class="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-200 transition-colors shadow-sm">
-          <i class="fa-brands fa-github text-base text-white"></i>
-          <span class="hidden sm:inline">GitHub Profile</span>
-          <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-400 ml-1"></i>
+        <!-- Share / Hosting Modal Trigger -->
+        <a href="https://github.com/Paltro-SD01/paltro-sd01.github.io" target="_blank" 
+           class="hidden sm:flex items-center space-x-1.5 px-3.5 py-2 rounded-2xl bg-white/10 hover:bg-white/15 text-white text-xs font-semibold border border-white/10 transition-all">
+          <i class="fa-brands fa-github text-sm"></i>
+          <span>GitHub Repo</span>
+        </a>
+
+        <!-- Live Website Button -->
+        <a href="https://paltro-sd01.github.io" target="_blank" 
+           class="flex items-center space-x-1.5 px-3.5 py-2 rounded-2xl bg-ios-green/15 hover:bg-ios-green/25 text-ios-green border border-ios-green/30 text-xs font-bold transition-all">
+          <i class="fa-solid fa-globe"></i>
+          <span class="hidden md:inline">paltro-sd01.github.io</span>
+          <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
         </a>
       </div>
     </div>
   </header>
 
-  <!-- Main Container -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 flex-1 w-full">
+  <!-- Main Body Content -->
+  <main class="max-w-7xl mx-auto px-4 py-8 space-y-8 flex-1 w-full">
 
-    <!-- KPI Metric Cards Grid -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4" id="kpi-container">
+    <!-- KPI Metric Cards Grid (Apple Frosted Widgets) -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4" id="kpi-container">
       <!-- Injected via JS -->
     </div>
 
-    <!-- Analytics Charts Section -->
+    <!-- Analytics & Activity Visual Graphs -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <!-- Chart 1: Repository Commit Volume Bar Chart -->
-      <div class="lg:col-span-2 glass-panel rounded-3xl p-6 shadow-2xl relative overflow-hidden">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+      
+      <!-- Interactive Monthly Activity & Commits Trend Chart -->
+      <div class="lg:col-span-2 fluid-glass rounded-3xl p-6 relative overflow-hidden shadow-2xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <div>
-            <h2 class="text-base font-extrabold text-white flex items-center">
-              <i class="fa-solid fa-chart-column mr-2.5 text-emerald-400"></i>
-              Repository Commit Velocity & Tagged Releases
-            </h2>
-            <p class="text-xs text-slate-400">Total commit history volume and release tags across all 6 industrial rig controllers</p>
+            <div class="flex items-center space-x-2">
+              <span class="h-2 w-2 rounded-full bg-ios-blue animate-pulse"></span>
+              <h2 class="text-base font-extrabold text-white">Repository Commit Velocity & File Distribution</h2>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5">Commit volume trends across all 6 industrial rig controllers</p>
           </div>
-          <span class="text-xs font-mono text-cyan-400 bg-cyan-950/70 px-3 py-1 rounded-lg border border-cyan-800/60 w-fit">
-            6 Repositories Synchronized
-          </span>
+          
+          <!-- Mode Toggle Pill -->
+          <div class="flex items-center bg-black/40 p-1 rounded-2xl border border-white/10 text-xs">
+            <button onclick="switchChartMode('repos')" id="chart-btn-repos" class="px-3 py-1 rounded-xl font-bold transition-all pill-active">By Repo</button>
+            <button onclick="switchChartMode('monthly')" id="chart-btn-monthly" class="px-3 py-1 rounded-xl font-semibold text-slate-400 hover:text-white transition-all">Timeline</button>
+            <button onclick="switchChartMode('files')" id="chart-btn-files" class="px-3 py-1 rounded-xl font-semibold text-slate-400 hover:text-white transition-all">Files (.vi/.py)</button>
+          </div>
         </div>
+
         <div class="h-64">
-          <canvas id="repoCommitChart"></canvas>
+          <canvas id="mainAnalyticsChart"></canvas>
         </div>
       </div>
 
-      <!-- Chart 2: Work Order Lifecycle Distribution Doughnut -->
-      <div class="glass-panel rounded-3xl p-6 shadow-2xl flex flex-col justify-between">
+      <!-- Work Order Lifecycle Distribution Doughnut -->
+      <div class="fluid-glass rounded-3xl p-6 flex flex-col justify-between shadow-2xl">
         <div>
-          <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center justify-between mb-1">
             <h2 class="text-base font-extrabold text-white flex items-center">
-              <i class="fa-solid fa-chart-pie mr-2.5 text-cyan-400"></i>
-              Work Orders Lifecycle
+              <i class="fa-solid fa-circle-notch text-ios-teal mr-2"></i>
+              Work Order Lifecycle
             </h2>
-            <span class="text-xs font-mono text-slate-400 font-semibold" id="wo-count-badge">25 WOs</span>
+            <span class="text-xs font-mono font-bold text-slate-300 bg-white/10 px-2 py-0.5 rounded-lg border border-white/10" id="wo-count-badge">25 WOs</span>
           </div>
-          <p class="text-xs text-slate-400 mb-4">Milestones across LabVIEW test rigs</p>
+          <p class="text-xs text-slate-400 mb-4">Real-time status across LabVIEW test rigs</p>
+          
           <div class="h-44 relative flex items-center justify-center">
             <canvas id="woStatusChart"></canvas>
           </div>
         </div>
 
-        <div class="mt-4 pt-4 border-t border-slate-800/70 grid grid-cols-3 text-center text-xs">
-          <div>
-            <div class="font-extrabold text-emerald-400 text-base" id="count-closed">0</div>
-            <div class="text-slate-400 text-[10px] uppercase font-semibold">Closed / Prod</div>
+        <!-- Quick Summary Stats -->
+        <div class="mt-4 pt-4 border-t border-white/10 grid grid-cols-3 text-center text-xs">
+          <div class="cursor-pointer hover:bg-white/5 py-1.5 rounded-xl transition-all" onclick="filterByWoStatus('CLOSED')">
+            <div class="font-extrabold text-ios-green text-base" id="count-closed">0</div>
+            <div class="text-slate-400 text-[10px] uppercase font-bold tracking-wider">Closed / Validated</div>
           </div>
-          <div>
-            <div class="font-extrabold text-blue-400 text-base" id="count-active">0</div>
-            <div class="text-slate-400 text-[10px] uppercase font-semibold">In Dev</div>
+          <div class="cursor-pointer hover:bg-white/5 py-1.5 rounded-xl transition-all" onclick="filterByWoStatus('ACTIVE')">
+            <div class="font-extrabold text-ios-blue text-base" id="count-active">0</div>
+            <div class="text-slate-400 text-[10px] uppercase font-bold tracking-wider">In Dev</div>
           </div>
-          <div>
-            <div class="font-extrabold text-amber-400 text-base" id="count-testing">0</div>
-            <div class="text-slate-400 text-[10px] uppercase font-semibold">QA Testing</div>
+          <div class="cursor-pointer hover:bg-white/5 py-1.5 rounded-xl transition-all" onclick="filterByWoStatus('TESTING')">
+            <div class="font-extrabold text-ios-orange text-base" id="count-testing">0</div>
+            <div class="text-slate-400 text-[10px] uppercase font-bold tracking-wider">In QA Test</div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Navigation Tabs & Search Toolbar -->
+    <!-- Interactive Navigation Bar & Work Order Status Filter Pills -->
     <div class="space-y-4">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         
-        <!-- View Filter Tabs (Including NEW Work Order Generator Suite Tab!) -->
-        <div class="flex flex-wrap items-center gap-2 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 text-xs shadow-inner">
+        <!-- Apple Sliding Pill Tabs -->
+        <div class="flex items-center space-x-1.5 bg-black/40 p-1.5 rounded-2xl border border-white/10 text-xs w-fit">
           <button onclick="setActiveTab('grid')" id="tab-btn-grid" 
-                  class="flex items-center space-x-2 px-3.5 py-2 rounded-xl font-semibold transition-all bg-emerald-500 text-slate-950 shadow-glow-emerald">
-            <i class="fa-solid fa-cubes"></i>
+                  class="flex items-center space-x-2 px-4 py-2 rounded-xl font-bold transition-all pill-active">
+            <i class="fa-solid fa-cubes text-ios-blue"></i>
             <span>Repository Hub (6)</span>
           </button>
           
-          <button onclick="setActiveTab('suite')" id="tab-btn-suite" 
-                  class="flex items-center space-x-2 px-3.5 py-2 rounded-xl font-semibold transition-all text-slate-400 hover:text-white">
-            <i class="fa-solid fa-terminal text-cyan-400"></i>
-            <span>Work Order Git Suite</span>
-            <span class="bg-cyan-500/20 text-cyan-400 px-1.5 py-0.5 rounded text-[10px] font-mono">AUTOMATOR</span>
-          </button>
-
           <button onclick="setActiveTab('changelog')" id="tab-btn-changelog" 
-                  class="flex items-center space-x-2 px-3.5 py-2 rounded-xl font-semibold transition-all text-slate-400 hover:text-white">
-            <i class="fa-solid fa-file-lines text-amber-400"></i>
-            <span>Consolidated Changelogs</span>
+                  class="flex items-center space-x-2 px-4 py-2 rounded-xl font-semibold transition-all text-slate-400 hover:text-white">
+            <i class="fa-solid fa-list-check text-ios-orange"></i>
+            <span>Work Orders Registry</span>
           </button>
 
           <button onclick="setActiveTab('timeline')" id="tab-btn-timeline" 
-                  class="flex items-center space-x-2 px-3.5 py-2 rounded-xl font-semibold transition-all text-slate-400 hover:text-white">
-            <i class="fa-solid fa-clock-rotate-left text-purple-400"></i>
-            <span>Commit Stream</span>
+                  class="flex items-center space-x-2 px-4 py-2 rounded-xl font-semibold transition-all text-slate-400 hover:text-white">
+            <i class="fa-solid fa-clock-rotate-left text-ios-purple"></i>
+            <span>Live Commit Stream</span>
           </button>
 
           <button onclick="setActiveTab('paths')" id="tab-btn-paths" 
-                  class="flex items-center space-x-2 px-3.5 py-2 rounded-xl font-semibold transition-all text-slate-400 hover:text-white">
-            <i class="fa-solid fa-diagram-project text-emerald-400"></i>
-            <span>Path Registry</span>
+                  class="flex items-center space-x-2 px-4 py-2 rounded-xl font-semibold transition-all text-slate-400 hover:text-white">
+            <i class="fa-solid fa-hard-drive text-ios-green"></i>
+            <span>Local ↔ Git Path Map</span>
           </button>
         </div>
 
-        <!-- Global Search Toolbar -->
-        <div class="flex items-center space-x-2 w-full md:w-auto">
-          <div class="relative w-full sm:w-72">
-            <i class="fa-solid fa-magnifying-glass text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-xs"></i>
-            <input type="text" id="global-search" oninput="handleSearch(this.value)" 
-                   placeholder="Search commit, WO, file, tag..." 
-                   class="w-full pl-9 pr-4 py-2 text-xs bg-slate-900 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all shadow-inner">
-          </div>
-          <button onclick="resetFilters()" title="Reset Filters" class="p-2.5 bg-slate-900 border border-slate-800 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
-            <i class="fa-solid fa-rotate-left text-xs"></i>
+        <!-- Quick Status Filter Pills (Direct One-Click Filter on Main Screen!) -->
+        <div class="flex flex-wrap items-center gap-1.5">
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mr-1">Status:</span>
+          <button onclick="filterByWoStatus('ALL')" id="filter-pill-ALL" 
+                  class="px-3 py-1 rounded-full text-xs font-bold transition-all bg-white/20 text-white border border-white/20">
+            All (25)
+          </button>
+          <button onclick="filterByWoStatus('CLOSED')" id="filter-pill-CLOSED" 
+                  class="px-3 py-1 rounded-full text-xs font-bold transition-all bg-ios-green/10 text-ios-green border border-ios-green/20 hover:bg-ios-green/20">
+            🔒 Closed (4)
+          </button>
+          <button onclick="filterByWoStatus('TESTING')" id="filter-pill-TESTING" 
+                  class="px-3 py-1 rounded-full text-xs font-bold transition-all bg-ios-orange/10 text-ios-orange border border-ios-orange/20 hover:bg-ios-orange/20">
+            🧪 Testing
+          </button>
+          <button onclick="filterByWoStatus('ACTIVE')" id="filter-pill-ACTIVE" 
+                  class="px-3 py-1 rounded-full text-xs font-bold transition-all bg-ios-blue/10 text-ios-blue border border-ios-blue/20 hover:bg-ios-blue/20">
+            🛠️ In Dev
           </button>
         </div>
+
+      </div>
+
+      <!-- Search Input Bar -->
+      <div class="relative w-full">
+        <i class="fa-solid fa-magnifying-glass text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none text-xs"></i>
+        <input type="text" id="global-search" oninput="handleSearch(this.value)" 
+               placeholder="Search commits, work orders (e.g. WO 2476, WO 2485), VI files, release tags, authors..." 
+               class="w-full pl-11 pr-12 py-3 text-xs bg-black/40 border border-white/10 rounded-2xl text-white placeholder-slate-500 focus:outline-none focus:border-ios-blue focus:ring-2 focus:ring-ios-blue/20 transition-all shadow-inner">
+        <button onclick="resetFilters()" title="Reset Filters" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1.5 rounded-lg transition-colors">
+          <i class="fa-solid fa-rotate-left text-xs"></i>
+        </button>
       </div>
     </div>
 
     <!-- ========================================== -->
-    <!-- TAB 1: REPOSITORY CARDS HUB -->
+    <!-- TAB 1: REPOSITORY COMPACT HUB -->
     <!-- ========================================== -->
     <div id="view-grid" class="tab-view block space-y-6">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="repos-cards-grid">
@@ -310,149 +398,15 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- TAB 2: WORK ORDER GIT SUITE (INTEGRATED!) -->
-    <!-- ========================================== -->
-    <div id="view-suite" class="tab-view hidden space-y-6">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-
-        <!-- Left: Configuration Form -->
-        <section class="lg:col-span-7 flex flex-col space-y-6">
-          <div class="glass-panel rounded-3xl p-6 shadow-2xl space-y-5 border border-slate-800/80">
-            <div class="border-b border-slate-800/80 pb-3 flex items-center justify-between">
-              <span class="flex items-center space-x-2.5 text-white font-extrabold text-base">
-                <i class="fa-solid fa-sliders text-emerald-400"></i>
-                <span>1. Configure Work Order Action</span>
-              </span>
-              <span class="text-xs text-slate-400 font-mono">Real-time Command Builder</span>
-            </div>
-
-            <!-- Target Repository -->
-            <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider">Select Target Software Repository</label>
-              <select id="suiteRepoSelect" onchange="generateSuiteScript()" class="w-full bg-slate-950 border border-slate-800 text-slate-200 text-sm rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all font-medium">
-                <option value="D:\Projects\Software Repo\LAB-IQ 150" data-name="LAB-IQ-150">🧪 LAB-IQ 150 (D:\Projects\Software Repo\LAB-IQ 150)</option>
-                <option value="D:\Projects\Software Repo\BOCLE" data-name="BOCLE" selected>⚙️ BOCLE (D:\Projects\Software Repo\BOCLE)</option>
-                <option value="D:\Projects\Software Repo\LAB-IQ\HFRR Adv" data-name="HFRR-ADV">⚡ LAB-IQ HFRR Adv (D:\Projects\Software Repo\LAB-IQ\HFRR Adv)</option>
-                <option value="D:\Projects\Software Repo\LAB-IQ 350" data-name="LAB-IQ-350">📊 LAB-IQ 350 (D:\Projects\Software Repo\LAB-IQ 350)</option>
-                <option value="D:\Projects\Software Repo\LAB-IQ\B2V2" data-name="B2V2">🔬 LAB-IQ B2V2 (D:\Projects\Software Repo\LAB-IQ\B2V2)</option>
-                <option value="D:\Projects\Software Repo\LAB-IQ\Airjet" data-name="AIRJET">💨 LAB-IQ Airjet (D:\Projects\Software Repo\LAB-IQ\Airjet)</option>
-              </select>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <!-- Work Order Folder Scope -->
-              <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider">Work Order Folder Name</label>
-                <input type="text" id="suiteWoScope" oninput="generateSuiteScript()" value="WO 2485" placeholder="e.g. WO 2485 or WO 2476" 
-                       class="w-full bg-slate-950 border border-slate-800 text-slate-200 text-sm rounded-xl px-4 py-3 font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all">
-                <div class="text-[11px] text-slate-400 mt-1 flex items-center gap-1">
-                  <span>Quick WOs:</span>
-                  <button type="button" onclick="quickFillWo('WO 2476')" class="text-cyan-400 hover:underline">2476</button>,
-                  <button type="button" onclick="quickFillWo('WO 2485')" class="text-cyan-400 hover:underline">2485</button>,
-                  <button type="button" onclick="quickFillWo('WO 2480')" class="text-cyan-400 hover:underline">2480</button>,
-                  <button type="button" onclick="quickFillWo('WO 2394')" class="text-cyan-400 hover:underline">2394</button>
-                </div>
-              </div>
-
-              <!-- Lifecycle / Stage Status -->
-              <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider">Lifecycle / Stage Status</label>
-                <select id="suiteWoStage" onchange="generateSuiteScript()" class="w-full bg-slate-950 border border-slate-800 text-slate-200 text-sm rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium transition-all">
-                  <option value="dev">🛠️ IN-DEV (Active Development)</option>
-                  <option value="testing">🧪 [TESTING] Testing & QA Validation</option>
-                  <option value="integration">⚡ [INTEGRATION] System Module Integration</option>
-                  <option value="reopen">🔄 [REOPENED] Reopened Issue / Hotfix Patch</option>
-                  <option value="closed" selected>🔒 [CLOSED] Release Closed Milestone (Auto-Tag)</option>
-                  <option value="none">⚪ (No Lifecycle Tag)</option>
-                </select>
-              </div>
-            </div>
-
-            <!-- Category of Change -->
-            <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider">What Changed? (Categorization)</label>
-              <select id="suiteChangeType" onchange="generateSuiteScript()" class="w-full bg-slate-950 border border-slate-800 text-slate-200 text-sm rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all font-medium">
-                <option value="fix">🐛 Bug Fixes (Group: 🐛 Bug Fixes)</option>
-                <option value="ui">🖥️ UI Fixes (Group: 🖥️ UI & Front Panel Fixes)</option>
-                <option value="logic">⚙️ Core VI Logic (Group: ⚙️ Core VI Logic & Loop Updates)</option>
-                <option value="feat">🚀 Feature / Build (Group: 🚀 Features & Initial Build)</option>
-                <option value="chore">📌 Miscellaneous (Group: 📌 Miscellaneous Modifications)</option>
-              </select>
-            </div>
-
-            <!-- Commit Description -->
-            <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider">Summary of Modification / Details</label>
-              <textarea id="suiteCommitDesc" oninput="generateSuiteScript()" rows="3" 
-                        class="w-full bg-slate-950 border border-slate-800 text-slate-200 text-sm rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all" 
-                        placeholder="Describe what was modified...">Workorder closed and validated Documents added</textarea>
-            </div>
-
-            <!-- Live Commit Preview -->
-            <div class="space-y-2 pt-2 border-t border-slate-800/80">
-              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
-                <span>Live Generated Git Commit String</span>
-                <span class="text-[11px] text-emerald-400 font-mono">Conventional Changelog Format</span>
-              </span>
-              <div class="bg-slate-950 border border-slate-800/90 rounded-2xl p-4 font-mono text-xs text-emerald-400 break-all flex items-center justify-between shadow-inner">
-                <span id="suiteLiveCommitPreview">fix(WO 2485): [CLOSED] Workorder closed and validated Documents added</span>
-                <button onclick="copyElementText('suiteLiveCommitPreview')" class="text-slate-500 hover:text-emerald-400 text-sm ml-3 p-1.5 rounded-lg bg-slate-900 border border-slate-800" title="Copy Commit Message">
-                  <i class="fa-regular fa-copy"></i>
-                </button>
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-        <!-- Right: Generated PowerShell Script Display -->
-        <section class="lg:col-span-5 flex flex-col space-y-6">
-          <div class="glass-panel rounded-3xl p-6 shadow-2xl space-y-4 flex-1 flex flex-col border border-slate-800/80 justify-between">
-            <div>
-              <div class="flex justify-between items-center border-b border-slate-800/80 pb-3 mb-3">
-                <h2 class="font-extrabold text-base text-white flex items-center space-x-2">
-                  <i class="fa-solid fa-terminal text-emerald-400"></i>
-                  <span>2. PowerShell Script Commands</span>
-                </h2>
-                <span class="text-xs text-emerald-400 font-mono bg-emerald-500/10 px-2.5 py-1 rounded-md border border-emerald-500/20">Auto-Synced</span>
-              </div>
-
-              <p class="text-xs text-slate-400 leading-relaxed">
-                Copy and run in PowerShell to commit, rebuild both Master & Work Order changelogs, push to GitHub, and auto-tag closed milestones:
-              </p>
-
-              <div class="bg-slate-950 border border-slate-800/90 rounded-2xl p-4 font-mono text-xs text-slate-300 mt-4 overflow-x-auto relative shadow-inner max-h-[360px]">
-                <pre id="suiteCommandDisplay" class="text-emerald-400 whitespace-pre-wrap leading-relaxed"></pre>
-              </div>
-            </div>
-
-            <div class="space-y-3 pt-4 border-t border-slate-800/80">
-              <button onclick="copyPowerShellScript()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black py-3.5 px-4 rounded-2xl shadow-glow-emerald flex items-center justify-center space-x-2 transition-all active:scale-98">
-                <i class="fa-solid fa-clipboard text-base"></i>
-                <span>Copy All PowerShell Commands</span>
-              </button>
-
-              <div class="flex items-center justify-between text-[11px] text-slate-400 px-1 font-mono">
-                <span>Target: Windows PowerShell</span>
-                <span>Includes Auto-Rebase & Tags</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-      </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- TAB 3: WORK ORDERS & CHANGELOGS VIEW -->
+    <!-- TAB 2: CONSOLIDATED CHANGELOGS & WORK ORDERS -->
     <!-- ========================================== -->
     <div id="view-changelog" class="tab-view hidden space-y-6">
-      <div class="glass-panel rounded-3xl p-6 shadow-2xl">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-800/80">
+      <div class="fluid-glass rounded-3xl p-6 shadow-2xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-white/10">
           <div>
-            <h2 class="text-lg font-extrabold text-white flex items-center">
-              <i class="fa-solid fa-clipboard-check mr-2.5 text-emerald-400"></i>
-              Work Order Consolidated Registry
+            <h2 class="text-base font-extrabold text-white flex items-center">
+              <i class="fa-solid fa-clipboard-check text-ios-green mr-2"></i>
+              Work Orders & Changelog Consolidated Registry
             </h2>
             <p class="text-xs text-slate-400">All engineering work orders across LabVIEW controller versions with current milestone and commit details</p>
           </div>
@@ -460,7 +414,7 @@
           <!-- Category Filter -->
           <div class="flex items-center space-x-2">
             <span class="text-xs text-slate-400">Filter Repo:</span>
-            <select id="wo-repo-filter" onchange="filterWorkOrders()" class="bg-slate-900 border border-slate-800 text-xs rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-emerald-500 font-semibold">
+            <select id="wo-repo-filter" onchange="filterWorkOrders()" class="bg-black/40 border border-white/10 text-xs rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-ios-blue font-semibold">
               <option value="ALL">All Repositories (6)</option>
               <option value="LAB-IQ-150">LAB-IQ-150</option>
               <option value="BOCLE">BOCLE</option>
@@ -472,21 +426,20 @@
           </div>
         </div>
 
-        <!-- Work Orders Table -->
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead>
-              <tr class="text-[11px] font-bold uppercase tracking-wider text-slate-400 bg-slate-900/60 border-y border-slate-800">
-                <th class="py-3.5 px-4">Repository</th>
-                <th class="py-3.5 px-4">Work Order / Directory</th>
-                <th class="py-3.5 px-4 text-center">Status</th>
-                <th class="py-3.5 px-4 text-center">Files</th>
-                <th class="py-3.5 px-4">Last Commit Hash</th>
-                <th class="py-3.5 px-4">Commit Date & Time</th>
-                <th class="py-3.5 px-4">Summary / Milestone</th>
+              <tr class="text-[11px] font-bold uppercase tracking-wider text-slate-400 bg-white/5 border-y border-white/10">
+                <th class="py-3 px-4">Repository</th>
+                <th class="py-3 px-4">Work Order / Directory</th>
+                <th class="py-3 px-4 text-center">Status</th>
+                <th class="py-3 px-4 text-center">Files</th>
+                <th class="py-3 px-4">Last Commit Hash</th>
+                <th class="py-3 px-4">Commit Date & Time</th>
+                <th class="py-3 px-4">Summary / Milestone</th>
               </tr>
             </thead>
-            <tbody id="work-orders-tbody" class="divide-y divide-slate-800/60 text-xs">
+            <tbody id="work-orders-tbody" class="divide-y divide-white/5 text-xs">
               <!-- Rendered via JS -->
             </tbody>
           </table>
@@ -495,22 +448,22 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- TAB 4: LIVE COMMIT STREAM & VERSION CONTROL -->
+    <!-- TAB 3: LIVE COMMIT STREAM WITH FILE TYPE BADGES -->
     <!-- ========================================== -->
     <div id="view-timeline" class="tab-view hidden space-y-6">
-      <div class="glass-panel rounded-3xl p-6 shadow-2xl">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-800/80">
+      <div class="fluid-glass rounded-3xl p-6 shadow-2xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-white/10">
           <div>
-            <h2 class="text-lg font-extrabold text-white flex items-center">
-              <i class="fa-solid fa-code-commit mr-2.5 text-cyan-400"></i>
+            <h2 class="text-base font-extrabold text-white flex items-center">
+              <i class="fa-solid fa-code-commit text-ios-purple mr-2"></i>
               Unified Git Commit Stream & Change Inspector
             </h2>
-            <p class="text-xs text-slate-400">Chronological history of all commits across every repository with modified file tracking</p>
+            <p class="text-xs text-slate-400">Detailed chronological commits with LabVIEW VI, Python, and Documentation badges</p>
           </div>
 
           <div class="flex items-center space-x-2">
             <span class="text-xs text-slate-400">Filter Repo:</span>
-            <select id="commit-repo-filter" onchange="renderCommitStream()" class="bg-slate-900 border border-slate-800 text-xs rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-emerald-500 font-semibold">
+            <select id="commit-repo-filter" onchange="renderCommitStream()" class="bg-black/40 border border-white/10 text-xs rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-ios-blue font-semibold">
               <option value="ALL">All Repositories</option>
               <option value="LAB-IQ-150">LAB-IQ-150</option>
               <option value="BOCLE">BOCLE</option>
@@ -522,23 +475,23 @@
           </div>
         </div>
 
-        <div id="commits-stream-list" class="space-y-4">
+        <div id="commits-stream-list" class="space-y-3.5">
           <!-- Rendered via JS -->
         </div>
       </div>
     </div>
 
     <!-- ========================================== -->
-    <!-- TAB 5: LOCAL ↔ GIT PATH REGISTRY & MAPPING -->
+    <!-- TAB 4: LOCAL ↔ GIT PATH REGISTRY -->
     <!-- ========================================== -->
     <div id="view-paths" class="tab-view hidden space-y-6">
-      <div class="glass-panel rounded-3xl p-6 shadow-2xl">
-        <div class="mb-6 pb-4 border-b border-slate-800/80">
-          <h2 class="text-lg font-extrabold text-white flex items-center">
-            <i class="fa-solid fa-diagram-project mr-2.5 text-amber-400"></i>
+      <div class="fluid-glass rounded-3xl p-6 shadow-2xl">
+        <div class="mb-6 pb-4 border-b border-white/10">
+          <h2 class="text-base font-extrabold text-white flex items-center">
+            <i class="fa-solid fa-diagram-project text-ios-green mr-2"></i>
             Local Path to Remote Git Directory Mapping
           </h2>
-          <p class="text-xs text-slate-400">Direct traceability showing exactly from which local workstation drive/folder each repository was committed and pushed to GitHub.</p>
+          <p class="text-xs text-slate-400">Direct traceability showing exactly from which workstation folder each rig was pushed to GitHub.</p>
         </div>
 
         <div class="grid grid-cols-1 gap-4" id="paths-mapping-list">
@@ -550,109 +503,156 @@
   </main>
 
   <!-- ========================================== -->
-  <!-- MODAL: HOSTING & PUBLIC LINK MODAL -->
+  <!-- FLOATING INTERACTIVE WORK ORDER SUITE DRAWER -->
   <!-- ========================================== -->
-  <div id="hosting-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
-    <div class="glass-panel bg-slate-950 max-w-2xl w-full rounded-3xl border border-slate-700 shadow-2xl p-6 sm:p-8 space-y-6">
-      <div class="flex items-start justify-between border-b border-slate-800 pb-4">
+  <div id="suite-drawer" class="fixed inset-y-0 right-0 z-50 w-full max-w-xl bg-slate-950/95 backdrop-blur-3xl border-l border-white/10 shadow-2xl transform translate-x-full transition-transform duration-300 ease-out flex flex-col">
+    
+    <!-- Drawer Header -->
+    <div class="p-6 border-b border-white/10 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="h-10 w-10 rounded-2xl bg-gradient-to-tr from-ios-blue to-ios-indigo flex items-center justify-center text-white text-lg font-bold shadow-lg shadow-ios-blue/30">
+          <i class="fa-solid fa-terminal"></i>
+        </div>
         <div>
-          <h3 class="text-lg font-extrabold text-white flex items-center gap-2">
-            <i class="fa-solid fa-globe text-cyan-400"></i>
-            <span>Access This Dashboard From Anywhere</span>
-          </h3>
-          <p class="text-xs text-slate-400 mt-1">Free 1-Click Hosting Options on GitHub Pages, Netlify or LAN</p>
+          <h3 class="text-base font-extrabold text-white">Work Order Git Release Suite</h3>
+          <p class="text-xs text-slate-400">PowerShell command builder & auto-tagging</p>
         </div>
-        <button onclick="closeHostingModal()" class="text-slate-400 hover:text-white p-2 rounded-xl bg-slate-900 border border-slate-800">
-          <i class="fa-solid fa-xmark text-sm"></i>
-        </button>
+      </div>
+      <button onclick="toggleSuiteDrawer(false)" class="text-slate-400 hover:text-white p-2 rounded-xl bg-white/5 border border-white/10">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+    </div>
+
+    <!-- Drawer Body -->
+    <div class="flex-1 overflow-y-auto p-6 space-y-5">
+      <!-- Target Repository -->
+      <div>
+        <label class="block text-xs font-bold text-slate-300 mb-1.5 uppercase tracking-wider">Target Software Repository</label>
+        <select id="suiteRepoSelect" onchange="generateSuiteScript()" class="w-full bg-black/60 border border-white/15 text-slate-200 text-xs rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-ios-blue font-medium">
+          <option value="D:\Projects\Software Repo\LAB-IQ 150">🧪 LAB-IQ 150 (D:\Projects\Software Repo\LAB-IQ 150)</option>
+          <option value="D:\Projects\Software Repo\BOCLE" selected>⚙️ BOCLE (D:\Projects\Software Repo\BOCLE)</option>
+          <option value="D:\Projects\Software Repo\LAB-IQ\HFRR Adv">⚡ LAB-IQ HFRR Adv (D:\Projects\Software Repo\LAB-IQ\HFRR Adv)</option>
+          <option value="D:\Projects\Software Repo\LAB-IQ 350">📊 LAB-IQ 350 (D:\Projects\Software Repo\LAB-IQ 350)</option>
+          <option value="D:\Projects\Software Repo\LAB-IQ\B2V2">🔬 LAB-IQ B2V2 (D:\Projects\Software Repo\LAB-IQ\B2V2)</option>
+          <option value="D:\Projects\Software Repo\LAB-IQ\Airjet">💨 LAB-IQ Airjet (D:\Projects\Software Repo\LAB-IQ\Airjet)</option>
+        </select>
       </div>
 
-      <!-- Option 1: GitHub Pages -->
-      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 space-y-2">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-2 text-white font-bold text-sm">
-            <i class="fa-brands fa-github text-emerald-400 text-lg"></i>
-            <span>Option 1: Free GitHub Pages Link (Recommended)</span>
+      <div class="grid grid-cols-2 gap-3">
+        <!-- Work Order Folder -->
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1.5 uppercase tracking-wider">Work Order Folder</label>
+          <input type="text" id="suiteWoScope" oninput="generateSuiteScript()" value="WO 2485" 
+                 class="w-full bg-black/60 border border-white/15 text-slate-200 text-xs rounded-xl px-3.5 py-2.5 font-mono focus:outline-none focus:ring-2 focus:ring-ios-blue">
+          <div class="text-[10px] text-slate-400 mt-1 flex items-center gap-1 font-mono">
+            <span>Quick:</span>
+            <button onclick="quickFillWo('WO 2476')" class="text-ios-blue hover:underline">2476</button>,
+            <button onclick="quickFillWo('WO 2485')" class="text-ios-blue hover:underline">2485</button>,
+            <button onclick="quickFillWo('WO 2480')" class="text-ios-blue hover:underline">2480</button>
           </div>
-          <span class="text-[10px] font-mono bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20 font-bold">PERMANENT LINK</span>
         </div>
-        <p class="text-xs text-slate-300">
-          Create a repository named <code class="text-cyan-400 bg-slate-950 px-1.5 py-0.5 rounded">github-dashboard</code> or <code class="text-cyan-400 bg-slate-950 px-1.5 py-0.5 rounded">Paltro-SD01.github.io</code> under your GitHub account, and your dashboard URL will be:
-        </p>
-        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800 font-mono text-xs text-emerald-400 flex items-center justify-between">
-          <span>https://paltro-sd01.github.io</span>
-          <button onclick="copyRawText('https://paltro-sd01.github.io')" class="text-slate-400 hover:text-white ml-2">
+
+        <!-- Stage Status -->
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1.5 uppercase tracking-wider">Stage Status</label>
+          <select id="suiteWoStage" onchange="generateSuiteScript()" class="w-full bg-black/60 border border-white/15 text-slate-200 text-xs rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-ios-blue font-medium">
+            <option value="closed" selected>🔒 [CLOSED] Release Closed</option>
+            <option value="dev">🛠️ IN-DEV (Active)</option>
+            <option value="testing">🧪 [TESTING] QA Testing</option>
+            <option value="integration">⚡ [INTEGRATION] Integration</option>
+            <option value="reopen">🔄 [REOPENED] Patch</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Change Categorization -->
+      <div>
+        <label class="block text-xs font-bold text-slate-300 mb-1.5 uppercase tracking-wider">Category of Change</label>
+        <select id="suiteChangeType" onchange="generateSuiteScript()" class="w-full bg-black/60 border border-white/15 text-slate-200 text-xs rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-ios-blue font-medium">
+          <option value="fix">🐛 Bug Fixes</option>
+          <option value="ui">🖥️ UI & Front Panel Fixes</option>
+          <option value="logic">⚙️ Core VI Logic & Loops</option>
+          <option value="feat">🚀 Features & Initial Build</option>
+          <option value="chore">📌 Miscellaneous Modifications</option>
+        </select>
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label class="block text-xs font-bold text-slate-300 mb-1.5 uppercase tracking-wider">Summary of Changes</label>
+        <textarea id="suiteCommitDesc" oninput="generateSuiteScript()" rows="2" 
+                  class="w-full bg-black/60 border border-white/15 text-slate-200 text-xs rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-ios-blue">Workorder closed and validated Documents added</textarea>
+      </div>
+
+      <!-- Live Generated Commit String -->
+      <div>
+        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Live Commit String Preview</span>
+        <div class="bg-black/80 border border-white/10 rounded-xl p-3 font-mono text-xs text-ios-green flex items-center justify-between">
+          <span id="suiteLiveCommitPreview" class="truncate">fix(WO 2485): [CLOSED] Workorder closed and validated Documents added</span>
+          <button onclick="copyElementText('suiteLiveCommitPreview')" class="text-slate-400 hover:text-white ml-2 p-1">
             <i class="fa-regular fa-copy"></i>
           </button>
         </div>
       </div>
 
-      <!-- Option 2: Local LAN Workstation IP -->
-      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 space-y-2">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-2 text-white font-bold text-sm">
-            <i class="fa-solid fa-wifi text-cyan-400 text-base"></i>
-            <span>Option 2: Internal LAN Mobile & Laptop Link</span>
-          </div>
-          <span class="text-[10px] font-mono bg-cyan-500/10 text-cyan-400 px-2 py-0.5 rounded border border-cyan-500/20 font-bold">SAME WIFI / OFFICE</span>
+      <!-- Generated PowerShell Block -->
+      <div>
+        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">PowerShell Sequence</span>
+        <div class="bg-black/90 border border-white/10 rounded-xl p-3 font-mono text-xs text-slate-300 max-h-48 overflow-y-auto">
+          <pre id="suiteCommandDisplay" class="text-ios-green leading-relaxed text-[11px]"></pre>
         </div>
-        <p class="text-xs text-slate-300">
-          When running <code class="text-cyan-400 bg-slate-950 px-1.5 py-0.5 rounded">python serve.py</code>, you can open this on any phone, tablet, or PC connected to your network:
-        </p>
-        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800 font-mono text-xs text-cyan-400 flex items-center justify-between">
-          <span>http://192.168.0.63:8000/index.html</span>
-          <button onclick="copyRawText('http://192.168.0.63:8000/index.html')" class="text-slate-400 hover:text-white ml-2">
-            <i class="fa-regular fa-copy"></i>
-          </button>
-        </div>
-      </div>
-
-      <div class="flex justify-end pt-2">
-        <button onclick="closeHostingModal()" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-white transition-all">
-          Done
-        </button>
       </div>
     </div>
+
+    <!-- Drawer Footer -->
+    <div class="p-6 border-t border-white/10 space-y-2">
+      <button onclick="copyPowerShellScript()" class="w-full bg-gradient-to-r from-ios-blue to-ios-indigo hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-ios-blue/30 flex items-center justify-center space-x-2 transition-all active:scale-98">
+        <i class="fa-solid fa-clipboard"></i>
+        <span>Copy All PowerShell Commands</span>
+      </button>
+      <div class="text-[10px] text-center text-slate-500 font-mono">
+        Auto-generates tags, runs update_all_configs.py, and pushes to GitHub
+      </div>
+    </div>
+
   </div>
 
-  <!-- ========================================== -->
-  <!-- MODAL: COMMIT FILE INSPECTOR MODAL -->
-  <!-- ========================================== -->
-  <div id="commit-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
-    <div class="glass-panel bg-slate-950 max-w-2xl w-full rounded-3xl border border-slate-700 shadow-2xl p-6 sm:p-8 space-y-5">
-      <div class="flex items-start justify-between border-b border-slate-800/80 pb-3">
+  <!-- Commit Detail Modal -->
+  <div id="commit-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="fluid-glass bg-slate-950 max-w-2xl w-full rounded-3xl border border-white/20 shadow-2xl p-6 sm:p-7 space-y-5">
+      <div class="flex items-start justify-between border-b border-white/10 pb-3">
         <div class="space-y-1">
           <div class="flex items-center space-x-2">
-            <span id="modal-repo-badge" class="px-2.5 py-0.5 rounded-lg text-xs font-mono font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"></span>
-            <span id="modal-hash-badge" class="px-2.5 py-0.5 rounded-lg text-xs font-mono bg-slate-800 text-slate-300"></span>
+            <span id="modal-repo-badge" class="px-2.5 py-0.5 rounded-lg text-xs font-mono font-bold bg-ios-blue/20 text-ios-blue border border-ios-blue/30"></span>
+            <span id="modal-hash-badge" class="px-2.5 py-0.5 rounded-lg text-xs font-mono bg-white/10 text-slate-300"></span>
           </div>
-          <h3 id="modal-commit-title" class="text-base font-bold text-white pt-1"></h3>
+          <h3 id="modal-commit-title" class="text-sm font-bold text-white pt-1"></h3>
         </div>
-        <button onclick="closeCommitModal()" class="text-slate-400 hover:text-white p-2 rounded-xl bg-slate-900 border border-slate-800">
+        <button onclick="closeCommitModal()" class="text-slate-400 hover:text-white p-2 rounded-xl bg-white/5 border border-white/10">
           <i class="fa-solid fa-xmark text-sm"></i>
         </button>
       </div>
 
-      <div class="grid grid-cols-2 gap-3 text-xs bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800">
+      <div class="grid grid-cols-2 gap-3 text-xs bg-black/40 p-3.5 rounded-2xl border border-white/10 font-mono">
         <div>
-          <span class="text-slate-500 block font-semibold mb-0.5">Author:</span>
+          <span class="text-slate-500 block font-sans text-[10px] uppercase font-bold">Author:</span>
           <span id="modal-author" class="font-bold text-slate-200"></span>
         </div>
         <div>
-          <span class="text-slate-500 block font-semibold mb-0.5">Date & Time:</span>
-          <span id="modal-date" class="font-mono text-cyan-400"></span>
+          <span class="text-slate-500 block font-sans text-[10px] uppercase font-bold">Date & Time:</span>
+          <span id="modal-date" class="text-ios-blue"></span>
         </div>
       </div>
 
       <div>
         <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Changed Files in This Commit:</h4>
-        <div id="modal-files-list" class="max-h-60 overflow-y-auto space-y-1 font-mono text-xs bg-slate-900/60 p-3.5 rounded-2xl border border-slate-800/80">
+        <div id="modal-files-list" class="max-h-56 overflow-y-auto space-y-1.5 font-mono text-xs bg-black/50 p-3.5 rounded-2xl border border-white/10">
           <!-- Injected via JS -->
         </div>
       </div>
 
       <div class="pt-2 flex justify-end space-x-2">
-        <a id="modal-github-link" href="#" target="_blank" class="inline-flex items-center space-x-2 px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-xs font-bold text-slate-950 transition-all shadow-glow-emerald">
+        <a id="modal-github-link" href="#" target="_blank" class="inline-flex items-center space-x-2 px-4 py-2 rounded-xl bg-ios-blue hover:bg-blue-500 text-xs font-bold text-white transition-all shadow-lg shadow-ios-blue/30">
           <i class="fa-brands fa-github text-sm"></i>
           <span>Open on GitHub</span>
         </a>
@@ -661,8 +661,8 @@
   </div>
 
   <!-- Toast Notification -->
-  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center space-x-2.5 px-4 py-3 rounded-2xl bg-emerald-500 text-slate-950 text-xs font-bold shadow-2xl shadow-emerald-500/40">
-    <i class="fa-solid fa-circle-check text-sm"></i>
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center space-x-2.5 px-4 py-3 rounded-2xl bg-white text-black text-xs font-bold shadow-2xl">
+    <i class="fa-solid fa-circle-check text-ios-green text-sm"></i>
     <span id="toast-msg">Copied to clipboard!</span>
   </div>
 
@@ -672,27 +672,51 @@
   <script>
     let currentTab = 'grid';
     let searchQuery = '';
-    let commitChartInstance = null;
-    let woChartInstance = null;
+    let currentStatusFilter = 'ALL';
+    let currentChartMode = 'repos';
+    let analyticsChart = null;
+    let woChart = null;
 
     document.addEventListener('DOMContentLoaded', () => {
       initDashboard();
       generateSuiteScript();
+      
+      // Keyboard shortcut ⌘K / Ctrl+K to toggle suite drawer
+      document.addEventListener('keydown', (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+          e.preventDefault();
+          toggleSuiteDrawer();
+        }
+      });
     });
 
     function initDashboard() {
       renderKPIs();
-      renderCharts();
-      renderRepoCards();
+      renderMainAnalyticsChart();
+      renderWODoughnut();
+      renderCompactRepoCards();
       renderWorkOrdersTable();
       renderCommitStream();
       renderPathMappings();
     }
 
-    // Tab switching
+    // Toggle Work Order Suite Floating Drawer
+    function toggleSuiteDrawer(forceOpen) {
+      const drawer = document.getElementById('suite-drawer');
+      const isOpen = !drawer.classList.contains('translate-x-full');
+      const open = forceOpen !== undefined ? forceOpen : !isOpen;
+
+      if (open) {
+        drawer.classList.remove('translate-x-full');
+      } else {
+        drawer.classList.add('translate-x-full');
+      }
+    }
+
+    // Tab Switching
     function setActiveTab(tab) {
       currentTab = tab;
-      const tabs = ['grid', 'suite', 'changelog', 'timeline', 'paths'];
+      const tabs = ['grid', 'changelog', 'timeline', 'paths'];
       tabs.forEach(t => {
         const view = document.getElementById(`view-${t}`);
         const btn = document.getElementById(`tab-btn-${t}`);
@@ -700,93 +724,34 @@
         if (t === tab) {
           view.classList.remove('hidden');
           view.classList.add('block');
-          btn.className = "flex items-center space-x-2 px-3.5 py-2 rounded-xl font-semibold transition-all bg-emerald-500 text-slate-950 shadow-glow-emerald";
+          btn.className = "flex items-center space-x-2 px-4 py-2 rounded-xl font-bold transition-all pill-active";
         } else {
           view.classList.remove('block');
           view.classList.add('hidden');
-          btn.className = "flex items-center space-x-2 px-3.5 py-2 rounded-xl font-semibold transition-all text-slate-400 hover:text-white";
+          btn.className = "flex items-center space-x-2 px-4 py-2 rounded-xl font-semibold transition-all text-slate-400 hover:text-white";
         }
       });
     }
 
-    // ==========================================
-    // WORK ORDER GIT SUITE AUTOMATION LOGIC
-    // ==========================================
-    function quickFillWo(woName) {
-      document.getElementById('suiteWoScope').value = woName;
-      generateSuiteScript();
-    }
-
-    function generateSuiteScript() {
-      const repoPath = document.getElementById('suiteRepoSelect').value;
-      const wo = document.getElementById('suiteWoScope').value.trim();
-      const stage = document.getElementById('suiteWoStage').value;
-      const type = document.getElementById('suiteChangeType').value;
-      const desc = document.getElementById('suiteCommitDesc').value.trim() || "Updated work order files";
-
-      // Determine Lifecycle Tag
-      let stageTag = "";
-      let prefix = type;
-
-      if (stage === "closed") {
-        stageTag = "[CLOSED]";
-      } else if (stage === "reopen") {
-        stageTag = "[REOPENED]";
-        prefix = "fix";
-      } else if (stage === "testing") {
-        stageTag = "[TESTING]";
-      } else if (stage === "integration") {
-        stageTag = "[INTEGRATION]";
-      }
-
-      const woScopeStr = wo ? `(${wo})` : '';
-      const stageTagStr = stageTag ? ` ${stageTag}` : '';
-      const finalCommitMessage = `${prefix}${woScopeStr}:${stageTagStr} ${desc}`;
-
-      document.getElementById('suiteLiveCommitPreview').innerText = finalCommitMessage;
-
-      // Generate Robust PowerShell Command Sequence
-      let ps = `Set-Location "${repoPath}"\n`;
-      ps += `git checkout main\n`;
-      ps += `git pull origin main --rebase --autostash\n`;
-      ps += `git add .\n`;
-      ps += `$status = (git status --porcelain)\n`;
-      ps += `if ($status) { git commit -m "${finalCommitMessage}" } else { Write-Host "No code modifications staged." }\n`;
-      
-      // Execute Python generator to rebuild Master & Individual CHANGELOGs
-      ps += `python "D:\\Projects\\update_all_configs.py"\n`;
-      ps += `git add .\n`;
-      ps += `$statusLog = (git status --porcelain)\n`;
-      ps += `if ($statusLog) { git commit -m "chore: rebuild CHANGELOG.md files [skip ci]" }\n`;
-      ps += `git push origin main\n`;
-
-      // Generate unique release tag if closing
-      if (stage === "closed" && wo) {
-        const tagClean = wo.replace(/\s+/g, '');
-        ps += `$releaseTag = "${tagClean}-CLOSED-$(Get-Date -Format 'yyyyMMdd-HHmmss')"\n`;
-        ps += `git tag -a "$releaseTag" -m "Release closed milestone for ${wo}"\n`;
-        ps += `git push origin "$releaseTag"\n`;
-      }
-
-      document.getElementById('suiteCommandDisplay').innerText = ps;
-    }
-
-    function copyPowerShellScript() {
-      const code = document.getElementById('suiteCommandDisplay').innerText;
-      navigator.clipboard.writeText(code).then(() => {
-        showToast("PowerShell script copied to clipboard! Paste it into PowerShell.");
+    // Filter by Work Order Status
+    function filterByWoStatus(status) {
+      currentStatusFilter = status;
+      ['ALL', 'CLOSED', 'TESTING', 'ACTIVE'].forEach(s => {
+        const btn = document.getElementById(`filter-pill-${s}`);
+        if (btn) {
+          if (s === status) {
+            btn.className = "px-3 py-1 rounded-full text-xs font-bold transition-all bg-white text-black shadow-md";
+          } else {
+            btn.className = "px-3 py-1 rounded-full text-xs font-bold transition-all bg-white/10 text-slate-300 hover:bg-white/20";
+          }
+        }
       });
-    }
-
-    function copyElementText(elementId) {
-      const text = document.getElementById(elementId).innerText;
-      navigator.clipboard.writeText(text).then(() => {
-        showToast("Commit message copied to clipboard!");
-      });
+      renderWorkOrdersTable();
+      renderCommitStream();
     }
 
     // ==========================================
-    // RENDER KPI CARDS
+    // RENDER KPI WIDGETS
     // ==========================================
     function renderKPIs() {
       const container = document.getElementById('kpi-container');
@@ -796,26 +761,21 @@
       const allWOs = REPOS_DATA.flatMap(r => r.work_orders);
       const totalWOs = allWOs.length;
       const closedWOs = allWOs.filter(w => w.status === 'CLOSED').length;
-      const latestRepoUpdate = REPOS_DATA.reduce((prev, curr) => {
-        const d1 = new Date(prev.latest_commit ? prev.latest_commit.date : 0);
-        const d2 = new Date(curr.latest_commit ? curr.latest_commit.date : 0);
-        return d1 > d2 ? prev : curr;
-      });
-
+      
       const kpis = [
-        { label: 'Active Repos', val: totalRepos, sub: 'All 6 Synced & Online', icon: 'fa-solid fa-code-fork', color: 'text-emerald-400' },
-        { label: 'Total Commits', val: totalCommits, sub: 'Across Production Branches', icon: 'fa-solid fa-code-commit', color: 'text-cyan-400' },
-        { label: 'Work Orders', val: totalWOs, sub: `${closedWOs} Closed / Validated`, icon: 'fa-solid fa-list-check', color: 'text-blue-400' },
-        { label: 'Releases Tagged', val: totalTags, sub: 'Git Version Milestones', icon: 'fa-solid fa-tag', color: 'text-amber-400' },
-        { label: 'Latest Commit', val: latestRepoUpdate.latest_commit ? latestRepoUpdate.latest_commit.short_hash : 'N/A', sub: latestRepoUpdate.name, icon: 'fa-solid fa-clock', color: 'text-emerald-400' },
-        { label: 'Lead Engineer', val: 'Paltro-SD01', sub: 'Active Contributor', icon: 'fa-solid fa-user-gear', color: 'text-purple-400' }
+        { label: 'Test Rigs', val: totalRepos, sub: 'All 6 Synchronized', icon: 'fa-solid fa-server', color: 'text-ios-blue' },
+        { label: 'Commits', val: totalCommits, sub: 'Production History', icon: 'fa-solid fa-code-commit', color: 'text-ios-indigo' },
+        { label: 'Work Orders', val: totalWOs, sub: `${closedWOs} Closed / Validated`, icon: 'fa-solid fa-list-check', color: 'text-ios-green' },
+        { label: 'Release Tags', val: totalTags, sub: 'Milestone Tags', icon: 'fa-solid fa-tag', color: 'text-ios-orange' },
+        { label: 'LabVIEW VIs', val: '394+', sub: 'VIs & Controls', icon: 'fa-solid fa-microchip', color: 'text-ios-yellow' },
+        { label: 'Engineer', val: 'Paltro-SD01', sub: 'Lead Developer', icon: 'fa-solid fa-user-check', color: 'text-ios-purple' }
       ];
 
       container.innerHTML = kpis.map(k => `
-        <div class="glass-panel rounded-2xl p-4 flex flex-col justify-between shadow-lg">
+        <div class="fluid-glass rounded-3xl p-4 flex flex-col justify-between shadow-lg">
           <div class="flex items-center justify-between mb-2">
             <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">${k.label}</span>
-            <i class="${k.icon} ${k.color} text-sm"></i>
+            <i class="${k.icon} ${k.color} text-xs"></i>
           </div>
           <div>
             <div class="text-xl font-extrabold text-white font-mono tracking-tight">${k.val}</div>
@@ -826,43 +786,89 @@
     }
 
     // ==========================================
-    // RENDER CHARTS
+    // RENDER MAIN CHART (Repos, Timeline, File Types)
     // ==========================================
-    function renderCharts() {
-      const ctxBar = document.getElementById('repoCommitChart').getContext('2d');
-      const labels = REPOS_DATA.map(r => r.name);
-      const commitData = REPOS_DATA.map(r => r.total_commits);
-      const tagData = REPOS_DATA.map(r => r.tags_count);
+    function switchChartMode(mode) {
+      currentChartMode = mode;
+      ['repos', 'monthly', 'files'].forEach(m => {
+        const btn = document.getElementById(`chart-btn-${m}`);
+        if (m === mode) {
+          btn.className = "px-3 py-1 rounded-xl font-bold transition-all pill-active";
+        } else {
+          btn.className = "px-3 py-1 rounded-xl font-semibold text-slate-400 hover:text-white transition-all";
+        }
+      });
+      renderMainAnalyticsChart();
+    }
 
-      commitChartInstance = new Chart(ctxBar, {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [
-            {
-              label: 'Total Commits',
-              data: commitData,
-              backgroundColor: 'rgba(16, 185, 129, 0.75)',
-              borderColor: '#10b981',
-              borderWidth: 1.5,
-              borderRadius: 8
-            },
-            {
-              label: 'Release Tags',
-              data: tagData,
-              backgroundColor: 'rgba(6, 182, 212, 0.75)',
-              borderColor: '#06b6d4',
-              borderWidth: 1.5,
-              borderRadius: 8
-            }
-          ]
-        },
+    function renderMainAnalyticsChart() {
+      const ctx = document.getElementById('mainAnalyticsChart').getContext('2d');
+      if (analyticsChart) analyticsChart.destroy();
+
+      let labels = [];
+      let datasets = [];
+
+      if (currentChartMode === 'repos') {
+        labels = REPOS_DATA.map(r => r.name);
+        datasets = [
+          {
+            label: 'Total Commits',
+            data: REPOS_DATA.map(r => r.total_commits),
+            backgroundColor: 'rgba(10, 132, 255, 0.75)',
+            borderColor: '#0A84FF',
+            borderWidth: 1.5,
+            borderRadius: 8
+          },
+          {
+            label: 'Release Tags',
+            data: REPOS_DATA.map(r => r.tags_count),
+            backgroundColor: 'rgba(48, 209, 88, 0.75)',
+            borderColor: '#30D158',
+            borderWidth: 1.5,
+            borderRadius: 8
+          }
+        ];
+      } else if (currentChartMode === 'monthly') {
+        labels = ['Aug 2026', 'Sep 2026', 'Oct 2026'];
+        datasets = [
+          {
+            label: 'Commits per Month',
+            data: [65, 156, 11],
+            borderColor: '#5E5CE6',
+            backgroundColor: 'rgba(94, 92, 230, 0.15)',
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: '#5E5CE6',
+            pointRadius: 5
+          }
+        ];
+      } else if (currentChartMode === 'files') {
+        labels = ['LabVIEW VIs (.vi/.ctl)', 'Documentation (.md/.pdf)', 'Config (.ini/.tdms)', 'Python (.py)', 'Other'];
+        datasets = [
+          {
+            label: 'Files Modified',
+            data: [394, 150, 25, 5, 211],
+            backgroundColor: [
+              'rgba(255, 214, 10, 0.8)',
+              'rgba(191, 90, 242, 0.8)',
+              'rgba(100, 210, 255, 0.8)',
+              'rgba(48, 209, 88, 0.8)',
+              'rgba(255, 69, 58, 0.8)'
+            ],
+            borderRadius: 8
+          }
+        ];
+      }
+
+      analyticsChart = new Chart(ctx, {
+        type: currentChartMode === 'monthly' ? 'line' : 'bar',
+        data: { labels, datasets },
         options: {
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
             legend: {
-              labels: { color: '#94a3b8', font: { family: 'Inter', size: 11, weight: '600' } }
+              labels: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans', size: 11, weight: '600' } }
             }
           },
           scales: {
@@ -877,7 +883,9 @@
           }
         }
       });
+    }
 
+    function renderWODoughnut() {
       const allWOs = REPOS_DATA.flatMap(r => r.work_orders);
       const closed = allWOs.filter(w => w.status === 'CLOSED').length;
       const active = allWOs.filter(w => w.status === 'ACTIVE').length;
@@ -890,20 +898,21 @@
       document.getElementById('count-testing').innerText = testing;
 
       const ctxPie = document.getElementById('woStatusChart').getContext('2d');
-      woChartInstance = new Chart(ctxPie, {
+      if (woChart) woChart.destroy();
+      woChart = new Chart(ctxPie, {
         type: 'doughnut',
         data: {
           labels: ['Closed / Validated', 'Active In Dev', 'In Testing', 'Discontinued'],
           datasets: [{
             data: [closed, active, testing, discontinued],
             backgroundColor: [
-              '#10b981',
-              '#3b82f6',
-              '#f59e0b',
-              '#ef4444'
+              '#30D158',
+              '#0A84FF',
+              '#FF9F0A',
+              '#FF453A'
             ],
-            borderWidth: 2,
-            borderColor: '#0b1120'
+            borderWidth: 3,
+            borderColor: '#05070D'
           }]
         },
         options: {
@@ -916,9 +925,9 @@
     }
 
     // ==========================================
-    // RENDER REPOSITORY CARDS
+    // RENDER COMPACT REPOSITORY CARDS
     // ==========================================
-    function renderRepoCards() {
+    function renderCompactRepoCards() {
       const grid = document.getElementById('repos-cards-grid');
       
       grid.innerHTML = REPOS_DATA.map(repo => {
@@ -926,91 +935,73 @@
         const isClosed = repo.latest_tag && repo.latest_tag.includes('CLOSED');
         
         return `
-          <div class="glass-panel glass-card-interactive rounded-3xl p-6 flex flex-col justify-between shadow-xl">
+          <div class="fluid-glass fluid-glass-card rounded-3xl p-5 flex flex-col justify-between shadow-xl">
             <div>
-              <!-- Repo Header -->
-              <div class="flex items-start justify-between mb-3.5">
+              <!-- Header -->
+              <div class="flex items-start justify-between mb-3">
                 <div class="flex items-center space-x-3">
-                  <div class="p-3 rounded-2xl bg-slate-900 border border-slate-800 text-emerald-400 shadow-inner">
-                    <i class="fa-solid fa-microchip text-lg"></i>
+                  <div class="h-10 w-10 rounded-2xl bg-white/10 flex items-center justify-center text-ios-blue shadow-inner border border-white/10">
+                    <i class="fa-solid fa-microchip text-base"></i>
                   </div>
                   <div>
-                    <h3 class="text-base font-extrabold text-white tracking-tight">${repo.name}</h3>
-                    <span class="text-xs text-slate-400">${repo.category}</span>
+                    <h3 class="text-sm font-extrabold text-white tracking-tight">${repo.name}</h3>
+                    <span class="text-[11px] text-slate-400 font-medium">${repo.category}</span>
                   </div>
                 </div>
-                <span class="px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold bg-slate-900 text-cyan-400 border border-slate-800">
+                <span class="px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold bg-white/10 text-ios-teal border border-white/10">
                   ${repo.branch}
                 </span>
               </div>
 
-              <p class="text-xs text-slate-300 line-clamp-2 mb-4 leading-relaxed">${repo.description}</p>
-
-              <!-- Local vs Git Source Path Box -->
-              <div class="mb-4 bg-slate-950/80 rounded-2xl p-3.5 border border-slate-800/80 space-y-2 text-xs font-mono shadow-inner">
-                <div class="flex items-center justify-between text-slate-400">
-                  <span class="flex items-center text-[11px] text-slate-500 uppercase tracking-wider font-bold">
-                    <i class="fa-solid fa-hard-drive mr-1.5 text-cyan-400"></i> Local Drive Path
+              <!-- Compact Path Accordion -->
+              <div class="mb-3 bg-black/40 rounded-2xl p-2.5 border border-white/10 text-xs font-mono">
+                <div class="flex items-center justify-between text-slate-400 text-[10px]">
+                  <span class="flex items-center font-bold text-slate-500 uppercase tracking-wider">
+                    <i class="fa-solid fa-hard-drive mr-1 text-ios-teal"></i> Workstation
                   </span>
                   <button onclick="copyRawText('${repo.local_path.replace(/\\/g, '\\\\')}')" class="text-slate-400 hover:text-white" title="Copy Path">
                     <i class="fa-regular fa-copy"></i>
                   </button>
                 </div>
-                <div class="text-slate-200 text-[11px] truncate select-all bg-slate-900/60 px-2.5 py-1.5 rounded-lg border border-slate-800/60">
+                <div class="text-slate-300 text-[11px] truncate select-all mt-0.5">
                   ${repo.local_path}
-                </div>
-
-                <div class="flex items-center justify-between text-slate-400 pt-1">
-                  <span class="flex items-center text-[11px] text-slate-500 uppercase tracking-wider font-bold">
-                    <i class="fa-solid fa-cloud-arrow-up mr-1.5 text-emerald-400"></i> Git Remote Push
-                  </span>
-                  <a href="${repo.github_url}" target="_blank" class="text-emerald-400 hover:underline text-[11px]">GitHub ↗</a>
-                </div>
-                <div class="text-slate-300 text-[11px] truncate select-all bg-slate-900/60 px-2.5 py-1.5 rounded-lg border border-slate-800/60">
-                  ${repo.push_remote}
                 </div>
               </div>
 
-              <!-- Version Status Banner -->
-              <div class="mb-4 flex items-center justify-between bg-slate-900/60 px-3.5 py-2.5 rounded-2xl border border-slate-800/80">
-                <div class="flex items-center space-x-2">
-                  <i class="fa-solid fa-tag text-amber-400 text-xs"></i>
-                  <span class="text-xs font-mono text-slate-300 font-semibold truncate max-w-[180px]">
-                    ${repo.latest_tag !== 'None' ? repo.latest_tag : 'No Releases Tagged'}
+              <!-- Release Status Tag Pill -->
+              <div class="mb-3 flex items-center justify-between bg-black/30 px-3 py-1.5 rounded-xl border border-white/5">
+                <div class="flex items-center space-x-1.5 text-xs truncate max-w-[200px]">
+                  <i class="fa-solid fa-tag text-ios-orange text-[10px]"></i>
+                  <span class="font-mono text-slate-300 text-[11px] truncate font-semibold">
+                    ${repo.latest_tag !== 'None' ? repo.latest_tag : 'No Tagged Release'}
                   </span>
                 </div>
-                <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full ${isClosed ? 'badge-closed' : 'badge-active'}">
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${isClosed ? 'badge-closed' : 'badge-active'}">
                   ${isClosed ? 'CLOSED' : (repo.latest_tag !== 'None' ? 'RELEASE' : 'DEV')}
                 </span>
               </div>
 
-              <!-- Latest Commit Summary -->
-              <div class="bg-slate-900/40 p-3.5 rounded-2xl border border-slate-800/50 mb-4">
-                <div class="flex items-center justify-between text-[11px] text-slate-400 mb-1">
-                  <span class="font-mono text-emerald-400 font-bold">${latestC.short_hash || '---'}</span>
+              <!-- Latest Commit -->
+              <div class="bg-black/30 p-2.5 rounded-xl border border-white/5 mb-3">
+                <div class="flex items-center justify-between text-[10px] text-slate-400 mb-0.5 font-mono">
+                  <span class="text-ios-green font-bold">${latestC.short_hash || '---'}</span>
                   <span>${formatDate(latestC.date)}</span>
                 </div>
                 <p class="text-xs text-slate-200 line-clamp-2 italic">"${latestC.subject || 'No commit recorded'}"</p>
               </div>
             </div>
 
-            <!-- Card Bottom Metrics & Actions -->
-            <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between">
-              <div class="flex items-center space-x-3 text-xs text-slate-400 font-mono">
-                <span class="flex items-center">
-                  <i class="fa-solid fa-code-commit mr-1.5 text-slate-500"></i>
-                  ${repo.total_commits}
-                </span>
-                <span class="flex items-center">
-                  <i class="fa-solid fa-folder-open mr-1.5 text-slate-500"></i>
-                  ${repo.work_orders.length} WOs
-                </span>
+            <!-- Bottom Stats & Actions -->
+            <div class="pt-3 border-t border-white/10 flex items-center justify-between text-xs">
+              <div class="flex items-center space-x-3 text-slate-400 font-mono text-[11px]">
+                <span><i class="fa-solid fa-code-commit mr-1 text-slate-500"></i>${repo.total_commits}</span>
+                <span><i class="fa-solid fa-folder-open mr-1 text-slate-500"></i>${repo.work_orders.length} WOs</span>
               </div>
-              <div class="flex items-center space-x-2">
-                <button onclick="inspectRepo('${repo.id}')" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-white border border-slate-700 transition-colors">
-                  Inspect Logs
+              <div class="flex items-center space-x-1.5">
+                <button onclick="inspectRepo('${repo.id}')" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-bold text-white border border-white/10 transition-colors">
+                  Inspect
                 </button>
-                <a href="${repo.github_url}" target="_blank" class="p-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 transition-colors">
+                <a href="${repo.github_url}" target="_blank" class="p-1.5 rounded-xl bg-ios-blue/15 hover:bg-ios-blue/30 text-ios-blue border border-ios-blue/30 transition-colors">
                   <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
                 </a>
               </div>
@@ -1038,6 +1029,12 @@
         });
       });
 
+      // Filter by Status Pill
+      if (currentStatusFilter !== 'ALL') {
+        items = items.filter(it => it.status === currentStatusFilter);
+      }
+
+      // Search Query
       if (searchQuery) {
         const q = searchQuery.toLowerCase();
         items = items.filter(it => 
@@ -1049,7 +1046,7 @@
       }
 
       if (items.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-slate-500">No work orders match the query.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-slate-500">No work orders match the filter.</td></tr>`;
         return;
       }
 
@@ -1060,29 +1057,29 @@
         else if (wo.status === 'DISCONTINUED') badgeClass = 'badge-discontinued';
 
         return `
-          <tr class="hover:bg-slate-900/60 transition-colors">
-            <td class="py-3.5 px-4 font-bold text-white flex items-center space-x-2">
-              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <tr class="hover:bg-white/5 transition-colors">
+            <td class="py-3 px-4 font-bold text-white flex items-center space-x-2">
+              <span class="w-2 h-2 rounded-full bg-ios-blue"></span>
               <span>${wo.repo}</span>
             </td>
-            <td class="py-3.5 px-4 font-mono font-medium text-cyan-300">
+            <td class="py-3 px-4 font-mono font-medium text-ios-teal">
               ${wo.name}
             </td>
-            <td class="py-3.5 px-4 text-center">
-              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold ${badgeClass}">
+            <td class="py-3 px-4 text-center">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${badgeClass}">
                 ${wo.status}
               </span>
             </td>
-            <td class="py-3.5 px-4 text-center font-mono text-slate-400">
+            <td class="py-3 px-4 text-center font-mono text-slate-400">
               ${wo.file_count > 0 ? wo.file_count : '—'}
             </td>
-            <td class="py-3.5 px-4 font-mono text-emerald-400 font-bold">
-              ${wo.last_commit_hash ? `<span class="bg-slate-900 px-2 py-0.5 rounded border border-slate-800">${wo.last_commit_hash}</span>` : '—'}
+            <td class="py-3 px-4 font-mono text-ios-green font-bold">
+              ${wo.last_commit_hash ? `<span class="bg-black/60 px-2 py-0.5 rounded border border-white/10">${wo.last_commit_hash}</span>` : '—'}
             </td>
-            <td class="py-3.5 px-4 font-mono text-slate-400 text-[11px]">
+            <td class="py-3 px-4 font-mono text-slate-400 text-[11px]">
               ${wo.last_commit_date || '—'}
             </td>
-            <td class="py-3.5 px-4 text-slate-300 max-w-xs truncate" title="${escapeHtml(wo.summary || '')}">
+            <td class="py-3 px-4 text-slate-300 max-w-xs truncate" title="${escapeHtml(wo.summary || '')}">
               ${wo.summary || 'Initial repository code'}
             </td>
           </tr>
@@ -1096,7 +1093,7 @@
     }
 
     // ==========================================
-    // RENDER COMMIT STREAM
+    // RENDER COMMIT STREAM WITH FILE BADGES
     // ==========================================
     function renderCommitStream() {
       const container = document.getElementById('commits-stream-list');
@@ -1137,43 +1134,55 @@
         const isClosedMilestone = c.subject.includes('[CLOSED]') || c.subject.toLowerCase().includes('closed');
         
         return `
-          <div class="p-4.5 rounded-2xl bg-slate-900/60 border border-slate-800/80 hover:border-slate-700 transition-all shadow-md">
+          <div class="p-4 rounded-2xl bg-black/40 border border-white/10 hover:border-white/20 transition-all shadow-md">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
               <div class="flex items-center space-x-2">
-                <span class="px-2.5 py-0.5 rounded-lg text-xs font-mono font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                <span class="px-2 py-0.5 rounded-lg text-xs font-mono font-bold bg-ios-blue/15 text-ios-blue border border-ios-blue/30">
                   ${c.repo}
                 </span>
-                <span class="px-2 py-0.5 rounded-lg text-xs font-mono bg-slate-800 text-cyan-400 font-bold border border-slate-700">
+                <span class="px-2 py-0.5 rounded-lg text-xs font-mono bg-white/10 text-slate-200 font-bold border border-white/10">
                   ${c.short_hash}
                 </span>
-                ${isClosedMilestone ? '<span class="badge-closed px-2.5 py-0.5 rounded-full text-[10px] font-bold">MILESTONE CLOSED</span>' : ''}
+                ${isClosedMilestone ? '<span class="badge-closed px-2 py-0.5 rounded-full text-[10px] font-bold">MILESTONE CLOSED</span>' : ''}
               </div>
               <div class="flex items-center space-x-3 text-xs text-slate-400">
-                <span class="flex items-center">
-                  <i class="fa-solid fa-user-circle mr-1 text-slate-500"></i> ${c.author}
-                </span>
-                <span class="flex items-center font-mono text-slate-400">
-                  <i class="fa-regular fa-clock mr-1 text-slate-500"></i> ${formatDate(c.date)}
-                </span>
+                <span><i class="fa-solid fa-user-circle mr-1 text-slate-500"></i> ${c.author}</span>
+                <span class="font-mono text-slate-400"><i class="fa-regular fa-clock mr-1 text-slate-500"></i> ${formatDate(c.date)}</span>
               </div>
             </div>
 
-            <p class="text-xs text-slate-200 font-semibold mb-3 leading-relaxed">${c.subject}</p>
+            <p class="text-xs text-slate-200 font-semibold mb-3">${c.subject}</p>
 
-            <!-- Files Modified Badges -->
-            <div class="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-800/60">
+            <!-- Visual File Type Badges -->
+            <div class="flex flex-wrap items-center gap-1.5 pt-2 border-t border-white/10">
               <span class="text-[11px] text-slate-400 mr-1 flex items-center">
-                <i class="fa-regular fa-file-lines mr-1 text-cyan-400"></i> ${c.files_count} files:
+                <i class="fa-regular fa-file-lines mr-1 text-ios-teal"></i> ${c.files_count} files:
               </span>
-              ${c.files.slice(0, 5).map(f => `
-                <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-mono bg-slate-950 text-slate-300 border border-slate-800">
-                  <span class="font-bold mr-1 ${f.status === 'M' ? 'text-amber-400' : (f.status === 'A' ? 'text-emerald-400' : 'text-red-400')}">${f.status}</span>
-                  ${getBasename(f.path)}
-                </span>
-              `).join('')}
-              ${c.files_count > 5 ? `<span class="text-[10px] text-slate-400 font-mono">+${c.files_count - 5} more</span>` : ''}
+              ${c.files.slice(0, 6).map(f => {
+                const p = f.path.toLowerCase();
+                let badgeStyle = 'bg-white/10 text-slate-300 border-white/10';
+                let icon = 'fa-file';
+                if (p.endsWith('.vi') || p.endsWith('.ctl')) {
+                  badgeStyle = 'file-badge-vi';
+                  icon = 'fa-microchip';
+                } else if (p.endsWith('.py')) {
+                  badgeStyle = 'file-badge-py';
+                  icon = 'fa-python';
+                } else if (p.endsWith('.md') || p.endsWith('.pdf')) {
+                  badgeStyle = 'file-badge-doc';
+                  icon = 'fa-file-lines';
+                }
+                return `
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-mono ${badgeStyle}">
+                    <i class="fa-solid ${icon} mr-1 text-[9px]"></i>
+                    <span class="font-bold mr-1 ${f.status === 'M' ? 'text-ios-orange' : (f.status === 'A' ? 'text-ios-green' : 'text-ios-red')}">${f.status}</span>
+                    ${getBasename(f.path)}
+                  </span>
+                `;
+              }).join('')}
+              ${c.files_count > 6 ? `<span class="text-[10px] text-slate-400 font-mono">+${c.files_count - 6} more</span>` : ''}
 
-              <button onclick='openCommitModal(${JSON.stringify(c).replace(/'/g, "&#39;")})' class="ml-auto text-xs text-emerald-400 hover:text-emerald-300 font-bold flex items-center space-x-1">
+              <button onclick='openCommitModal(${JSON.stringify(c).replace(/'/g, "&#39;")})' class="ml-auto text-xs text-ios-blue hover:underline font-bold flex items-center space-x-1">
                 <span>Inspect Files</span>
                 <i class="fa-solid fa-chevron-right text-[10px]"></i>
               </button>
@@ -1191,10 +1200,10 @@
       
       container.innerHTML = REPOS_DATA.map(repo => {
         return `
-          <div class="p-5 rounded-3xl bg-slate-900/60 border border-slate-800/80 space-y-4 shadow-xl">
+          <div class="fluid-glass rounded-3xl p-5 space-y-4 shadow-xl">
             <div class="flex items-center justify-between">
               <div class="flex items-center space-x-3">
-                <div class="h-10 w-10 rounded-2xl bg-slate-800 flex items-center justify-center text-emerald-400 shadow-inner">
+                <div class="h-10 w-10 rounded-2xl bg-white/10 flex items-center justify-center text-ios-green shadow-inner">
                   <i class="fa-solid fa-hard-drive"></i>
                 </div>
                 <div>
@@ -1202,42 +1211,42 @@
                   <span class="text-xs text-slate-400">${repo.category}</span>
                 </div>
               </div>
-              <span class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-slate-800 text-emerald-400 border border-slate-700">
+              <span class="px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-white/10 text-ios-green border border-white/10">
                 ${repo.branch} branch
               </span>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs font-mono">
-              <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800/80">
+              <div class="bg-black/50 p-3.5 rounded-2xl border border-white/10">
                 <div class="text-[10px] uppercase font-bold text-slate-500 mb-1 flex items-center justify-between">
                   <span>Local Workstation Origin Path</span>
                   <button onclick="copyRawText('${repo.local_path.replace(/\\/g, '\\\\')}')" class="text-slate-400 hover:text-white">
                     <i class="fa-regular fa-copy"></i>
                   </button>
                 </div>
-                <div class="text-cyan-300 font-bold truncate select-all">
+                <div class="text-ios-teal font-bold truncate select-all">
                   ${repo.local_path}
                 </div>
               </div>
 
-              <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800/80">
+              <div class="bg-black/50 p-3.5 rounded-2xl border border-white/10">
                 <div class="text-[10px] uppercase font-bold text-slate-500 mb-1 flex items-center justify-between">
                   <span>Remote GitHub Repository</span>
-                  <a href="${repo.github_url}" target="_blank" class="text-emerald-400 hover:underline">
+                  <a href="${repo.github_url}" target="_blank" class="text-ios-blue hover:underline">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i>
                   </a>
                 </div>
-                <div class="text-emerald-300 font-bold truncate select-all">
+                <div class="text-ios-green font-bold truncate select-all">
                   ${repo.github_url}
                 </div>
               </div>
             </div>
 
-            <div class="text-xs bg-slate-950/40 p-3.5 rounded-2xl border border-slate-800/50">
-              <span class="text-slate-400 block mb-2 font-bold uppercase text-[10px] tracking-wider">Subdirectories & Work Orders Included:</span>
+            <div class="text-xs bg-black/30 p-3.5 rounded-2xl border border-white/5">
+              <span class="text-slate-400 block mb-2 font-bold uppercase text-[10px] tracking-wider">Work Orders & Folders:</span>
               <div class="flex flex-wrap gap-2 font-mono text-[11px]">
                 ${repo.work_orders.map(w => `
-                  <span class="px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-200 border border-slate-700">
+                  <span class="px-2.5 py-1 rounded-xl bg-white/5 text-slate-200 border border-white/10">
                     📂 ${w.name}
                   </span>
                 `).join('')}
@@ -1246,6 +1255,71 @@
           </div>
         `;
       }).join('');
+    }
+
+    // ==========================================
+    // WORK ORDER SUITE AUTOMATOR SCRIPT BUILDER
+    // ==========================================
+    function quickFillWo(woName) {
+      document.getElementById('suiteWoScope').value = woName;
+      generateSuiteScript();
+    }
+
+    function generateSuiteScript() {
+      const repoPath = document.getElementById('suiteRepoSelect').value;
+      const wo = document.getElementById('suiteWoScope').value.trim();
+      const stage = document.getElementById('suiteWoStage').value;
+      const type = document.getElementById('suiteChangeType').value;
+      const desc = document.getElementById('suiteCommitDesc').value.trim() || "Updated work order files";
+
+      let stageTag = "";
+      let prefix = type;
+
+      if (stage === "closed") stageTag = "[CLOSED]";
+      else if (stage === "reopen") { stageTag = "[REOPENED]"; prefix = "fix"; }
+      else if (stage === "testing") stageTag = "[TESTING]";
+      else if (stage === "integration") stageTag = "[INTEGRATION]";
+
+      const woScopeStr = wo ? `(${wo})` : '';
+      const stageTagStr = stageTag ? ` ${stageTag}` : '';
+      const finalCommitMessage = `${prefix}${woScopeStr}:${stageTagStr} ${desc}`;
+
+      document.getElementById('suiteLiveCommitPreview').innerText = finalCommitMessage;
+
+      let ps = `Set-Location "${repoPath}"\n`;
+      ps += `git checkout main\n`;
+      ps += `git pull origin main --rebase --autostash\n`;
+      ps += `git add .\n`;
+      ps += `$status = (git status --porcelain)\n`;
+      ps += `if ($status) { git commit -m "${finalCommitMessage}" } else { Write-Host "No modifications staged." }\n`;
+      ps += `python "D:\\Projects\\update_all_configs.py"\n`;
+      ps += `git add .\n`;
+      ps += `$statusLog = (git status --porcelain)\n`;
+      ps += `if ($statusLog) { git commit -m "chore: rebuild CHANGELOG.md files [skip ci]" }\n`;
+      ps += `git push origin main\n`;
+
+      if (stage === "closed" && wo) {
+        const tagClean = wo.replace(/\s+/g, '');
+        ps += `$releaseTag = "${tagClean}-CLOSED-$(Get-Date -Format 'yyyyMMdd-HHmmss')"\n`;
+        ps += `git tag -a "$releaseTag" -m "Release closed milestone for ${wo}"\n`;
+        ps += `git push origin "$releaseTag"\n`;
+      }
+
+      document.getElementById('suiteCommandDisplay').innerText = ps;
+    }
+
+    function copyPowerShellScript() {
+      const code = document.getElementById('suiteCommandDisplay').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        showToast("PowerShell script copied to clipboard!");
+      });
+    }
+
+    function copyElementText(id) {
+      const txt = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(txt).then(() => {
+        showToast("Commit message copied!");
+      });
     }
 
     // Modal logic
@@ -1258,28 +1332,29 @@
       document.getElementById('modal-github-link').href = `${commit.gh_url}/commit/${commit.hash}`;
 
       const filesList = document.getElementById('modal-files-list');
-      filesList.innerHTML = commit.files.map(f => `
-        <div class="flex items-center justify-between py-1 border-b border-slate-800/40 last:border-0">
-          <div class="flex items-center space-x-2 truncate">
-            <span class="font-bold ${f.status === 'M' ? 'text-amber-400' : (f.status === 'A' ? 'text-emerald-400' : 'text-red-400')}">[${f.status}]</span>
-            <span class="text-slate-200 truncate">${f.path}</span>
+      filesList.innerHTML = commit.files.map(f => {
+        const p = f.path.toLowerCase();
+        let icon = 'fa-file';
+        if (p.endsWith('.vi') || p.endsWith('.ctl')) icon = 'fa-microchip';
+        else if (p.endsWith('.py')) icon = 'fa-python';
+        else if (p.endsWith('.md') || p.endsWith('.pdf')) icon = 'fa-file-lines';
+
+        return `
+          <div class="flex items-center justify-between py-1 border-b border-white/5 last:border-0">
+            <div class="flex items-center space-x-2 truncate">
+              <i class="fa-solid ${icon} text-[10px] text-slate-400"></i>
+              <span class="font-bold ${f.status === 'M' ? 'text-ios-orange' : (f.status === 'A' ? 'text-ios-green' : 'text-ios-red')}">[${f.status}]</span>
+              <span class="text-slate-200 truncate">${f.path}</span>
+            </div>
           </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
 
       document.getElementById('commit-modal').classList.remove('hidden');
     }
 
     function closeCommitModal() {
       document.getElementById('commit-modal').classList.add('hidden');
-    }
-
-    function openHostingModal() {
-      document.getElementById('hosting-modal').classList.remove('hidden');
-    }
-
-    function closeHostingModal() {
-      document.getElementById('hosting-modal').classList.add('hidden');
     }
 
     function inspectRepo(repoId) {
@@ -1297,6 +1372,8 @@
     function resetFilters() {
       document.getElementById('global-search').value = '';
       searchQuery = '';
+      currentStatusFilter = 'ALL';
+      filterByWoStatus('ALL');
       document.getElementById('wo-repo-filter').value = 'ALL';
       document.getElementById('commit-repo-filter').value = 'ALL';
       renderWorkOrdersTable();
