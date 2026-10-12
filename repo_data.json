@@ -1,0 +1,374 @@
+{
+  "LAB-IQ-150": {
+    "name": "LAB-IQ-150",
+    "description": "High Frequency Reciprocating / Tribology Rig Controller",
+    "local_path": "D:\\Projects\\Software Repo\\LAB-IQ 150",
+    "github_url": "https://github.com/Paltro-SD01/LAB-IQ-150",
+    "default_branch": "main",
+    "total_commits": 61,
+    "latest_tag": "WO2476-CLOSED-20261012-131550",
+    "tags": [
+      "WO2476-CLOSED-20261012-131550"
+    ],
+    "work_orders": [
+      "WO 2476"
+    ],
+    "subdirectories": [
+      "lib",
+      "WO 2476"
+    ],
+    "latest_commit": {
+      "hash": "e676d09f5586f782a8699c8da4285d5ea250fc88",
+      "short_hash": "e676d09",
+      "author": "Paltro-SD01",
+      "date": "2026-10-12 13:15:43 +0530",
+      "subject": "chore: rebuild CHANGELOG.md files [skip ci]",
+      "body": "",
+      "files_count": 0,
+      "files": []
+    },
+    "commits": [
+      {
+        "hash": "e676d09f5586f782a8699c8da4285d5ea250fc88",
+        "short_hash": "e676d09",
+        "author": "Paltro-SD01",
+        "date": "2026-10-12 13:15:43 +0530",
+        "subject": "chore: rebuild CHANGELOG.md files [skip ci]",
+        "body": "",
+        "files_count": 0,
+        "files": []
+      },
+      {
+        "hash": "560a01f613b817358b518ddce8687b31e2468144",
+        "short_hash": "560a01f",
+        "author": "Paltro-SD01",
+        "date": "2026-09-11 18:38:37 +0530",
+        "subject": "auto commit check",
+        "body": "",
+        "files_count": 0,
+        "files": []
+      },
+      {
+        "hash": "12be8a10a14b8b5aa84e097b23b40fffa3578153",
+        "short_hash": "12be8a1",
+        "author": "Paltro-SD01",
+        "date": "2026-08-27 17:50:38 +0530",
+        "subject": "Updated logic for single graph for Force and Torque",
+        "body": "",
+        "files_count": 0,
+        "files": []
+      },
+      {
+        "hash": "463533338f8c78c3ab5c7cb93f1150b1e0ab84de",
+        "short_hash": "4635333",
+        "author": "Paltro-SD01",
+        "date": "2026-08-20 18:49:33 +0530",
+        "subject": "lOGIC CHANGED FOR SWAY AND PID VARIABLES",
+        "body": "",
+        "files_count": 0,
+        "files": []
+      }
+    ]
+  },
+  "BOCLE": {
+    "name": "BOCLE",
+    "description": "Ball-on-Cylinder Lubricity Evaluator Testing Software",
+    "local_path": "D:\\Projects\\Software Repo\\BOCLE",
+    "github_url": "https://github.com/Paltro-SD01/BOCLE",
+    "default_branch": "main",
+    "total_commits": 53,
+    "latest_tag": "WO2485-CLOSED-20260930-145929",
+    "tags": [
+      "WO2485-CLOSED-20260930-145929",
+      "WO2485-CLOSED-20260929-203949",
+      "WO2485-CLOSED-20260929-202635",
+      "WO2485-CLOSED-20260929-191345",
+      "WO2485-CLOSED-20260929-191104",
+      "WO2485-CLOSED-20260929-185305",
+      "WO2479-CLOSED-20260929-1833"
+    ],
+    "work_orders": [
+      "WO 2411",
+      "WO 2414",
+      "WO 2418 & 2419",
+      "WO 2427",
+      "WO 2427  internal",
+      "WO 2442",
+      "WO 2443",
+      "WO 2446 Discontinued",
+      "WO 2446 Replacement Machine",
+      "WO 2451",
+      "WO 2452",
+      "WO 2453",
+      "WO 2462",
+      "WO 2467",
+      "WO 2479",
+      "WO 2482",
+      "WO 2485"
+    ],
+    "subdirectories": [
+      "WO 2411",
+      "WO 2414",
+      "WO 2418 & 2419",
+      "WO 2427",
+      "WO 2427  internal",
+      "WO 2442",
+      "WO 2443",
+      "WO 2446 Discontinued",
+      "WO 2446 Replacement Machine",
+      "WO 2451",
+      "WO 2452",
+      "WO 2453",
+      "WO 2462",
+      "WO 2467",
+      "WO 2479",
+      "WO 2482",
+      "WO 2485"
+    ],
+    "latest_commit": {
+      "hash": "02caa588d754cad3d5e7f15aeb83ab4d9f377a39",
+      "short_hash": "02caa58",
+      "author": "Paltro-SD01",
+      "date": "2026-09-30 14:59:25 +0530",
+      "subject": "chore: rebuild CHANGELOG.md files [skip ci]",
+      "body": "",
+      "files_count": 0,
+      "files": []
+    },
+    "commits": [
+      {
+        "hash": "02caa588d754cad3d5e7f15aeb83ab4d9f377a39",
+        "short_hash": "02caa58",
+        "author": "Paltro-SD01",
+        "date": "2026-09-30 14:59:25 +0530",
+        "subject": "chore: rebuild CHANGELOG.md files [skip ci]",
+        "body": "",
+        "files_count": 0,
+        "files": []
+      },
+      {
+        "hash": "0e580e97316e52855083e16dd550935091199230",
+        "short_hash": "0e580e9",
+        "author": "Paltro-SD01",
+        "date": "2026-09-11 18:40:08 +0530",
+        "subject": "Auto Git Update check",
+        "body": "",
+        "files_count": 0,
+        "files": []
+      },
+      {
+        "hash": "5df8e6d8a220088605f6496b3a138f3d0e33dcdd",
+        "short_hash": "5df8e6d",
+        "author": "Paltro-SD01",
+        "date": "2026-08-26 18:45:51 +0530",
+        "subject": "Git Update",
+        "body": "",
+        "files_count": 0,
+        "files": []
+      },
+      {
+        "hash": "650512fd9a6ec48af018cd65ad441541297add79",
+        "short_hash": "650512f",
+        "author": "github-actions[bot]",
+        "date": "2026-08-19 13:47:03 +0000",
+        "subject": "docs: Auto-update commit log [skip ci]",
+        "body": "",
+        "files_count": 0,
+        "files": []
+      },
+      {
+        "hash": "db5cc0d201af67052a896ed2afda0c3c2d5235ef",
+        "short_hash": "db5cc0d",
+        "author": "Paltro-SD01",
+        "date": "2026-08-19 19:12:21 +0530",
+        "subject": "WORKFLOW SCRIPT ADDED",
+        "body": "",
+        "files_count": 0,
+        "files": []
+      }
+    ]
+  },
+  "HFRR-ADV": {
+    "name": "HFRR-ADV",
+    "description": "HFRR Advanced High-Precision Test Control Suite",
+    "local_path": "D:\\Projects\\Software Repo\\LAB-IQ\\HFRR Adv",
+    "github_url": "https://github.com/Paltro-SD01/HFRR-ADV",
+    "default_branch": "main",
+    "total_commits": 33,
+    "latest_tag": null,
+    "tags": [],
+    "work_orders": [
+      "WO 2465",
+      "WO 2472",
+      "WO 2480"
+    ],
+    "subdirectories": [
+      "data",
+      "DEMO CODE",
+      "WO 2465",
+      "WO 2472",
+      "WO 2480"
+    ],
+    "latest_commit": {
+      "hash": "af0767f77a31634a9b60ecceb5b4f0495c563c60",
+      "short_hash": "af0767f",
+      "author": "Paltro-SD01",
+      "date": "2026-10-10 11:04:40 +0530",
+      "subject": "chore: rebuild CHANGELOG.md files [skip ci]",
+      "body": "",
+      "files_count": 0,
+      "files": []
+    },
+    "commits": [
+      {
+        "hash": "af0767f77a31634a9b60ecceb5b4f0495c563c60",
+        "short_hash": "af0767f",
+        "author": "Paltro-SD01",
+        "date": "2026-10-10 11:04:40 +0530",
+        "subject": "chore: rebuild CHANGELOG.md files [skip ci]",
+        "body": "",
+        "files_count": 0,
+        "files": []
+      }
+    ]
+  },
+  "LAB-IQ-350": {
+    "name": "LAB-IQ-350",
+    "description": "LAB-IQ 350 Tribology & Mechanical Test Platform",
+    "local_path": "D:\\Projects\\Software Repo\\LAB-IQ 350",
+    "github_url": "https://github.com/Paltro-SD01/LAB-IQ-350",
+    "default_branch": "main",
+    "total_commits": 28,
+    "latest_tag": "WO2394-CLOSED-20261008-162105",
+    "tags": [
+      "WO2394-CLOSED-20261008-162105"
+    ],
+    "work_orders": [
+      "WO 2203",
+      "WO 2394"
+    ],
+    "subdirectories": [
+      "Controls",
+      "Sub VIs",
+      "WO 2203",
+      "WO 2394"
+    ],
+    "latest_commit": {
+      "hash": "1c56277bdb7ad8c2bede9bd12b8afbfb81639010",
+      "short_hash": "1c56277",
+      "author": "Paltro-SD01",
+      "date": "2026-10-08 16:20:58 +0530",
+      "subject": "chore: rebuild CHANGELOG.md files [skip ci]",
+      "body": "",
+      "files_count": 0,
+      "files": []
+    },
+    "commits": [
+      {
+        "hash": "1c56277bdb7ad8c2bede9bd12b8afbfb81639010",
+        "short_hash": "1c56277",
+        "author": "Paltro-SD01",
+        "date": "2026-10-08 16:20:58 +0530",
+        "subject": "chore: rebuild CHANGELOG.md files [skip ci]",
+        "body": "",
+        "files_count": 0,
+        "files": []
+      },
+      {
+        "hash": "f2510dc6c795c4fdf44ccde20c5b2d6dbc554300",
+        "short_hash": "f2510dc",
+        "author": "Paltro-SD01",
+        "date": "2026-09-11 18:40:46 +0530",
+        "subject": "auto git check",
+        "body": "",
+        "files_count": 0,
+        "files": []
+      }
+    ]
+  },
+  "B2V2": {
+    "name": "B2V2",
+    "description": "B2V2 Automation & Multi-Axis Motion Control Software",
+    "local_path": "D:\\Projects\\Software Repo\\LAB-IQ\\B2V2",
+    "github_url": "https://github.com/Paltro-SD01/B2V2",
+    "default_branch": "main",
+    "total_commits": 31,
+    "latest_tag": null,
+    "tags": [],
+    "work_orders": [
+      "WO 2470"
+    ],
+    "subdirectories": [
+      "Trial Code",
+      "WO 2470"
+    ],
+    "latest_commit": {
+      "hash": "84d28f3a05b55b1bfe2b7987f016d1cc895e351a",
+      "short_hash": "84d28f3",
+      "author": "Paltro-SD01",
+      "date": "2026-09-29 17:54:16 +0530",
+      "subject": "chore: update changelog files",
+      "body": "",
+      "files_count": 0,
+      "files": []
+    },
+    "commits": [
+      {
+        "hash": "84d28f3a05b55b1bfe2b7987f016d1cc895e351a",
+        "short_hash": "84d28f3",
+        "author": "Paltro-SD01",
+        "date": "2026-09-29 17:54:16 +0530",
+        "subject": "chore: update changelog files",
+        "body": "",
+        "files_count": 0,
+        "files": []
+      }
+    ]
+  },
+  "AIRJET": {
+    "name": "AIRJET",
+    "description": "Airjet Erosion & Fluid Dynamic Testing Rig",
+    "local_path": "D:\\Projects\\Software Repo\\LAB-IQ\\Airjet",
+    "github_url": "https://github.com/Paltro-SD01/AIRJET",
+    "default_branch": "main",
+    "total_commits": 26,
+    "latest_tag": null,
+    "tags": [],
+    "work_orders": [],
+    "subdirectories": [
+      "Erosion Tester"
+    ],
+    "latest_commit": {
+      "hash": "dabcb8aea39792d1f4c116c04d84be47519eb9c9",
+      "short_hash": "dabcb8a",
+      "author": "Paltro-SD01",
+      "date": "2026-09-29 17:54:12 +0530",
+      "subject": "chore: update changelog files",
+      "body": "",
+      "files_count": 0,
+      "files": []
+    },
+    "commits": [
+      {
+        "hash": "dabcb8aea39792d1f4c116c04d84be47519eb9c9",
+        "short_hash": "dabcb8a",
+        "author": "Paltro-SD01",
+        "date": "2026-09-29 17:54:12 +0530",
+        "subject": "chore: update changelog files",
+        "body": "",
+        "files_count": 0,
+        "files": []
+      },
+      {
+        "hash": "5fb633e68f5c775b0e05a347a5895d1711d76d19",
+        "short_hash": "5fb633e",
+        "author": "Paltro-SD01",
+        "date": "2026-09-11 18:40:37 +0530",
+        "subject": "Auto Git check",
+        "body": "",
+        "files_count": 0,
+        "files": []
+      }
+    ]
+  }
+}
