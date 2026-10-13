@@ -1,0 +1,42 @@
+name: Auto-Sync Telemetry Data
+
+on:
+  schedule:
+    # Run automatically every day at 00:00 UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Run Telemetry Refresh
+        run: |
+          python refresh_data.py || true
+
+      - name: Commit & Push Changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action Bot"
+          git add data.js || true
+          if git diff --staged --quiet; then
+            echo "No telemetry changes detected."
+          else
+            git commit -m "chore: auto-sync telemetry and work order metrics [skip ci]"
+            git push origin main
+          fi

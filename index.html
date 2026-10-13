@@ -9,6 +9,10 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jsPDF & XLSX CDNs for Report Exporting -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- SF Pro / Inter Typography -->
@@ -411,10 +415,18 @@
             <p class="text-xs text-slate-400">All engineering work orders across LabVIEW controller versions with current milestone and commit details</p>
           </div>
           
-          <!-- Category Filter -->
-          <div class="flex items-center space-x-2">
-            <span class="text-xs text-slate-400">Filter Repo:</span>
-            <select id="wo-repo-filter" onchange="filterWorkOrders()" class="bg-black/40 border border-white/10 text-xs rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-ios-blue font-semibold">
+          <!-- Category Filter & Export Buttons -->
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="exportEngineeringPDF()" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-ios-blue to-ios-indigo hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold shadow-md transition-all active:scale-95">
+              <i class="fa-solid fa-file-pdf"></i>
+              <span>Export PDF Report</span>
+            </button>
+            <button onclick="exportEngineeringExcel()" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-ios-green/15 hover:bg-ios-green/25 text-ios-green border border-ios-green/30 text-xs font-bold transition-all active:scale-95">
+              <i class="fa-solid fa-file-excel"></i>
+              <span>Export Excel / CSV</span>
+            </button>
+            <span class="text-xs text-slate-400 ml-1">Filter Repo:</span>
+            <select id="wo-repo-filter" onchange="filterWorkOrders()" class="bg-black/40 border border-white/10 text-xs rounded-xl px-3.5 py-1.5 text-white focus:outline-none focus:border-ios-blue font-semibold">
               <option value="ALL">All Repositories (6)</option>
               <option value="LAB-IQ-150">LAB-IQ-150</option>
               <option value="BOCLE">BOCLE</option>
@@ -437,6 +449,7 @@
                 <th class="py-3 px-4">Last Commit Hash</th>
                 <th class="py-3 px-4">Commit Date & Time</th>
                 <th class="py-3 px-4">Summary / Milestone</th>
+                <th class="py-3 px-4 text-center">Release Artifact</th>
               </tr>
             </thead>
             <tbody id="work-orders-tbody" class="divide-y divide-white/5 text-xs">
@@ -1082,6 +1095,16 @@
             <td class="py-3 px-4 text-slate-300 max-w-xs truncate" title="${escapeHtml(wo.summary || '')}">
               ${wo.summary || 'Initial repository code'}
             </td>
+            <td class="py-3 px-4 text-center">
+              ${wo.status === 'CLOSED' ? `
+                <button onclick="downloadReleaseModal('${wo.repo}', '${wo.name}', '${wo.last_commit_hash}')" class="px-2.5 py-1 rounded-lg bg-ios-green/15 hover:bg-ios-green/25 text-ios-green border border-ios-green/30 text-[11px] font-bold inline-flex items-center space-x-1 shadow-sm transition-all">
+                  <i class="fa-solid fa-download text-[10px]"></i>
+                  <span>Build</span>
+                </button>
+              ` : `
+                <span class="text-slate-500 font-mono text-[10px]">In Dev</span>
+              `}
+            </td>
           </tr>
         `;
       }).join('');
@@ -1320,6 +1343,120 @@
       navigator.clipboard.writeText(txt).then(() => {
         showToast("Commit message copied!");
       });
+    }
+
+    
+    // ==========================================
+    // EXPORT PDF & EXCEL ENGINEERING REPORTS
+    // ==========================================
+    function exportEngineeringPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF('landscape');
+
+      doc.setFillColor(5, 7, 13);
+      doc.rect(0, 0, 297, 210, 'F');
+
+      doc.setTextColor(10, 132, 255);
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Paltro-SD01 | Engineering & Work Order Telemetry Report', 14, 18);
+
+      doc.setTextColor(200, 200, 200);
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`Generated: ${new Date().toLocaleString()} | Lead Engineer: Paltro-SD01 | Platform: NI LabVIEW Real-Time`, 14, 25);
+
+      const rows = [];
+      REPOS_DATA.forEach(r => {
+        r.work_orders.forEach(w => {
+          rows.push([
+            r.name,
+            w.name,
+            w.status,
+            w.file_count > 0 ? w.file_count : '--',
+            w.last_commit_hash || '--',
+            w.last_commit_date || '--',
+            w.summary || 'Initial repository code'
+          ]);
+        });
+      });
+
+      doc.autoTable({
+        startY: 32,
+        head: [['Repository', 'Work Order', 'Status', 'Files', 'Commit', 'Date & Time', 'Milestone Summary']],
+        body: rows,
+        theme: 'grid',
+        headStyles: { fillColor: [10, 132, 255], textColor: [255, 255, 255], fontStyle: 'bold' },
+        styles: { fontSize: 8, textColor: [240, 240, 240], fillColor: [20, 24, 38], lineColor: [40, 44, 60] },
+        alternateRowStyles: { fillColor: [15, 19, 30] }
+      });
+
+      doc.save(`Paltro-WorkOrder-Executive-Report-${new Date().toISOString().slice(0,10)}.pdf`);
+      showToast('Executive PDF Report downloaded!');
+    }
+
+    function exportEngineeringExcel() {
+      const rows = [];
+      REPOS_DATA.forEach(r => {
+        r.work_orders.forEach(w => {
+          rows.push({
+            'Repository': r.name,
+            'Instrument Category': r.category,
+            'Work Order Folder': w.name,
+            'Lifecycle Status': w.status,
+            'Files Tracked': w.file_count,
+            'Commit Hash': w.last_commit_hash,
+            'Commit Timestamp': w.last_commit_date,
+            'Summary & Milestone': w.summary,
+            'Local Workstation Path': w.path,
+            'GitHub Remote URL': r.github_url
+          });
+        });
+      });
+
+      const ws = XLSX.utils.json_to_sheet(rows);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Work Orders');
+      XLSX.writeFile(wb, `Paltro-WorkOrders-Consolidated-${new Date().toISOString().slice(0,10)}.xlsx`);
+      showToast('Consolidated Excel sheet downloaded!');
+    }
+
+    function downloadReleaseModal(repoName, woName, commitHash) {
+      const modal = document.getElementById('release-download-modal');
+      document.getElementById('dl-modal-title').innerText = `${repoName} - ${woName}`;
+      document.getElementById('dl-modal-desc').innerText = `Production release binary and validated LabVIEW VI executable compiled under commit ${commitHash || 'latest'}.`;
+      
+      const linksContainer = document.getElementById('dl-modal-links');
+      
+      const artifacts = [
+        { label: 'Validated Executable (.exe)', icon: 'fa-cube', note: 'Precompiled standalone LabVIEW binary for Windows' },
+        { label: 'Consolidated Work Order CHANGELOG (.md)', icon: 'fa-file-lines', note: 'Complete revision history and validated test logs' },
+        { label: 'Source Code Archive (.zip)', icon: 'fa-file-zipper', note: 'Full project tree with SubVIs, Controls, and FGVs' }
+      ];
+
+      linksContainer.innerHTML = artifacts.map(a => `
+        <div class="flex items-center justify-between p-3 rounded-2xl bg-black/40 border border-white/10 hover:border-white/20 transition-all">
+          <div class="flex items-center space-x-3">
+            <div class="h-9 w-9 rounded-xl bg-white/10 flex items-center justify-center text-ios-green">
+              <i class="fa-solid ${a.icon}"></i>
+            </div>
+            <div>
+              <div class="text-xs font-bold text-white">${a.label}</div>
+              <div class="text-[10px] text-slate-400">${a.note}</div>
+            </div>
+          </div>
+          <a href="https://github.com/Paltro-SD01/${repoName}/archive/refs/heads/main.zip" target="_blank" class="px-3 py-1.5 rounded-xl bg-ios-green/15 hover:bg-ios-green/25 text-ios-green border border-ios-green/30 text-xs font-bold flex items-center space-x-1 transition-all">
+            <i class="fa-solid fa-download text-[10px]"></i>
+            <span>Get</span>
+          </a>
+        </div>
+      `).join('');
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeReleaseModal() {
+      document.getElementById('release-download-modal').classList.add('hidden');
     }
 
     // Modal logic
