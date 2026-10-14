@@ -4,6 +4,12 @@ import json
 import subprocess
 from datetime import datetime
 
+# Force UTF-8 on Windows
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+if hasattr(sys.stderr, 'reconfigure'):
+    sys.stderr.reconfigure(encoding='utf-8')
+
 DASHBOARD_DIR = os.path.dirname(os.path.abspath(__file__))
 REPOS_CONFIG = [
     {
@@ -39,7 +45,7 @@ REPOS_CONFIG = [
         'category': 'Multi-Parameter Tribometer',
         'description': 'Industrial mechanical test platform with RS-485 load cell communication and automated PDF reporting.',
         'local_path': r'D:\Projects\Software Repo\LAB-IQ 350',
-        'github_url': 'https://github.com/Paltro-SD01/LAB-IQ-350',
+        'github_url': 'https://github.com/Paltro-SD01/LAB-IQ 350',
         'work_order_folders': ['WO 2203', 'WO 2394']
     },
     {
@@ -82,6 +88,34 @@ def parse_changelog_table(file_path):
         elif in_table and not line.startswith('|') and line.strip() != '':
             in_table = False
     return rows
+
+def parse_wo_detailed_changelog(file_path):
+    """Parses individual Work Order CHANGELOG.md file into structured entries grouped by category."""
+    if not os.path.exists(file_path):
+        return []
+    with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+        content = f.read()
+    
+    entries = []
+    current_section = 'General'
+    
+    for line in content.splitlines():
+        line_s = line.strip()
+        if line_s.startswith('### '):
+            current_section = line_s.replace('### ', '').strip()
+            continue
+        if line_s.startswith('|') and not line_s.startswith('| :---') and not line_s.startswith('| Date'):
+            parts = [p.strip() for p in line_s.split('|')[1:-1]]
+            if len(parts) >= 4:
+                clean_commit = parts[1].replace('`', '').strip()
+                entries.append({
+                    'category': current_section,
+                    'date': parts[0].strip(),
+                    'commit_hash': clean_commit,
+                    'summary': parts[2].strip(),
+                    'author': parts[3].replace('`', '').strip()
+                })
+    return entries
 
 def refresh_data():
     print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Refreshing repository data...")
@@ -131,7 +165,7 @@ def refresh_data():
                 'files': files[:15]
             })
         
-        # Parse changelog
+        # 1. Parse Root Master CHANGELOG.md (Latest commit per Work Order)
         root_cl_path = os.path.join(p, 'CHANGELOG.md')
         root_table = parse_changelog_table(root_cl_path)
         root_table_map = {}
@@ -148,6 +182,7 @@ def refresh_data():
                 'summary': sum_clean
             }
         
+        # 2. Parse Sub-Changelog inside every Work Order folder (Full history of that particular Work Order)
         wo_data = []
         for wo_folder in cfg['work_order_folders']:
             wo_path = os.path.join(p, wo_folder)
@@ -166,6 +201,9 @@ def refresh_data():
                 status = 'TESTING'
             elif 'DISCONTINUED' in wo_folder.upper():
                 status = 'DISCONTINUED'
+            
+            # Read all historical commits belonging to this specific work order
+            detailed_history = parse_wo_detailed_changelog(wo_cl_path)
                 
             wo_data.append({
                 'name': wo_folder,
@@ -176,7 +214,9 @@ def refresh_data():
                 'last_commit_hash': root_info.get('last_commit_hash', ''),
                 'last_commit_date': root_info.get('last_commit_date', ''),
                 'summary': root_info.get('summary', ''),
-                'has_detailed_changelog': os.path.exists(wo_cl_path)
+                'has_detailed_changelog': os.path.exists(wo_cl_path),
+                'detailed_history_count': len(detailed_history),
+                'detailed_history': detailed_history
             })
         
         repos_data.append({
@@ -196,7 +236,7 @@ def refresh_data():
             'work_orders': wo_data,
             'commits': commits
         })
-        print(f"Processed {cfg['name']}: {len(commits)} commits, {len(wo_data)} work orders")
+        print(f"Processed {cfg['name']}: {len(commits)} total commits, {len(wo_data)} work orders parsed with full sub-changelogs.")
 
     # Output JS and JSON
     js_content = "const REPOS_DATA = " + json.dumps(repos_data, ensure_ascii=False) + ";"
