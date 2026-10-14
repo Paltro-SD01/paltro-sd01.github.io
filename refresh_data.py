@@ -171,11 +171,15 @@ def refresh_data():
         root_table_map = {}
         for r in root_table:
             wo_clean = r[0].replace('*', '').strip()
-            status_clean = r[1].replace('`', '').strip() if len(r) > 1 else ''
-            hash_clean = r[2].replace('`', '').strip() if len(r) > 2 else ''
-            dt_clean = r[3] if len(r) > 3 else ''
-            sum_clean = r[4] if len(r) > 4 else ''
+            # Master CHANGELOG.md columns:
+            # [0] Work Order, [1] LabVIEW Version, [2] Status, [3] Hash, [4] Date, [5] Summary, [6] Author
+            ver_clean = r[1].replace('`', '').strip() if len(r) > 1 else 'v01'
+            status_clean = r[2].replace('`', '').strip() if len(r) > 2 else ''
+            hash_clean = r[3].replace('`', '').strip() if len(r) > 3 else ''
+            dt_clean = r[4] if len(r) > 4 else ''
+            sum_clean = r[5] if len(r) > 5 else ''
             root_table_map[wo_clean] = {
+                'version': ver_clean,
                 'status': status_clean,
                 'last_commit_hash': hash_clean,
                 'last_commit_date': dt_clean,
@@ -210,6 +214,7 @@ def refresh_data():
                 'path': wo_path,
                 'relative_path': wo_folder,
                 'status': status,
+                'version': root_info.get('version', 'v01'),
                 'file_count': item_count,
                 'last_commit_hash': root_info.get('last_commit_hash', ''),
                 'last_commit_date': root_info.get('last_commit_date', ''),
