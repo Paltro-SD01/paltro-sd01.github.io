@@ -63,39 +63,69 @@
       position: fixed;
       top: -15%;
       left: -10%;
-      width: 700px;
-      height: 700px;
-      background: radial-gradient(circle, rgba(10, 132, 255, 0.22) 0%, rgba(94, 92, 230, 0.12) 45%, transparent 70%);
+      width: 750px;
+      height: 750px;
+      background: radial-gradient(circle, rgba(10, 132, 255, 0.28) 0%, rgba(94, 92, 230, 0.16) 45%, transparent 70%);
       filter: blur(120px);
       pointer-events-none;
       z-index: -1;
-      animation: floatMesh1 25s ease-in-out infinite alternate;
+      animation: floatMesh1 22s ease-in-out infinite alternate;
     }
 
     .mesh-gradient-2 {
       position: fixed;
       top: 25%;
       right: -10%;
-      width: 750px;
-      height: 750px;
-      background: radial-gradient(circle, rgba(48, 209, 88, 0.18) 0%, rgba(100, 210, 255, 0.12) 50%, transparent 70%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(48, 209, 88, 0.22) 0%, rgba(100, 210, 255, 0.16) 50%, transparent 70%);
       filter: blur(130px);
       pointer-events-none;
       z-index: -1;
-      animation: floatMesh2 30s ease-in-out infinite alternate;
+      animation: floatMesh2 26s ease-in-out infinite alternate;
     }
 
     .mesh-gradient-3 {
       position: fixed;
       bottom: -15%;
       left: 20%;
-      width: 800px;
-      height: 800px;
-      background: radial-gradient(circle, rgba(191, 90, 242, 0.15) 0%, rgba(255, 55, 95, 0.08) 50%, transparent 70%);
+      width: 850px;
+      height: 850px;
+      background: radial-gradient(circle, rgba(191, 90, 242, 0.20) 0%, rgba(255, 55, 95, 0.12) 50%, transparent 70%);
       filter: blur(140px);
       pointer-events-none;
       z-index: -1;
-      animation: floatMesh3 28s ease-in-out infinite alternate;
+      animation: floatMesh3 24s ease-in-out infinite alternate;
+    }
+
+    /* High-Tech Cyber Grid Background */
+    .cyber-grid {
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    /* Shimmer Text Effect */
+    @keyframes textShimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    .shimmer-text {
+      background: linear-gradient(90deg, #FFFFFF 0%, #64D2FF 25%, #BF5AF2 50%, #30D158 75%, #FFFFFF 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: textShimmer 10s linear infinite;
+    }
+
+    /* Pulse Glow */
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.8; transform: scale(1); filter: drop-shadow(0 0 6px rgba(48, 209, 88, 0.6)); }
+      50% { opacity: 1; transform: scale(1.15); filter: drop-shadow(0 0 12px rgba(48, 209, 88, 0.9)); }
+    }
+    .pulse-live-dot {
+      animation: pulseGlow 2s ease-in-out infinite;
     }
 
     @keyframes floatMesh1 {
@@ -113,28 +143,42 @@
 
     /* Apple Fluid Glassmorphism */
     .fluid-glass {
-      background: rgba(20, 24, 38, 0.55);
-      backdrop-filter: blur(28px) saturate(190%);
-      -webkit-backdrop-filter: blur(28px) saturate(190%);
-      border: 1px solid rgba(255, 255, 255, 0.10);
-      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.45), inset 0 1px 1px 0 rgba(255, 255, 255, 0.12);
+      background: rgba(16, 20, 32, 0.65);
+      backdrop-filter: blur(30px) saturate(200%);
+      -webkit-backdrop-filter: blur(30px) saturate(200%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.55), inset 0 1px 1px 0 rgba(255, 255, 255, 0.15);
     }
 
     .fluid-glass-card {
       transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+    .fluid-glass-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 1.5rem;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent 50%, rgba(255, 255, 255, 0.05));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
     }
     .fluid-glass-card:hover {
-      transform: translateY(-4px) scale(1.006);
-      background: rgba(28, 34, 52, 0.65);
-      border-color: rgba(255, 255, 255, 0.22);
-      box-shadow: 0 28px 50px -15px rgba(10, 132, 255, 0.25), inset 0 1px 2px 0 rgba(255, 255, 255, 0.2);
+      transform: translateY(-5px) scale(1.008);
+      background: rgba(24, 30, 48, 0.75);
+      border-color: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 30px 60px -15px rgba(10, 132, 255, 0.3), inset 0 1px 2px 0 rgba(255, 255, 255, 0.25);
     }
 
     /* Smooth iOS Pill Switch */
     .pill-active {
-      background: rgba(255, 255, 255, 0.18);
+      background: linear-gradient(135deg, rgba(10, 132, 255, 0.35), rgba(94, 92, 230, 0.35));
       color: #FFFFFF;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(100, 210, 255, 0.4);
+      box-shadow: 0 4px 18px rgba(10, 132, 255, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.25);
     }
 
     /* Custom scrollbars */
@@ -196,7 +240,7 @@
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col selection:bg-ios-blue selection:text-white">
+<body class="min-h-screen flex flex-col selection:bg-ios-blue selection:text-white cyber-grid">
 
   <!-- Ambient Fluid Mesh Background Glows -->
   <div class="mesh-gradient-1"></div>
@@ -204,7 +248,7 @@
   <div class="mesh-gradient-3"></div>
 
   <!-- Apple Floating Island Header -->
-  <header class="sticky top-4 z-40 max-w-7xl mx-auto px-4 w-full">
+  <header class="sticky top-4 z-40 max-w-7xl mx-auto px-4 w-full space-y-2.5">
     <div class="fluid-glass rounded-3xl px-6 py-3.5 flex items-center justify-between shadow-2xl">
       
       <!-- Brand & Profile -->
@@ -220,9 +264,10 @@
         </div>
         <div>
           <div class="flex items-center space-x-2">
-            <h1 class="text-base font-extrabold text-white tracking-tight">Paltro-SD01</h1>
-            <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-ios-blue/15 text-ios-blue border border-ios-blue/30">
-              Live Production
+            <h1 class="text-base font-extrabold text-white tracking-tight shimmer-text">Paltro-SD01</h1>
+            <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-ios-blue/15 text-ios-blue border border-ios-blue/30 flex items-center space-x-1">
+              <span class="h-1.5 w-1.5 rounded-full bg-ios-blue animate-pulse"></span>
+              <span>Live Telemetry</span>
             </span>
           </div>
           <p class="text-xs text-slate-400 font-medium">Engineering Rigs & LabVIEW Release Suite</p>
@@ -231,6 +276,12 @@
 
       <!-- Quick Action Buttons -->
       <div class="flex items-center space-x-2.5">
+        <!-- Setup Guide Quick Pill -->
+        <button onclick="setActiveTab('setup')" class="hidden lg:flex items-center space-x-1.5 px-3 py-2 rounded-2xl bg-ios-teal/15 hover:bg-ios-teal/25 text-ios-teal border border-ios-teal/30 text-xs font-bold transition-all shadow-sm">
+          <i class="fa-solid fa-screwdriver-wrench text-xs"></i>
+          <span>Setup Guide</span>
+        </button>
+
         <!-- Floating Work Order Suite Drawer Trigger -->
         <button onclick="toggleSuiteDrawer(true)" class="flex items-center space-x-2 px-4 py-2 rounded-2xl bg-gradient-to-r from-ios-blue to-ios-indigo hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold shadow-lg shadow-ios-blue/25 transition-all active:scale-95">
           <i class="fa-solid fa-terminal"></i>
@@ -247,11 +298,41 @@
 
         <!-- Live Website Button -->
         <a href="https://paltro-sd01.github.io" target="_blank" 
-           class="flex items-center space-x-1.5 px-3.5 py-2 rounded-2xl bg-ios-green/15 hover:bg-ios-green/25 text-ios-green border border-ios-green/30 text-xs font-bold transition-all">
+           class="flex items-center space-x-1.5 px-3.5 py-2 rounded-2xl bg-ios-green/15 hover:bg-ios-green/25 text-ios-green border border-ios-green/30 text-xs font-bold transition-all shadow-sm">
           <i class="fa-solid fa-globe"></i>
           <span class="hidden md:inline">paltro-sd01.github.io</span>
           <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
         </a>
+      </div>
+    </div>
+
+    <!-- Live Telemetry Ticker Ribbon -->
+    <div class="fluid-glass rounded-2xl px-5 py-2 flex flex-wrap items-center justify-between gap-3 text-xs border border-white/10 shadow-lg">
+      <div class="flex items-center space-x-3 font-mono">
+        <span class="flex items-center space-x-1.5 text-ios-green font-bold bg-ios-green/15 px-2.5 py-0.5 rounded-lg border border-ios-green/30 text-[11px]">
+          <span class="h-2 w-2 rounded-full bg-ios-green pulse-live-dot inline-block"></span>
+          <span>ONLINE</span>
+        </span>
+        <span class="text-slate-300 font-medium hidden sm:inline flex items-center space-x-1.5 text-[11px]">
+          <i class="fa-solid fa-microchip text-ios-blue"></i>
+          <span>6 LabVIEW Rig Repos</span>
+        </span>
+        <span class="text-slate-500 hidden sm:inline">·</span>
+        <span class="text-slate-300 font-medium hidden md:inline flex items-center space-x-1.5 text-[11px]">
+          <i class="fa-brands fa-python text-ios-yellow"></i>
+          <span>Python 3.9 Stack</span>
+        </span>
+        <span class="text-slate-500 hidden md:inline">·</span>
+        <span class="text-ios-teal font-medium text-[11px] truncate max-w-xs hidden lg:inline">
+          <i class="fa-solid fa-sparkles mr-1"></i>Changelogs &amp; Versions Synced
+        </span>
+      </div>
+
+      <div class="flex items-center space-x-2 ml-auto text-slate-300 font-mono text-[11px]">
+        <div class="flex items-center space-x-1.5 bg-black/40 px-2.5 py-1 rounded-xl border border-white/10">
+          <i class="fa-regular fa-clock text-ios-blue text-[10px]"></i>
+          <span id="live-telemetry-clock">--:--:--</span>
+        </div>
       </div>
     </div>
   </header>
@@ -366,6 +447,12 @@
                   class="flex items-center space-x-2 px-4 py-2 rounded-xl font-semibold transition-all text-slate-400 hover:text-white">
             <i class="fa-solid fa-microscope text-ios-pink"></i>
             <span>Wear Scar AI Guide</span>
+          </button>
+
+          <button onclick="setActiveTab('setup')" id="tab-btn-setup" 
+                  class="flex items-center space-x-2 px-4 py-2 rounded-xl font-semibold transition-all text-slate-400 hover:text-white">
+            <i class="fa-solid fa-screwdriver-wrench text-ios-teal"></i>
+            <span>Software Installation Guide</span>
           </button>
         </div>
 
@@ -867,6 +954,506 @@ if __name__ == "__main__":
       </div>
     </div>
 
+    <!-- ========================================== -->
+    <!-- TAB 7: SOFTWARE INSTALLATION GUIDE -->
+    <!-- ========================================== -->
+    <div id="view-setup" class="tab-view hidden space-y-6">
+
+      <!-- Hero Header Card -->
+      <div class="fluid-glass rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+        <div class="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-ios-teal/20 blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-28 -left-16 w-80 h-80 rounded-full bg-ios-blue/20 blur-3xl pointer-events-none"></div>
+        
+        <div class="relative flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-white/10">
+          <div class="flex items-start space-x-4">
+            <div class="h-14 w-14 shrink-0 rounded-2xl bg-gradient-to-tr from-ios-teal via-ios-blue to-ios-indigo flex items-center justify-center text-white text-2xl shadow-lg shadow-ios-teal/30">
+              <i class="fa-solid fa-screwdriver-wrench"></i>
+            </div>
+            <div>
+              <div class="flex flex-wrap items-center gap-2 mb-1.5">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-ios-teal/15 text-ios-teal border border-ios-teal/30 uppercase tracking-wider">
+                  Standard Operating Procedure
+                </span>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-white/10 text-slate-300 border border-white/10">
+                  Windows 64-bit
+                </span>
+              </div>
+              <h2 class="text-xl sm:text-2xl font-extrabold text-white tracking-tight">Software Installation Guide</h2>
+              <p class="text-xs text-slate-300 mt-1 max-w-2xl leading-relaxed">
+                Complete step-by-step installation preset for setting up National Instruments LabVIEW Runtime Engine, NI-VISA, Python 3.9 (64-bit), and all required scientific &amp; machine control libraries for HFRR-ADV, BOCLE &amp; LAB-IQ test rigs.
+              </p>
+            </div>
+          </div>
+
+          <!-- Hero Action Buttons -->
+          <div class="flex flex-wrap sm:flex-nowrap items-center gap-3">
+            <button onclick="downloadInstaller()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-gradient-to-r from-ios-green to-emerald-600 hover:brightness-110 text-white text-xs font-bold shadow-lg shadow-ios-green/30 flex items-center justify-center space-x-2 transition-all active:scale-95">
+              <i class="fa-solid fa-download"></i>
+              <span>Download 1-Click Installer (.bat)</span>
+            </button>
+            <button onclick="window.print()" class="w-full sm:w-auto px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-semibold border border-white/15 flex items-center justify-center space-x-1.5 transition-all">
+              <i class="fa-solid fa-print"></i>
+              <span>Save as PDF</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Spec Tags -->
+        <div class="relative mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
+          <div class="bg-black/40 rounded-2xl p-3 border border-white/10 flex items-center space-x-3">
+            <i class="fa-regular fa-clock text-ios-blue text-base"></i>
+            <div>
+              <span class="text-[10px] text-slate-400 block font-sans uppercase font-bold">Estimated Time</span>
+              <span class="text-white font-bold">~30 min setup</span>
+            </div>
+          </div>
+          <div class="bg-black/40 rounded-2xl p-3 border border-white/10 flex items-center space-x-3">
+            <i class="fa-brands fa-windows text-ios-teal text-base"></i>
+            <div>
+              <span class="text-[10px] text-slate-400 block font-sans uppercase font-bold">Operating System</span>
+              <span class="text-white font-bold">Windows 10/11 64-bit</span>
+            </div>
+          </div>
+          <div class="bg-black/40 rounded-2xl p-3 border border-white/10 flex items-center space-x-3">
+            <i class="fa-solid fa-shield-halved text-ios-orange text-base"></i>
+            <div>
+              <span class="text-[10px] text-slate-400 block font-sans uppercase font-bold">Privileges</span>
+              <span class="text-white font-bold">Administrator</span>
+            </div>
+          </div>
+          <div class="bg-black/40 rounded-2xl p-3 border border-white/10 flex items-center space-x-3">
+            <i class="fa-solid fa-microchip text-ios-purple text-base"></i>
+            <div>
+              <span class="text-[10px] text-slate-400 block font-sans uppercase font-bold">Platform</span>
+              <span class="text-white font-bold">NI LabVIEW + Py3.9</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Installation Flow Overview Pills -->
+      <div class="fluid-glass rounded-3xl p-6 shadow-xl space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-white/10">
+          <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center">
+            <i class="fa-solid fa-network-wired text-ios-blue mr-2"></i>
+            Installation Pipeline Flow
+          </h3>
+          <span class="text-[11px] font-mono text-ios-green font-semibold">6 Sequential Steps</span>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 text-xs">
+          <div class="bg-black/40 rounded-2xl p-3 border border-white/10 text-center hover:border-ios-blue/40 transition-colors">
+            <span class="inline-flex h-6 w-6 rounded-lg bg-ios-blue/20 text-ios-blue text-[11px] font-bold items-center justify-center mb-1.5 font-mono">1</span>
+            <div class="font-bold text-white text-[11px]">NI Package Mgr</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">Software Hub</div>
+          </div>
+          <div class="bg-black/40 rounded-2xl p-3 border border-white/10 text-center hover:border-ios-purple/40 transition-colors">
+            <span class="inline-flex h-6 w-6 rounded-lg bg-ios-purple/20 text-ios-purple text-[11px] font-bold items-center justify-center mb-1.5 font-mono">2</span>
+            <div class="font-bold text-white text-[11px]">LabVIEW Runtime</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">64-bit Engine</div>
+          </div>
+          <div class="bg-black/40 rounded-2xl p-3 border border-white/10 text-center hover:border-ios-green/40 transition-colors">
+            <span class="inline-flex h-6 w-6 rounded-lg bg-ios-green/20 text-ios-green text-[11px] font-bold items-center justify-center mb-1.5 font-mono">3</span>
+            <div class="font-bold text-white text-[11px]">NI-VISA Module</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">Hardware Comm</div>
+          </div>
+          <div class="bg-black/40 rounded-2xl p-3 border border-white/10 text-center hover:border-ios-orange/40 transition-colors">
+            <span class="inline-flex h-6 w-6 rounded-lg bg-ios-orange/20 text-ios-orange text-[11px] font-bold items-center justify-center mb-1.5 font-mono">4</span>
+            <div class="font-bold text-white text-[11px]">Python 3.9 (64-bit)</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">Web Installer</div>
+          </div>
+          <div class="bg-black/40 rounded-2xl p-3 border border-white/10 text-center hover:border-ios-pink/40 transition-colors">
+            <span class="inline-flex h-6 w-6 rounded-lg bg-ios-pink/20 text-ios-pink text-[11px] font-bold items-center justify-center mb-1.5 font-mono">5</span>
+            <div class="font-bold text-white text-[11px]">Git for Windows</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">Repo Control</div>
+          </div>
+          <div class="bg-black/40 rounded-2xl p-3 border border-white/10 text-center hover:border-ios-teal/40 transition-colors">
+            <span class="inline-flex h-6 w-6 rounded-lg bg-ios-teal/20 text-ios-teal text-[11px] font-bold items-center justify-center mb-1.5 font-mono">6</span>
+            <div class="font-bold text-white text-[11px]">Dependencies + TDMS</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">1-Click .bat</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Prerequisites Notice -->
+      <div class="fluid-glass rounded-3xl p-5 border border-amber-500/30 bg-amber-500/5 shadow-xl">
+        <div class="flex items-center space-x-2.5 text-amber-400 font-bold text-xs uppercase tracking-wider mb-2">
+          <i class="fa-solid fa-triangle-exclamation text-sm"></i>
+          <span>Prerequisites — Before You Begin</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5 text-xs text-slate-300">
+          <div class="flex items-center space-x-2 bg-black/40 p-2.5 rounded-xl border border-white/5">
+            <i class="fa-solid fa-circle-check text-ios-green"></i>
+            <span>Windows 10/11 (64-bit)</span>
+          </div>
+          <div class="flex items-center space-x-2 bg-black/40 p-2.5 rounded-xl border border-white/5">
+            <i class="fa-solid fa-circle-check text-ios-green"></i>
+            <span>Administrator Privileges</span>
+          </div>
+          <div class="flex items-center space-x-2 bg-black/40 p-2.5 rounded-xl border border-white/5">
+            <i class="fa-solid fa-circle-check text-ios-green"></i>
+            <span>Stable Internet Connection</span>
+          </div>
+          <div class="flex items-center space-x-2 bg-black/40 p-2.5 rounded-xl border border-white/5">
+            <i class="fa-solid fa-circle-check text-ios-green"></i>
+            <span>At least 10 GB Free Disk</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step Cards Grid -->
+      <div class="grid grid-cols-1 gap-6">
+
+        <!-- ── STEP 1: NI Package Manager ── -->
+        <div class="fluid-glass fluid-glass-card rounded-3xl p-6 shadow-xl space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
+            <div class="flex items-center space-x-3.5">
+              <span class="h-10 w-10 rounded-2xl bg-gradient-to-tr from-ios-blue to-blue-600 text-white font-extrabold text-base flex items-center justify-center font-mono shadow-md shadow-ios-blue/30">1</span>
+              <div>
+                <h3 class="text-base font-extrabold text-white">Install NI Package Manager</h3>
+                <span class="text-xs text-slate-400">Foundation hub for all National Instruments software</span>
+              </div>
+            </div>
+            <a href="https://www.ni.com/en/support/downloads/tools-network/download.ni-package-manager.html" target="_blank" class="px-3.5 py-1.5 rounded-xl bg-ios-blue/15 hover:bg-ios-blue/25 text-ios-blue border border-ios-blue/30 text-xs font-bold inline-flex items-center space-x-1.5 transition-all self-start sm:self-auto">
+              <span>Open NI Downloads</span>
+              <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+            </a>
+          </div>
+
+          <p class="text-xs text-slate-300 leading-relaxed">
+            NI Package Manager is the central hub required to download, install, and manage National Instruments runtimes and hardware drivers. This must be installed <strong class="text-white">first</strong> before installing LabVIEW Runtimes or NI-VISA.
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            <div class="bg-black/40 rounded-2xl p-3.5 border border-white/10">
+              <div class="text-ios-blue font-bold mb-1 flex items-center space-x-1.5">
+                <i class="fa-solid fa-download"></i>
+                <span>Download Installer</span>
+              </div>
+              <p class="text-slate-400 text-[11px]">Go to <span class="text-white font-semibold">ni.com</span> and search for "NI Package Manager". Download the latest release.</p>
+            </div>
+            <div class="bg-black/40 rounded-2xl p-3.5 border border-white/10">
+              <div class="text-ios-blue font-bold mb-1 flex items-center space-x-1.5">
+                <i class="fa-solid fa-play"></i>
+                <span>Run Setup</span>
+              </div>
+              <p class="text-slate-400 text-[11px]">Run the downloaded executable as administrator. Accept default directories and license agreements.</p>
+            </div>
+            <div class="bg-black/40 rounded-2xl p-3.5 border border-white/10">
+              <div class="text-ios-blue font-bold mb-1 flex items-center space-x-1.5">
+                <i class="fa-solid fa-rotate-right"></i>
+                <span>Reboot if Asked</span>
+              </div>
+              <p class="text-slate-400 text-[11px]">If prompted by the NI installer to restart your machine, complete the reboot before proceeding to Step 2.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── STEP 2: LabVIEW Runtime Engine (64-bit) ── -->
+        <div class="fluid-glass fluid-glass-card rounded-3xl p-6 shadow-xl space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
+            <div class="flex items-center space-x-3.5">
+              <span class="h-10 w-10 rounded-2xl bg-gradient-to-tr from-ios-purple to-purple-600 text-white font-extrabold text-base flex items-center justify-center font-mono shadow-md shadow-ios-purple/30">2</span>
+              <div>
+                <h3 class="text-base font-extrabold text-white">Install LabVIEW Runtime Engine (64-bit)</h3>
+                <span class="text-xs text-slate-400">Execution engine for standalone LabVIEW VIs and test rig executables</span>
+              </div>
+            </div>
+            <span class="px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold bg-ios-purple/15 text-ios-purple border border-ios-purple/30 self-start sm:self-auto">
+              Installed via NIPM
+            </span>
+          </div>
+
+          <p class="text-xs text-slate-300 leading-relaxed">
+            The LabVIEW Runtime Engine allows workstations to execute precompiled test rig applications (HFRR, BOCLE, LAB-IQ 150/350, B2V2, AIRJET) without needing the full development license. Be sure to select the <strong class="text-white">64-bit</strong> version.
+          </p>
+
+          <div class="bg-black/50 border border-white/10 rounded-2xl p-4 space-y-2 text-xs">
+            <div class="font-bold text-slate-200 uppercase tracking-wider text-[11px]">Installation Steps via NI Package Manager:</div>
+            <ol class="list-decimal list-inside space-y-1.5 text-slate-300 font-sans">
+              <li>Open <strong class="text-white">NI Package Manager</strong> from the Windows Start menu.</li>
+              <li>In the search box, type <span class="bg-white/10 px-2 py-0.5 rounded font-mono text-ios-purple font-semibold">LabVIEW Runtime Engine</span>.</li>
+              <li>Filter or select the <strong class="text-white">64-bit</strong> edition (Latest 2023 / 2024 / 2026 release).</li>
+              <li>Click <strong class="text-white">Install</strong>, accept agreements, and let installation finalize.</li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- ── STEP 3: NI-VISA Module ── -->
+        <div class="fluid-glass fluid-glass-card rounded-3xl p-6 shadow-xl space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
+            <div class="flex items-center space-x-3.5">
+              <span class="h-10 w-10 rounded-2xl bg-gradient-to-tr from-ios-green to-emerald-600 text-white font-extrabold text-base flex items-center justify-center font-mono shadow-md shadow-ios-green/30">3</span>
+              <div>
+                <h3 class="text-base font-extrabold text-white">Install NI-VISA Module (Latest)</h3>
+                <span class="text-xs text-slate-400">Virtual Instrument Software Architecture for RS-232, RS-485, USB &amp; Ethernet comms</span>
+              </div>
+            </div>
+            <span class="px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold bg-ios-green/15 text-ios-green border border-ios-green/30 self-start sm:self-auto">
+              Instrument Driver Layer
+            </span>
+          </div>
+
+          <p class="text-xs text-slate-300 leading-relaxed">
+            NI-VISA provides the standardized I/O interface between LabVIEW and test instrumentation (motor drives, heating controllers, load cells, pressure transducers, COM ports).
+          </p>
+
+          <div class="bg-black/50 border border-white/10 rounded-2xl p-4 space-y-2 text-xs">
+            <div class="font-bold text-slate-200 uppercase tracking-wider text-[11px]">Installation Steps:</div>
+            <ol class="list-decimal list-inside space-y-1.5 text-slate-300 font-sans">
+              <li>In <strong class="text-white">NI Package Manager</strong>, search for <span class="bg-white/10 px-2 py-0.5 rounded font-mono text-ios-green font-semibold">NI-VISA</span>.</li>
+              <li>Select the latest release compatible with your Windows 64-bit operating system.</li>
+              <li>Click <strong class="text-white">Install</strong> and follow on-screen prompts.</li>
+              <li>Restart your workstation once the installation finishes to bind the serial / USB kernel drivers.</li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- ── STEP 4: Python 3.9 (64-bit) ── -->
+        <div class="fluid-glass fluid-glass-card rounded-3xl p-6 shadow-xl space-y-5 border-l-4 border-l-ios-orange">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
+            <div class="flex items-center space-x-3.5">
+              <span class="h-10 w-10 rounded-2xl bg-gradient-to-tr from-ios-orange to-amber-600 text-white font-extrabold text-base flex items-center justify-center font-mono shadow-md shadow-ios-orange/30">4</span>
+              <div>
+                <h3 class="text-base font-extrabold text-white">Install Python 3.9 (64-bit)</h3>
+                <span class="text-xs text-slate-400">Core runtime for automated PDF reporting (ReportLab), OpenCV, and TDMS analysis</span>
+              </div>
+            </div>
+            <a href="https://www.python.org/downloads/release/python-390/" target="_blank" class="px-3.5 py-1.5 rounded-xl bg-ios-orange/15 hover:bg-ios-orange/25 text-ios-orange border border-ios-orange/30 text-xs font-bold inline-flex items-center space-x-1.5 transition-all self-start sm:self-auto">
+              <span>Python 3.9.0 Release Page</span>
+              <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+            </a>
+          </div>
+
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Python 3.9 (64-bit) is required for the LabVIEW Python Node integrations. Follow the exact package selection instructions below:
+          </p>
+
+          <!-- Exact Requested Selection Card -->
+          <div class="bg-gradient-to-br from-amber-500/10 via-black/60 to-black/80 rounded-2xl p-5 border border-ios-orange/40 space-y-4">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <span class="text-[10px] font-bold text-ios-orange uppercase tracking-wider block mb-1">
+                  <i class="fa-solid fa-arrow-down mr-1"></i> Scroll down to the "Files" table and select:
+                </span>
+                <a href="https://www.python.org/ftp/python/3.9.0/python-3.9.0-amd64-webinstall.exe" target="_blank" 
+                   class="text-sm font-extrabold text-white hover:text-ios-orange transition-colors inline-flex items-center space-x-2">
+                  <span>Windows x86-64 web-based installer</span>
+                  <i class="fa-solid fa-download text-xs text-ios-orange"></i>
+                </a>
+              </div>
+              <a href="https://www.python.org/ftp/python/3.9.0/python-3.9.0-amd64-webinstall.exe" target="_blank"
+                 class="px-4 py-2 rounded-xl bg-gradient-to-r from-ios-orange to-amber-600 hover:brightness-110 text-black font-extrabold text-xs shadow-md shadow-ios-orange/30 flex items-center space-x-1.5 transition-all active:scale-95 shrink-0">
+                <i class="fa-solid fa-download"></i>
+                <span>Direct Download (1.3 MB)</span>
+              </a>
+            </div>
+
+            <!-- Technical Specification Table for Python Package -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono bg-black/60 p-3.5 rounded-xl border border-white/10">
+              <div>
+                <span class="text-[10px] text-slate-400 font-sans block uppercase font-bold">Operating System</span>
+                <span class="text-white font-semibold">Windows for AMD64/EM64T/x64</span>
+              </div>
+              <div>
+                <span class="text-[10px] text-slate-400 font-sans block uppercase font-bold">Package Size</span>
+                <span class="text-white font-semibold">1.3 MB</span>
+              </div>
+              <div>
+                <span class="text-[10px] text-slate-400 font-sans block uppercase font-bold">GPG Signature</span>
+                <a href="https://www.python.org/ftp/python/3.9.0/python-3.9.0-amd64-webinstall.exe.asc" target="_blank" class="text-ios-blue hover:underline font-semibold">
+                  [SIG Key Verification]
+                </a>
+              </div>
+              <div>
+                <span class="text-[10px] text-slate-400 font-sans block uppercase font-bold">MD5 Checksum</span>
+                <span class="text-ios-green font-bold text-[11px] truncate block select-all" title="733df85afb160482c5636ca09b89c4c8">733df85afb160482c5636ca09b89c4c8</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Critical PATH Warning -->
+          <div class="bg-red-500/15 border border-red-500/40 rounded-2xl p-4 flex items-start space-x-3 text-xs text-red-200">
+            <i class="fa-solid fa-triangle-exclamation text-base text-red-400 mt-0.5 shrink-0"></i>
+            <div>
+              <strong class="text-white block font-bold text-sm mb-1">CRITICAL INSTALLATION STEP:</strong>
+              When the installer launches, <span class="text-white font-bold underline">YOU MUST CHECK</span> the box labeled:
+              <div class="bg-black/60 px-3 py-1.5 rounded-lg border border-red-500/30 my-2 font-mono text-ios-yellow font-bold inline-block">
+                ☑ Add Python 3.9 to PATH
+              </div>
+              at the bottom of the installer window <strong class="text-white">BEFORE</strong> clicking "Install Now". If omitted, LabVIEW will not be able to find Python.
+            </div>
+          </div>
+        </div>
+
+        <!-- ── STEP 5: Git for Windows ── -->
+        <div class="fluid-glass fluid-glass-card rounded-3xl p-6 shadow-xl space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
+            <div class="flex items-center space-x-3.5">
+              <span class="h-10 w-10 rounded-2xl bg-gradient-to-tr from-ios-pink to-rose-600 text-white font-extrabold text-base flex items-center justify-center font-mono shadow-md shadow-ios-pink/30">5</span>
+              <div>
+                <h3 class="text-base font-extrabold text-white">Install Git for Windows</h3>
+                <span class="text-xs text-slate-400">Version control engine to synchronize rig software repositories</span>
+              </div>
+            </div>
+            <a href="https://git-scm.com/downloads/win" target="_blank" class="px-3.5 py-1.5 rounded-xl bg-ios-pink/15 hover:bg-ios-pink/25 text-ios-pink border border-ios-pink/30 text-xs font-bold inline-flex items-center space-x-1.5 transition-all self-start sm:self-auto">
+              <span>git-scm.com/downloads/win</span>
+              <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+            </a>
+          </div>
+
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Git is required to clone and synchronize software repositories from the <code class="text-ios-pink">Paltro-SD01</code> GitHub organization, as well as executing the automated changelog generators.
+          </p>
+
+          <div class="bg-black/50 border border-white/10 rounded-2xl p-4 text-xs space-y-2">
+            <span class="font-bold text-slate-200 uppercase tracking-wider text-[11px] block">Installation Instructions:</span>
+            <ul class="space-y-1.5 text-slate-300">
+              <li class="flex items-center space-x-2">
+                <i class="fa-solid fa-circle-check text-ios-green text-[10px]"></i>
+                <span>Download the 64-bit Git for Windows Standalone Installer.</span>
+              </li>
+              <li class="flex items-center space-x-2">
+                <i class="fa-solid fa-circle-check text-ios-green text-[10px]"></i>
+                <span>Select default options for line endings (Checkout Windows-style, commit Unix-style line endings).</span>
+              </li>
+              <li class="flex items-center space-x-2">
+                <i class="fa-solid fa-circle-check text-ios-green text-[10px]"></i>
+                <span>Enable Git from the command prompt and 3rd-party software.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- ── STEP 6: 1-Click Dependency Installer (Python + TDMS) ── -->
+        <div class="fluid-glass fluid-glass-card rounded-3xl p-6 shadow-xl space-y-5 border-l-4 border-l-ios-teal">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
+            <div class="flex items-center space-x-3.5">
+              <span class="h-10 w-10 rounded-2xl bg-gradient-to-tr from-ios-teal to-cyan-600 text-white font-extrabold text-base flex items-center justify-center font-mono shadow-md shadow-ios-teal/30">6</span>
+              <div>
+                <h3 class="text-base font-extrabold text-white">One-Click Dependency Installer (Python + TDMS)</h3>
+                <span class="text-xs text-slate-400">Installs ReportLab, OpenCV, NumPy, PyQt5, TDMS, and required scientific libraries</span>
+              </div>
+            </div>
+            <button onclick="downloadInstaller()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-ios-green to-emerald-600 hover:brightness-110 text-white text-xs font-bold shadow-md shadow-ios-green/30 flex items-center space-x-1.5 transition-all active:scale-95 self-start sm:self-auto">
+              <i class="fa-solid fa-download"></i>
+              <span>Download .bat Installer</span>
+            </button>
+          </div>
+
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Instead of manually typing individual pip commands, use the one-click batch script below. It updates pip, installs all scientific libraries, and includes <strong class="text-ios-teal">tdms</strong> for LabVIEW binary file parsing.
+          </p>
+
+          <!-- 1-Click Batch Box -->
+          <div class="bg-black/60 rounded-2xl p-4 border border-white/10 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold text-slate-300 uppercase tracking-wider flex items-center">
+                <i class="fa-solid fa-terminal text-ios-teal mr-2"></i>
+                Install_HFRR_Dependencies.bat Script Contents:
+              </span>
+              <button onclick="copyBlockText('setup-bat-code', 'Batch script copied!')" class="text-slate-400 hover:text-white text-xs flex items-center space-x-1">
+                <i class="fa-regular fa-copy"></i>
+                <span>Copy Script</span>
+              </button>
+            </div>
+            <div class="bg-black/80 rounded-xl p-3 border border-white/10 overflow-x-auto">
+              <pre id="setup-bat-code" class="font-mono text-[11px] text-ios-green leading-relaxed">@echo off
+echo ===================================================
+echo HFRR ADV & BOCLE SOFTWARE - Dependency Installer
+echo ===================================================
+python -m pip install --upgrade pip
+pip install reportlab opencv-python numpy PyQt5 torch torchvision pywin32 pandas requests pyyaml tqdm matplotlib tdms
+echo Installation Complete!
+pause</pre>
+            </div>
+          </div>
+
+          <!-- Specific TDMS Callout Box -->
+          <div class="bg-ios-teal/10 border border-ios-teal/30 rounded-2xl p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2 text-xs font-bold text-ios-teal">
+                <i class="fa-solid fa-file-waveform"></i>
+                <span>Dedicated TDMS Library Command:</span>
+              </div>
+              <button onclick="copyBlockText('setup-tdms-cmd', 'pip install tdms copied!')" class="px-2.5 py-1 rounded-lg bg-ios-teal/20 hover:bg-ios-teal/30 text-ios-teal text-[11px] font-bold transition-colors">
+                <i class="fa-regular fa-copy mr-1"></i>Copy
+              </button>
+            </div>
+            <p class="text-[11px] text-slate-300">Used for direct binary ingestion of National Instruments TDMS telemetry logs in Python post-analysis scripts:</p>
+            <div class="bg-black/70 rounded-xl p-2.5 border border-white/10 font-mono text-xs text-ios-green">
+              <code id="setup-tdms-cmd">pip install tdms</code>
+            </div>
+          </div>
+
+          <!-- Manual Command Box -->
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between text-xs text-slate-400">
+              <span class="font-bold uppercase tracking-wider text-[10px]">Alternative: Manual Single Command (cmd.exe / PowerShell):</span>
+              <button onclick="copyBlockText('setup-pip-full', 'Full pip command copied!')" class="hover:text-white text-[11px] text-ios-blue flex items-center space-x-1">
+                <i class="fa-regular fa-copy"></i>
+                <span>Copy</span>
+              </button>
+            </div>
+            <div class="bg-black/80 rounded-xl p-3 border border-white/10 font-mono text-[11px] text-slate-200 overflow-x-auto">
+              <code id="setup-pip-full">pip install reportlab opencv-python numpy PyQt5 torch torchvision pywin32 pandas requests pyyaml tqdm matplotlib tdms</code>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── VERIFICATION & SYSTEM HEALTH CHECK (Step 7 from original file removed!) ── -->
+        <div class="fluid-glass fluid-glass-card rounded-3xl p-6 shadow-xl space-y-4 border-l-4 border-l-ios-green">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
+            <div class="flex items-center space-x-3.5">
+              <span class="h-10 w-10 rounded-2xl bg-gradient-to-tr from-ios-green to-emerald-600 text-white font-extrabold text-base flex items-center justify-center font-mono shadow-md shadow-ios-green/30">
+                <i class="fa-solid fa-check"></i>
+              </span>
+              <div>
+                <h3 class="text-base font-extrabold text-white">System Verification &amp; Validation</h3>
+                <span class="text-xs text-slate-400">Confirm all runtimes, Python packages, and TDMS drivers are installed properly</span>
+              </div>
+            </div>
+            <span class="px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold bg-ios-green/15 text-ios-green border border-ios-green/30 self-start sm:self-auto">
+              Verification Check
+            </span>
+          </div>
+
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Open a fresh <span class="bg-white/10 px-2 py-0.5 rounded font-mono text-white">cmd.exe</span> window and run these two verification commands:
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs font-mono">
+            <!-- Check Python -->
+            <div class="bg-black/60 rounded-2xl p-4 border border-white/10 space-y-2">
+              <div class="flex items-center justify-between text-slate-400 font-sans text-[11px]">
+                <span class="font-bold uppercase tracking-wider text-ios-blue">1. Python Version Check</span>
+                <button onclick="copyBlockText('verify-py-ver', 'Copied!')" class="hover:text-white"><i class="fa-regular fa-copy"></i></button>
+              </div>
+              <div class="bg-black/90 p-2.5 rounded-xl border border-white/10 text-ios-green">
+                <code id="verify-py-ver">python --version</code>
+              </div>
+              <span class="text-[10px] text-slate-400 font-sans block">Expected output: <strong class="text-white">Python 3.9.x</strong></span>
+            </div>
+
+            <!-- Check Libraries -->
+            <div class="bg-black/60 rounded-2xl p-4 border border-white/10 space-y-2">
+              <div class="flex items-center justify-between text-slate-400 font-sans text-[11px]">
+                <span class="font-bold uppercase tracking-wider text-ios-green">2. Core Modules + TDMS Check</span>
+                <button onclick="copyBlockText('verify-import', 'Copied!')" class="hover:text-white"><i class="fa-regular fa-copy"></i></button>
+              </div>
+              <div class="bg-black/90 p-2.5 rounded-xl border border-white/10 text-ios-green overflow-x-auto">
+                <code id="verify-import">python -c "import reportlab, tdms, cv2, numpy, PyQt5; print('All core modules verified OK!')"</code>
+              </div>
+              <span class="text-[10px] text-slate-400 font-sans block">Expected output: <strong class="text-ios-green">All core modules verified OK!</strong></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
   </main>
 
   <!-- ========================================== -->
@@ -1083,7 +1670,7 @@ if __name__ == "__main__":
     // Tab Switching
     function setActiveTab(tab) {
       currentTab = tab;
-      const tabs = ['grid', 'changelog', 'timeline', 'paths', 'builder', 'wearscar'];
+      const tabs = ['grid', 'changelog', 'timeline', 'paths', 'builder', 'wearscar', 'setup'];
       tabs.forEach(t => {
         const view = document.getElementById(`view-${t}`);
         const btn = document.getElementById(`tab-btn-${t}`);
@@ -1292,52 +1879,122 @@ if __name__ == "__main__":
     }
 
     // ==========================================
-    // RENDER COMPACT REPOSITORY CARDS
+    // RENDER COMPACT REPOSITORY CARDS (VIBRANT & LIVELY)
     // ==========================================
+    const REPO_THEMES = {
+      'LAB-IQ-150': {
+        gradient: 'from-cyan-500/10 via-blue-500/5 to-transparent',
+        border: 'border-cyan-500/30 hover:border-cyan-400/70',
+        badgeBg: 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30',
+        iconBg: 'bg-cyan-500/20 text-cyan-400 border border-cyan-400/30 shadow-lg shadow-cyan-500/20',
+        glow: 'hover:shadow-[0_0_30px_rgba(6,182,212,0.22)]',
+        accent: 'text-cyan-400',
+        dot: 'bg-cyan-400 shadow-[0_0_8px_#22d3ee]'
+      },
+      'BOCLE': {
+        gradient: 'from-amber-500/10 via-orange-500/5 to-transparent',
+        border: 'border-amber-500/30 hover:border-amber-400/70',
+        badgeBg: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
+        iconBg: 'bg-amber-500/20 text-amber-400 border border-amber-400/30 shadow-lg shadow-amber-500/20',
+        glow: 'hover:shadow-[0_0_30px_rgba(245,158,11,0.22)]',
+        accent: 'text-amber-400',
+        dot: 'bg-amber-400 shadow-[0_0_8px_#fbbf24]'
+      },
+      'HFRR-ADV': {
+        gradient: 'from-emerald-500/10 via-teal-500/5 to-transparent',
+        border: 'border-emerald-500/30 hover:border-emerald-400/70',
+        badgeBg: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
+        iconBg: 'bg-emerald-500/20 text-emerald-400 border border-emerald-400/30 shadow-lg shadow-emerald-500/20',
+        glow: 'hover:shadow-[0_0_30px_rgba(16,185,129,0.22)]',
+        accent: 'text-emerald-400',
+        dot: 'bg-emerald-400 shadow-[0_0_8px_#34d399]'
+      },
+      'LAB-IQ-350': {
+        gradient: 'from-purple-500/10 via-pink-500/5 to-transparent',
+        border: 'border-purple-500/30 hover:border-purple-400/70',
+        badgeBg: 'bg-purple-500/15 text-purple-300 border-purple-500/30',
+        iconBg: 'bg-purple-500/20 text-purple-400 border border-purple-400/30 shadow-lg shadow-purple-500/20',
+        glow: 'hover:shadow-[0_0_30px_rgba(168,85,247,0.22)]',
+        accent: 'text-purple-400',
+        dot: 'bg-purple-400 shadow-[0_0_8px_#c084fc]'
+      },
+      'B2V2': {
+        gradient: 'from-blue-500/10 via-indigo-500/5 to-transparent',
+        border: 'border-blue-500/30 hover:border-blue-400/70',
+        badgeBg: 'bg-blue-500/15 text-blue-300 border-blue-500/30',
+        iconBg: 'bg-blue-500/20 text-blue-400 border border-blue-400/30 shadow-lg shadow-blue-500/20',
+        glow: 'hover:shadow-[0_0_30px_rgba(59,130,246,0.22)]',
+        accent: 'text-blue-400',
+        dot: 'bg-blue-400 shadow-[0_0_8px_#60a5fa]'
+      },
+      'AIRJET': {
+        gradient: 'from-rose-500/10 via-orange-500/5 to-transparent',
+        border: 'border-rose-500/30 hover:border-rose-400/70',
+        badgeBg: 'bg-rose-500/15 text-rose-300 border-rose-500/30',
+        iconBg: 'bg-rose-500/20 text-rose-400 border border-rose-400/30 shadow-lg shadow-rose-500/20',
+        glow: 'hover:shadow-[0_0_30px_rgba(244,63,94,0.22)]',
+        accent: 'text-rose-400',
+        dot: 'bg-rose-400 shadow-[0_0_8px_#fb7185]'
+      }
+    };
+
     function renderCompactRepoCards() {
       const grid = document.getElementById('repos-cards-grid');
       
       grid.innerHTML = REPOS_DATA.map(repo => {
         const latestC = repo.latest_commit || {};
         const isClosed = repo.latest_tag && repo.latest_tag.includes('CLOSED');
+        const theme = REPO_THEMES[repo.id] || {
+          gradient: 'from-blue-500/10 to-transparent',
+          border: 'border-white/10 hover:border-white/30',
+          badgeBg: 'bg-white/10 text-ios-teal border-white/10',
+          iconBg: 'bg-white/10 text-ios-blue border-white/10',
+          glow: 'hover:shadow-lg',
+          accent: 'text-ios-blue',
+          dot: 'bg-ios-green'
+        };
         
         return `
-          <div class="fluid-glass fluid-glass-card rounded-3xl p-5 flex flex-col justify-between shadow-xl">
+          <div class="fluid-glass rounded-3xl p-5 flex flex-col justify-between shadow-xl transition-all duration-300 bg-gradient-to-br ${theme.gradient} border ${theme.border} ${theme.glow} group hover:-translate-y-1">
             <div>
               <!-- Header -->
-              <div class="flex items-start justify-between mb-3">
+              <div class="flex items-start justify-between mb-3.5">
                 <div class="flex items-center space-x-3">
-                  <div class="h-10 w-10 rounded-2xl bg-white/10 flex items-center justify-center text-ios-blue shadow-inner border border-white/10">
+                  <div class="h-11 w-11 rounded-2xl ${theme.iconBg} flex items-center justify-center transition-transform group-hover:scale-105">
                     <i class="fa-solid fa-microchip text-base"></i>
                   </div>
                   <div>
-                    <h3 class="text-sm font-extrabold text-white tracking-tight">${repo.name}</h3>
-                    <span class="text-[11px] text-slate-400 font-medium">${repo.category}</span>
+                    <div class="flex items-center space-x-1.5">
+                      <h3 class="text-sm font-extrabold text-white tracking-tight group-hover:${theme.accent} transition-colors">${repo.name}</h3>
+                      <span class="inline-block w-1.5 h-1.5 rounded-full ${theme.dot}"></span>
+                    </div>
+                    <span class="text-[11px] text-slate-400 font-medium block truncate max-w-[160px]">${repo.category}</span>
                   </div>
                 </div>
-                <span class="px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold bg-white/10 text-ios-teal border border-white/10">
-                  ${repo.branch}
+                <span class="px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold ${theme.badgeBg} border flex items-center space-x-1">
+                  <i class="fa-solid fa-code-branch text-[9px]"></i>
+                  <span>${repo.branch}</span>
                 </span>
               </div>
 
               <!-- Compact Path Accordion -->
-              <div class="mb-3 bg-black/40 rounded-2xl p-2.5 border border-white/10 text-xs font-mono">
+              <div class="mb-3 bg-black/50 rounded-2xl p-2.5 border border-white/10 text-xs font-mono transition-colors group-hover:border-white/20">
                 <div class="flex items-center justify-between text-slate-400 text-[10px]">
                   <span class="flex items-center font-bold text-slate-500 uppercase tracking-wider">
-                    <i class="fa-solid fa-hard-drive mr-1 text-ios-teal"></i> Workstation
+                    <i class="fa-solid fa-hard-drive mr-1 ${theme.accent}"></i> Workstation
                   </span>
-                  <button onclick="copyRawText('${repo.local_path.replace(/\\/g, '\\\\')}')" class="text-slate-400 hover:text-white" title="Copy Path">
+                  <button onclick="copyRawText('${repo.local_path.replace(/\\/g, '\\\\')}')" class="text-slate-400 hover:text-white transition-colors" title="Copy Path">
                     <i class="fa-regular fa-copy"></i>
                   </button>
                 </div>
-                <div class="text-slate-300 text-[11px] truncate select-all mt-0.5">
+                <div class="text-slate-300 text-[11px] truncate select-all mt-0.5" title="${repo.local_path}">
                   ${repo.local_path}
                 </div>
               </div>
 
               <!-- Release Status Tag Pill -->
-              <div class="mb-3 flex items-center justify-between bg-black/30 px-3 py-1.5 rounded-xl border border-white/5">
-                <div class="flex items-center space-x-1.5 text-xs truncate max-w-[200px]">
+              <div class="mb-3 flex items-center justify-between bg-black/40 px-3 py-1.5 rounded-xl border border-white/5">
+                <div class="flex items-center space-x-1.5 text-xs truncate max-w-[190px]">
                   <i class="fa-solid fa-tag text-ios-orange text-[10px]"></i>
                   <span class="font-mono text-slate-300 text-[11px] truncate font-semibold">
                     ${repo.latest_tag !== 'None' ? repo.latest_tag : 'No Tagged Release'}
@@ -1349,9 +2006,12 @@ if __name__ == "__main__":
               </div>
 
               <!-- Latest Commit -->
-              <div class="bg-black/30 p-2.5 rounded-xl border border-white/5 mb-3">
+              <div class="bg-black/40 p-2.5 rounded-xl border border-white/5 mb-3 group-hover:border-white/10 transition-colors">
                 <div class="flex items-center justify-between text-[10px] text-slate-400 mb-0.5 font-mono">
-                  <span class="text-ios-green font-bold">${latestC.short_hash || '---'}</span>
+                  <span class="text-ios-green font-bold flex items-center space-x-1">
+                    <i class="fa-solid fa-code-commit text-[9px]"></i>
+                    <span>${latestC.short_hash || '---'}</span>
+                  </span>
                   <span>${formatDate(latestC.date)}</span>
                 </div>
                 <p class="text-xs text-slate-200 line-clamp-2 italic">"${latestC.subject || 'No commit recorded'}"</p>
@@ -1361,14 +2021,14 @@ if __name__ == "__main__":
             <!-- Bottom Stats & Actions -->
             <div class="pt-3 border-t border-white/10 flex items-center justify-between text-xs">
               <div class="flex items-center space-x-3 text-slate-400 font-mono text-[11px]">
-                <span><i class="fa-solid fa-code-commit mr-1 text-slate-500"></i>${repo.total_commits}</span>
-                <span><i class="fa-solid fa-folder-open mr-1 text-slate-500"></i>${repo.work_orders.length} WOs</span>
+                <span title="Total Commits"><i class="fa-solid fa-code-commit mr-1 text-slate-500"></i>${repo.total_commits}</span>
+                <span title="Work Orders"><i class="fa-solid fa-folder-open mr-1 text-slate-500"></i>${repo.work_orders.length} WOs</span>
               </div>
               <div class="flex items-center space-x-1.5">
-                <button onclick="inspectRepo('${repo.id}')" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-bold text-white border border-white/10 transition-colors">
+                <button onclick="inspectRepo('${repo.id}')" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-bold text-white border border-white/10 transition-all active:scale-95">
                   Inspect
                 </button>
-                <a href="${repo.github_url}" target="_blank" class="p-1.5 rounded-xl bg-ios-blue/15 hover:bg-ios-blue/30 text-ios-blue border border-ios-blue/30 transition-colors">
+                <a href="${repo.github_url}" target="_blank" class="p-1.5 rounded-xl bg-ios-blue/15 hover:bg-ios-blue/30 text-ios-blue border border-ios-blue/30 transition-all hover:scale-105 active:scale-95" title="Open GitHub Repository">
                   <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
                 </a>
               </div>
@@ -2078,9 +2738,65 @@ if __name__ == "__main__":
       showToast(`${filename} downloaded!`);
     }
 
+    function downloadInstaller() {
+      const batContent = `@echo off\r
+title HFRR-ADV & LAB-IQ Python Dependency Installer\r
+color 0A\r
+echo ============================================================\r
+echo   HFRR-ADV & LAB-IQ ADV - Automated Dependency Installer\r
+echo ============================================================\r
+echo.\r
+echo [1/3] Checking Python 3.9 installation...\r
+python --version >nul 2>&1\r
+if %errorlevel% neq 0 (\r
+    echo [ERROR] Python is not installed or not in system PATH!\r
+    echo Please install Python 3.9 (64-bit) and ensure 'Add to PATH' is checked.\r
+    pause\r
+    exit /b 1\r
+)\r
+\r
+echo [2/3] Upgrading pip...\r
+python -m pip install --upgrade pip\r
+\r
+echo.\r
+echo [3/3] Installing Required Libraries (including tdms)...\r
+pip install reportlab opencv-python numpy PyQt5 torch torchvision pywin32 pandas requests pyyaml tqdm matplotlib tdms\r
+\r
+echo.\r
+echo ============================================================\r
+echo   Installation Complete! Running Self-Verification...\r
+echo ============================================================\r
+python -c "import reportlab, tdms, cv2, numpy, PyQt5; print('All core modules verified OK!')"\r
+if %errorlevel% equ 0 (\r
+    echo [SUCCESS] All HFRR-ADV / LAB-IQ packages ready for LabVIEW integration.\r
+) else (\r
+    echo [WARNING] Some modules encountered import errors. Please review output above.\r
+)\r
+echo.\r
+pause\r
+`;
+      const blob = new Blob([batContent], { type: 'application/x-bat' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'Install_HFRR_Dependencies.bat';
+      a.click();
+      URL.revokeObjectURL(a.href);
+      showToast('Install_HFRR_Dependencies.bat downloaded!');
+    }
+
+    function updateLiveClock() {
+      const el = document.getElementById('live-telemetry-clock');
+      if (el) {
+        const now = new Date();
+        el.textContent = now.toLocaleTimeString('en-US', { hour12: false });
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       renderPyiPresets();
       generatePyiCommand();
+      updateLiveClock();
+      setInterval(updateLiveClock, 1000);
     });
   </script>
 
