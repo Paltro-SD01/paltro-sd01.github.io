@@ -12,6 +12,16 @@
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <title>Paltro-SD01 | Engineering & Git Operations Command Center</title>
+  <script>
+    (function() {
+      var q = window.location.search || '';
+      var isMobileUA = /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      var isStandalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+      if ((isMobileUA || isStandalone) && q.indexOf('view=desktop') === -1 && q.indexOf('sim=1') === -1) {
+        window.location.replace('app.html' + q + window.location.hash);
+      }
+    })();
+  </script>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -1926,10 +1936,14 @@ Press Enter to open https://github.com/login/device in your browser...
                 <i class="fa-solid fa-file-zipper"></i>
                 <span>Download Android Studio Project (.zip)</span>
               </a>
-              <button onclick="copyRawText('https://paltro-sd01.github.io/?source=android')" class="inline-flex items-center space-x-2 px-4 py-3 rounded-2xl bg-white/10 hover:bg-white/15 text-white border border-white/15 font-bold text-xs transition-all">
-                <i class="fa-solid fa-link"></i>
-                <span>Copy App Link</span>
-              </button>
+              <a href="app.html" target="_blank" class="inline-flex items-center space-x-2 px-4 py-3 rounded-2xl bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/40 font-bold text-xs transition-all">
+                <i class="fa-solid fa-mobile-screen"></i>
+                <span>Open Mobile App UI (app.html)</span>
+              </a>
+              <a href="https://github.com/Paltro-SD01/paltro-sd01.github.io/blob/main/DEVICE_ACCESS_LOG.md" target="_blank" class="inline-flex items-center space-x-2 px-4 py-3 rounded-2xl bg-white/10 hover:bg-white/15 text-white border border-white/15 font-bold text-xs transition-all">
+                <i class="fa-solid fa-shield-halved text-ios-green"></i>
+                <span>GitHub Device Access Log</span>
+              </a>
             </div>
           </div>
 
@@ -1940,7 +1954,7 @@ Press Enter to open https://github.com/login/device in your browser...
               <span>Scan with Android Camera</span>
             </div>
             <div class="bg-white p-2.5 rounded-2xl shadow-inner">
-              <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=4&data=https%3A%2F%2Fpaltro-sd01.github.io%2F%3Fsource%3Dandroid"
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=4&data=https%3A%2F%2Fpaltro-sd01.github.io%2Fapp.html%3Fsource%3Dandroid"
                    alt="Scan to open Paltro-SD01 on Android"
                    width="148" height="148"
                    class="rounded-lg block"
@@ -2010,6 +2024,49 @@ Press Enter to open https://github.com/login/device in your browser...
                   <p class="text-[11px] text-slate-400 mt-0.5">Caches all 6 repositories, 28 Work Orders, and installation guides locally on your phone so you can inspect history even without Wi-Fi.</p>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <!-- GitHub Device Access Log & Phone Pairing Card -->
+          <div class="fluid-glass rounded-3xl p-6 space-y-4 border border-emerald-500/25">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2.5">
+                <div class="h-9 w-9 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-ios-green">
+                  <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div>
+                  <h3 class="text-sm font-extrabold text-white">GitHub Device Access &amp; Sync Audit Log</h3>
+                  <p class="text-[11px] text-slate-400">Cross-verify every device, IP, model &amp; sync version</p>
+                </div>
+              </div>
+              <a href="https://github.com/Paltro-SD01/paltro-sd01.github.io/blob/main/DEVICE_ACCESS_LOG.md" target="_blank" class="px-2.5 py-1 rounded-xl bg-ios-green/15 text-ios-green border border-ios-green/30 text-[10px] font-bold">
+                DEVICE_ACCESS_LOG.md ↗
+              </a>
+            </div>
+
+            <div class="p-3.5 rounded-2xl bg-black/50 border border-white/10 space-y-2 text-xs">
+              <div class="font-bold text-white flex items-center justify-between">
+                <span>1-Scan Phone Pairing for Auto-GitHub Logging</span>
+                <span class="text-[10px] font-mono text-ios-teal">Optional</span>
+              </div>
+              <p class="text-[11px] text-slate-400 leading-relaxed">
+                Paste a GitHub Personal Access Token below to embed it into the QR code above. When you scan the QR code with your Android phone, your phone pairs automatically and pushes every access event (Model, OS, Resolution, IP, Sync ID) directly to <code class="text-ios-teal">DEVICE_ACCESS_LOG.md</code> on GitHub!
+              </p>
+              <div class="flex items-center space-x-2">
+                <input type="password" id="desktop-pair-token" placeholder="Paste ghp_... token to generate Paired QR"
+                       class="flex-1 bg-black/70 border border-white/15 rounded-xl px-3 py-2 text-xs font-mono text-white">
+                <button onclick="generatePairedQrCode()" class="px-3.5 py-2 rounded-xl bg-ios-green text-black font-extrabold text-xs shrink-0">
+                  Update QR
+                </button>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <div class="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                <span>Recent Device Access &amp; Sync Records</span>
+                <button onclick="loadDesktopAccessLogs()" class="text-ios-teal hover:underline font-mono">Refresh</button>
+              </div>
+              <div id="desktop-access-logs-box" class="space-y-2 max-h-56 overflow-y-auto pr-1 text-[11px]"></div>
             </div>
           </div>
 
@@ -2096,7 +2153,7 @@ Press Enter to open https://github.com/login/device in your browser...
                   </div>
                 </div>
                 <!-- Embedded Interactive App View -->
-                <iframe id="android-sim-iframe" src="about:blank" data-src="index.html?sim=1" title="Paltro-SD01 Android App Live Simulator" class="w-full flex-1 border-0 bg-[#05070D]"></iframe>
+                <iframe id="android-sim-iframe" src="about:blank" data-src="app.html?sim=1" title="Paltro-SD01 Android App Live Simulator" class="w-full flex-1 border-0 bg-[#05070D]"></iframe>
                 <!-- Android Gesture Pill -->
                 <div class="h-4 bg-[#05070D] flex items-center justify-center shrink-0">
                   <div class="w-28 h-1 rounded-full bg-white/30"></div>
@@ -3886,6 +3943,67 @@ pause\r
         }
       });
     }
+
+
+    function generatePairedQrCode() {
+      const tok = (document.getElementById('desktop-pair-token').value || '').trim();
+      if (!tok) {
+        showToast('Paste a GitHub token first!');
+        return;
+      }
+      localStorage.setItem('paltro_gh_sync_token', tok);
+      const targetUrl = 'https://paltro-sd01.github.io/app.html?source=android#pair=' + encodeURIComponent(tok);
+      const qrImgs = document.querySelectorAll('#view-android img[alt*="Scan"]');
+      qrImgs.forEach(img => {
+        img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=4&data=' + encodeURIComponent(targetUrl);
+      });
+      showToast('QR Code updated with Pairing Key! Scan with your phone now.');
+    }
+
+    async function loadDesktopAccessLogs() {
+      const box = document.getElementById('desktop-access-logs-box');
+      if (!box) return;
+      try {
+        const res = await fetch('device_access_log.json?_t=' + Date.now(), { cache: 'no-store' });
+        if (!res.ok) return;
+        const logs = await res.json();
+        box.innerHTML = logs.slice(0, 15).map(e => `
+          <div class="p-2.5 rounded-xl bg-black/50 border border-white/10 space-y-1">
+            <div class="flex items-center justify-between font-mono text-[10px]">
+              <span class="px-1.5 py-0.5 rounded bg-ios-green/15 text-ios-green font-bold">${escapeHtml(e.device_id || '-')}</span>
+              <span class="text-ios-teal font-bold">${escapeHtml(e.sync_id || '-')}</span>
+              <span class="text-slate-400">${escapeHtml(e.timestamp || '-')}</span>
+            </div>
+            <div class="font-bold text-white text-xs">${escapeHtml(e.device_name || '-')} <span class="text-slate-400 font-normal text-[10px]">· ${escapeHtml(e.app_mode || '-')}</span></div>
+            <div class="text-[10px] font-mono text-slate-400">${escapeHtml(e.resolution || '-')} · ${escapeHtml(e.network || '-')}</div>
+          </div>
+        `).join('');
+      } catch (e) {}
+    }
+
+    // Auto-poll data.js every 30s on desktop too so updates reflect automatically
+    let desktopSyncId = (typeof DATA_SYNC_META !== 'undefined' && DATA_SYNC_META.sync_id) ? DATA_SYNC_META.sync_id : '';
+    async function pollDesktopLiveUpdate() {
+      try {
+        const res = await fetch('data.js?_t=' + Date.now(), { cache: 'no-store' });
+        if (!res.ok) return;
+        const text = await res.text();
+        const fn = new Function(text + '\nreturn { meta: typeof DATA_SYNC_META !== "undefined" ? DATA_SYNC_META : null, repos: REPOS_DATA };');
+        const parsed = fn();
+        if (parsed && parsed.meta && parsed.meta.sync_id && parsed.meta.sync_id !== desktopSyncId) {
+          desktopSyncId = parsed.meta.sync_id;
+          window.DATA_SYNC_META = parsed.meta;
+          REPOS_DATA = parsed.repos;
+          initDashboard();
+          initSuiteForm();
+          showToast('⚡ Live Update Synced (' + desktopSyncId + ')');
+        }
+      } catch (e) {}
+    }
+    setInterval(pollDesktopLiveUpdate, 30000);
+    document.addEventListener('DOMContentLoaded', () => {
+      loadDesktopAccessLogs();
+    });
 
     function reloadAndroidSimulator() {
       const iframe = document.getElementById('android-sim-iframe');

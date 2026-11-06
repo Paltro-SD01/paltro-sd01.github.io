@@ -1,0 +1,1680 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#060913">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Paltro-SD01">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <title>Paltro-SD01 Mobile | Android Engineering App</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            app: {
+              bg: '#060913',
+              surface: '#0F1525',
+              card: '#151D32',
+              border: 'rgba(255,255,255,0.09)',
+              blue: '#0A84FF',
+              green: '#30D158',
+              orange: '#FF9F0A',
+              purple: '#BF5AF2',
+              teal: '#64D2FF',
+              red: '#FF453A',
+              yellow: '#FFD60A'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'Roboto', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+    html, body {
+      background-color: #060913;
+      color: #F8FAFC;
+      font-family: 'Plus Jakarta Sans', -apple-system, Roboto, sans-serif;
+      overscroll-behavior-y: contain;
+      overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      padding-top: calc(3.75rem + env(safe-area-inset-top, 0px));
+      padding-bottom: calc(4.75rem + env(safe-area-inset-bottom, 0px));
+      min-height: 100dvh;
+    }
+    .app-topbar {
+      padding-top: env(safe-area-inset-top, 0px);
+      background: rgba(10, 14, 26, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .app-bottombar {
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      background: rgba(10, 14, 26, 0.96);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .m-card {
+      background: linear-gradient(180deg, rgba(23, 31, 52, 0.92) 0%, rgba(15, 21, 37, 0.95) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 1.15rem;
+      box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.5);
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .chip-active {
+      background: #0A84FF;
+      color: #FFFFFF;
+      border-color: #389BFF;
+      box-shadow: 0 2px 12px rgba(10, 132, 255, 0.4);
+    }
+    .chip-idle {
+      background: rgba(255, 255, 255, 0.06);
+      color: #94A3B8;
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    .status-closed { background: rgba(48, 209, 88, 0.15); color: #30D158; border: 1px solid rgba(48, 209, 88, 0.35); }
+    .status-testing { background: rgba(255, 159, 10, 0.15); color: #FF9F0A; border: 1px solid rgba(255, 159, 10, 0.35); }
+    .status-active { background: rgba(10, 132, 255, 0.15); color: #64D2FF; border: 1px solid rgba(10, 132, 255, 0.35); }
+    .status-discontinued { background: rgba(255, 69, 58, 0.15); color: #FF453A; border: 1px solid rgba(255, 69, 58, 0.35); }
+
+    @keyframes spinSlow { to { transform: rotate(360deg); } }
+    .spin-sync { animation: spinSlow 0.9s linear infinite; }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================== -->
+  <!-- FIXED NATIVE ANDROID TOP APP BAR           -->
+  <!-- ========================================== -->
+  <header class="app-topbar fixed top-0 inset-x-0 z-40">
+    <div class="h-14 px-3.5 flex items-center justify-between max-w-lg mx-auto">
+      <!-- App Identity -->
+      <div class="flex items-center space-x-2.5 min-w-0">
+        <div class="h-9 w-9 rounded-xl bg-gradient-to-tr from-app-blue to-indigo-600 flex items-center justify-center text-white shadow-md shadow-app-blue/30 shrink-0">
+          <i class="fa-solid fa-layer-group text-sm"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="flex items-center space-x-1.5">
+            <span class="font-extrabold text-sm text-white tracking-tight truncate">Paltro-SD01</span>
+            <span class="inline-flex items-center space-x-1 px-1.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-[9px] font-mono font-bold text-app-green">
+              <span class="w-1.5 h-1.5 rounded-full bg-app-green animate-pulse"></span>
+              <span id="top-sync-badge">LIVE</span>
+            </span>
+          </div>
+          <div class="text-[10px] text-slate-400 font-mono truncate" id="top-subtitle">Syncing telemetry...</div>
+        </div>
+      </div>
+
+      <!-- Right Actions: Live Sync, Device ID, Install/Desktop -->
+      <div class="flex items-center space-x-1.5 shrink-0">
+        <button onclick="checkAndPullLiveUpdate(true)" id="btn-live-sync" class="h-8 px-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-mono text-app-teal flex items-center space-x-1.5 active:scale-95 transition-all" title="Check & Pull Latest Update">
+          <i class="fa-solid fa-arrows-rotate text-xs" id="sync-icon"></i>
+          <span class="text-[10px] font-bold">Sync</span>
+        </button>
+
+        <button onclick="switchScreen('device')" class="h-8 px-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-[10px] font-mono font-bold text-app-green flex items-center space-x-1 active:scale-95" title="Device Verification & Access Log">
+          <i class="fa-solid fa-shield-halved text-[10px]"></i>
+          <span id="top-device-short">DEV</span>
+        </button>
+
+        <button onclick="triggerAppInstall()" id="top-install-btn" class="hidden h-8 px-2.5 rounded-xl bg-app-blue text-white text-[10px] font-extrabold flex items-center space-x-1 shadow-md shadow-app-blue/30 active:scale-95">
+          <i class="fa-solid fa-download text-[10px]"></i>
+          <span>Install</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- MAIN MOBILE APP CONTAINER (MAX-W-LG)       -->
+  <!-- ========================================== -->
+  <main class="max-w-lg mx-auto px-3 py-3 space-y-3.5">
+
+    <!-- ========================================== -->
+    <!-- SCREEN 1: HOME & RIGS OVERVIEW             -->
+    <!-- ========================================== -->
+    <section id="screen-rigs" class="space-y-3.5">
+
+      <!-- Live Auto-Sync Status Strip -->
+      <div onclick="switchScreen('device')" class="m-card p-3 flex items-center justify-between cursor-pointer active:scale-[0.99] transition-transform">
+        <div class="flex items-center space-x-2.5 min-w-0">
+          <div class="h-8 w-8 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-app-green shrink-0">
+            <i class="fa-solid fa-satellite-dish text-xs"></i>
+          </div>
+          <div class="min-w-0">
+            <div class="text-[11px] font-bold text-white flex items-center space-x-1.5">
+              <span>Auto-Update Active</span>
+              <span class="text-[10px] font-mono text-app-teal" id="home-sync-id">---</span>
+            </div>
+            <div class="text-[10px] text-slate-400 truncate" id="home-sync-time">Checks GitHub automatically every 30s</div>
+          </div>
+        </div>
+        <i class="fa-solid fa-chevron-right text-xs text-slate-500 shrink-0 ml-2"></i>
+      </div>
+
+      <!-- Compact 2x2 Android KPI Grid -->
+      <div class="grid grid-cols-2 gap-2.5" id="mobile-kpi-grid"></div>
+
+      <!-- Quick Work Order Status Filter Bar -->
+      <div class="m-card p-3 space-y-2">
+        <div class="flex items-center justify-between text-[11px]">
+          <span class="font-bold text-slate-300 uppercase tracking-wider text-[10px]">Work Order Lifecycle</span>
+          <button onclick="switchScreen('wos')" class="text-app-blue font-bold text-[11px] flex items-center space-x-1">
+            <span>Open All</span>
+            <i class="fa-solid fa-arrow-right text-[9px]"></i>
+          </button>
+        </div>
+        <div class="grid grid-cols-3 gap-2 text-center">
+          <button onclick="jumpToWosStatus('CLOSED')" class="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/25 active:scale-95 transition-transform">
+            <div class="text-base font-extrabold text-app-green font-mono" id="m-count-closed">0</div>
+            <div class="text-[10px] font-bold text-emerald-300">🔒 Closed</div>
+          </button>
+          <button onclick="jumpToWosStatus('ACTIVE')" class="p-2 rounded-xl bg-blue-500/10 border border-blue-500/25 active:scale-95 transition-transform">
+            <div class="text-base font-extrabold text-app-teal font-mono" id="m-count-active">0</div>
+            <div class="text-[10px] font-bold text-sky-300">🛠️ In Dev</div>
+          </button>
+          <button onclick="jumpToWosStatus('TESTING')" class="p-2 rounded-xl bg-amber-500/10 border border-amber-500/25 active:scale-95 transition-transform">
+            <div class="text-base font-extrabold text-app-orange font-mono" id="m-count-testing">0</div>
+            <div class="text-[10px] font-bold text-amber-300">🧪 Testing</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Section Heading -->
+      <div class="flex items-center justify-between px-1 pt-1">
+        <h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-300">
+          <i class="fa-solid fa-microchip text-app-blue mr-1.5"></i>6 Test Rig Repositories
+        </h2>
+        <span class="text-[10px] font-mono text-slate-400">Tap rig to inspect</span>
+      </div>
+
+      <!-- Rig Cards List -->
+      <div class="space-y-2.5" id="mobile-rigs-list"></div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 2: WORK ORDERS (MOBILE CARD LIST)   -->
+    <!-- ========================================== -->
+    <section id="screen-wos" class="hidden space-y-3">
+
+      <!-- Sticky Search & Filter Header -->
+      <div class="m-card p-3 space-y-2.5 sticky top-14 z-30 backdrop-blur-xl bg-slate-950/95">
+        <div class="relative">
+          <i class="fa-solid fa-magnifying-glass text-slate-400 text-xs absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+          <input type="text" id="m-wo-search" oninput="renderMobileWOs()" placeholder="Search WO (e.g. 2472, 2485), commit, change..."
+                 class="w-full pl-9 pr-8 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-app-blue">
+          <button onclick="clearWoFilters()" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs px-1">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- Horizontal Rig Filter Chips -->
+        <div class="flex items-center space-x-1.5 overflow-x-auto no-scrollbar pb-0.5" id="m-wo-repo-chips"></div>
+
+        <!-- Status Filter Chips -->
+        <div class="flex items-center justify-between pt-1 border-t border-white/10">
+          <div class="flex items-center space-x-1.5 overflow-x-auto no-scrollbar" id="m-wo-status-chips"></div>
+          <span class="text-[10px] font-mono text-slate-400 shrink-0 ml-2" id="m-wo-count-label">28 WOs</span>
+        </div>
+      </div>
+
+      <!-- Mobile Work Order Cards Container -->
+      <div class="space-y-2.5" id="mobile-wos-list"></div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 3: COMMITS STREAM                   -->
+    <!-- ========================================== -->
+    <section id="screen-commits" class="hidden space-y-3">
+
+      <!-- Search & Rig Filter -->
+      <div class="m-card p-3 space-y-2.5 sticky top-14 z-30 backdrop-blur-xl bg-slate-950/95">
+        <div class="relative">
+          <i class="fa-solid fa-magnifying-glass text-slate-400 text-xs absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+          <input type="text" id="m-commit-search" oninput="renderMobileCommits()" placeholder="Search commit hash, author, VI file, summary..."
+                 class="w-full pl-9 pr-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-app-blue">
+        </div>
+        <div class="flex items-center space-x-1.5 overflow-x-auto no-scrollbar pb-0.5" id="m-commit-repo-chips"></div>
+      </div>
+
+      <!-- Mobile Commits Feed -->
+      <div class="space-y-2.5" id="mobile-commits-list"></div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 4: AUTOMATOR & ENGINEERING GUIDES   -->
+    <!-- ========================================== -->
+    <section id="screen-tools" class="hidden space-y-3">
+
+      <!-- Sub-navigation Switcher -->
+      <div class="grid grid-cols-3 gap-1.5 p-1 rounded-2xl bg-black/60 border border-white/10 text-[11px]">
+        <button onclick="setToolSubtab('automator')" id="tbtn-automator" class="py-2 rounded-xl font-bold chip-active transition-all">
+          <i class="fa-solid fa-terminal mr-1"></i>Automator
+        </button>
+        <button onclick="setToolSubtab('sparse')" id="tbtn-sparse" class="py-2 rounded-xl font-semibold text-slate-400 transition-all">
+          <i class="fa-solid fa-cloud-arrow-down mr-1"></i>Sparse BAT
+        </button>
+        <button onclick="setToolSubtab('guides')" id="tbtn-guides" class="py-2 rounded-xl font-semibold text-slate-400 transition-all">
+          <i class="fa-solid fa-book-open mr-1"></i>Guides
+        </button>
+      </div>
+
+      <!-- Subtab A: Mobile Work Order Automator -->
+      <div id="tool-sub-automator" class="m-card p-4 space-y-3.5">
+        <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
+          <div>
+            <h3 class="text-sm font-extrabold text-white">Work Order Release Automator</h3>
+            <p class="text-[11px] text-slate-400">Auto-lists existing Work Orders &amp; builds PowerShell script</p>
+          </div>
+          <span class="px-2 py-0.5 rounded-lg bg-app-blue/20 text-app-teal font-mono text-[10px] font-bold" id="m-auto-wo-count">0 WOs</span>
+        </div>
+
+        <!-- Repo Select -->
+        <div>
+          <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">1. Target Software Repository</label>
+          <select id="mAutoRepo" onchange="onMobileAutoRepoChange()" class="w-full bg-black/70 border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white font-semibold focus:outline-none focus:border-app-blue"></select>
+        </div>
+
+        <!-- Work Order Select -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">2. Work Order Folder</label>
+            <select id="mAutoWo" onchange="onMobileAutoWoChange()" class="w-full bg-black/70 border border-white/15 rounded-xl px-3 py-2.5 text-xs text-app-teal font-mono font-bold focus:outline-none focus:border-app-blue"></select>
+            <input type="text" id="mAutoWoNew" oninput="buildMobileAutoScript()" placeholder="Enter new folder, e.g. WO 2501"
+                   class="hidden mt-2 w-full bg-black/70 border border-white/15 rounded-xl px-3 py-2 text-xs text-white font-mono">
+            <div id="mAutoWoMeta" class="text-[10px] font-mono text-slate-400 mt-1"></div>
+          </div>
+
+          <div>
+            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">3. Stage Status</label>
+            <select id="mAutoStage" onchange="buildMobileAutoScript()" class="w-full bg-black/70 border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white font-semibold focus:outline-none focus:border-app-blue">
+              <option value="closed" selected>🔒 [CLOSED] Release Closed</option>
+              <option value="dev">🛠️ IN-DEV (Active)</option>
+              <option value="testing">🧪 [TESTING] QA Testing</option>
+              <option value="integration">⚡ [INTEGRATION] Integration</option>
+              <option value="reopen">🔄 [REOPENED] Patch</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Category Select -->
+        <div>
+          <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">4. Category of Change (16 Categories)</label>
+          <select id="mAutoCategory" onchange="buildMobileAutoScript()" class="w-full bg-black/70 border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white font-semibold focus:outline-none focus:border-app-blue"></select>
+        </div>
+
+        <!-- Multi-line Summary -->
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">5. Summary of Changes (All Listed)</label>
+            <span id="mAutoChangesBadge" class="text-[10px] font-mono text-app-green font-bold">3 changes</span>
+          </div>
+          <textarea id="mAutoDesc" oninput="buildMobileAutoScript()" rows="4"
+                    class="w-full bg-black/70 border border-white/15 rounded-xl p-3 text-xs text-white leading-relaxed focus:outline-none focus:border-app-blue"
+                    placeholder="Enter one change per line or numbered 1. ... 2. ...">1. Updated front panel controls and indicators
+2. Fixed sensor calibration offset in DAQ loop
+3. Validated test logs and updated documentation</textarea>
+
+          <!-- Live Parsed Bullets Preview -->
+          <div class="mt-2 p-2.5 rounded-xl bg-black/50 border border-white/10 space-y-1">
+            <div class="text-[10px] font-bold uppercase text-app-teal">Live Changes Preview:</div>
+            <ul id="mAutoBulletsPreview" class="space-y-1 text-[11px] text-slate-200"></ul>
+          </div>
+        </div>
+
+        <!-- Generated PowerShell Preview -->
+        <div>
+          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Generated PowerShell Script</div>
+          <pre id="mAutoPsOutput" class="p-3 rounded-xl bg-black/90 border border-white/10 text-[10px] font-mono text-app-green overflow-x-auto max-h-40 leading-relaxed"></pre>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 pt-1">
+          <button onclick="copyMobileAutoPs()" class="py-3 px-3 rounded-xl bg-app-blue text-white font-extrabold text-xs flex items-center justify-center space-x-1.5 shadow-lg shadow-app-blue/30 active:scale-95">
+            <i class="fa-solid fa-copy"></i>
+            <span>Copy Script</span>
+          </button>
+          <button onclick="shareMobileAutoPs()" class="py-3 px-3 rounded-xl bg-white/10 text-white font-bold text-xs flex items-center justify-center space-x-1.5 border border-white/15 active:scale-95">
+            <i class="fa-solid fa-share-nodes"></i>
+            <span>Share to PC</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Subtab B: Mobile Sparse Downloader -->
+      <div id="tool-sub-sparse" class="hidden m-card p-4 space-y-3.5">
+        <div>
+          <h3 class="text-sm font-extrabold text-white">GitHub Sparse Folder Downloader</h3>
+          <p class="text-[11px] text-slate-400">Generate a `.bat` script to download a single Work Order folder</p>
+        </div>
+        <div class="space-y-2.5 text-xs">
+          <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Repository (`Owner/Repo`)</label>
+            <input id="mSparseRepo" oninput="updateMobileSparse()" value="Paltro-SD01/HFRR-ADV" class="w-full bg-black/70 border border-white/15 rounded-xl px-3 py-2 text-xs font-mono text-white">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Work Order Subfolder Path</label>
+            <input id="mSparseSub" oninput="updateMobileSparse()" value="WO 2472/v44" class="w-full bg-black/70 border border-white/15 rounded-xl px-3 py-2 text-xs font-mono text-app-teal">
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Drive</label>
+              <input id="mSparseDrive" oninput="updateMobileSparse()" value="D:" class="w-full bg-black/70 border border-white/15 rounded-xl px-3 py-2 text-xs font-mono text-white">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Branch</label>
+              <input id="mSparseBranch" oninput="updateMobileSparse()" value="main" class="w-full bg-black/70 border border-white/15 rounded-xl px-3 py-2 text-xs font-mono text-white">
+            </div>
+          </div>
+        </div>
+        <pre id="mSparsePreview" class="p-3 rounded-xl bg-black/90 border border-white/10 text-[10px] font-mono text-cyan-300 overflow-x-auto max-h-44 leading-relaxed"></pre>
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="copyMobileSparse()" class="py-2.5 rounded-xl bg-cyan-500 text-black font-extrabold text-xs">Copy .BAT</button>
+          <button onclick="downloadMobileSparse()" class="py-2.5 rounded-xl bg-white/10 text-white font-bold text-xs border border-white/15">Download .BAT</button>
+        </div>
+      </div>
+
+      <!-- Subtab C: Engineering Guides (Setup, EXE Builder, Wear Scar AI) -->
+      <div id="tool-sub-guides" class="hidden space-y-2.5">
+        <div class="m-card p-4 space-y-2.5">
+          <div class="flex items-center space-x-2.5">
+            <div class="h-8 w-8 rounded-xl bg-teal-500/20 text-app-teal flex items-center justify-center"><i class="fa-solid fa-screwdriver-wrench text-xs"></i></div>
+            <div>
+              <h3 class="text-xs font-extrabold text-white">Software Installation Guide</h3>
+              <p class="text-[10px] text-slate-400">HFRR-ADV &amp; LAB-IQ ADV Setup</p>
+            </div>
+          </div>
+          <ol class="list-decimal list-inside text-[11px] text-slate-300 space-y-1.5 leading-relaxed">
+            <li>Install <b>NI LabVIEW Run-Time Engine &amp; NI-DAQmx / NI-VISA</b> drivers.</li>
+            <li>Install <b>Python 3.9 (64-bit)</b>: scroll down &amp; select <a href="https://www.python.org/ftp/python/3.9.0/python-3.9.0-amd64-webinstall.exe" class="text-app-teal underline font-semibold">Windows x86-64 web-based installer</a> (<code class="text-[10px]">733df85afb160482c5636ca09b89c4c8</code>). Check <b>Add Python 3.9 to PATH</b>.</li>
+            <li>Install required Python packages in CMD:
+              <pre class="mt-1 p-2 rounded-lg bg-black/80 text-[10px] font-mono text-app-green overflow-x-auto">pip install opencv-python numpy matplotlib pillow scipy scikit-image tdms npTDMS pyinstaller</pre>
+            </li>
+          </ol>
+        </div>
+
+        <div class="m-card p-4 space-y-2">
+          <div class="flex items-center space-x-2.5">
+            <div class="h-8 w-8 rounded-xl bg-pink-500/20 text-pink-400 flex items-center justify-center"><i class="fa-solid fa-microscope text-xs"></i></div>
+            <div>
+              <h3 class="text-xs font-extrabold text-white">Wear Scar AI Detection Pipeline</h3>
+              <p class="text-[10px] text-slate-400">Automated HFRR &amp; BOCLE Optical Metrology</p>
+            </div>
+          </div>
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            Uses CLAHE illumination normalization, Sobel gradient fusion, morphological closing, and major/minor axis ellipse fitting ($\mu\text{m}$ calibration) integrated directly with LabVIEW System Exec VI.
+          </p>
+          <a href="index.html?view=desktop&tab=wearscar" class="inline-flex items-center space-x-1 text-[11px] font-bold text-app-teal pt-1">
+            <span>Open Full Desktop Guide &amp; Diagrams</span>
+            <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+          </a>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 5: AUTO-SYNC & DEVICE ACCESS LOG    -->
+    <!-- ========================================== -->
+    <section id="screen-device" class="hidden space-y-3.5">
+
+      <!-- Card 1: Live Auto-Update Status & Verification -->
+      <div class="m-card p-4 space-y-3 border border-emerald-500/30">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2.5">
+            <div class="h-9 w-9 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-app-green">
+              <i class="fa-solid fa-rotate text-sm" id="device-sync-spinner"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-extrabold text-white">Live Auto-Update Engine</h3>
+              <p class="text-[10px] text-slate-400">Automatically syncs changes pushed from workstation</p>
+            </div>
+          </div>
+          <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold status-closed" id="dev-sync-pill">IN SYNC</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 text-[11px] font-mono bg-black/50 p-3 rounded-xl border border-white/10">
+          <div>
+            <span class="text-[9px] uppercase text-slate-400 font-sans font-bold block">Loaded Sync ID</span>
+            <span class="text-app-teal font-bold" id="dev-meta-syncid">---</span>
+          </div>
+          <div>
+            <span class="text-[9px] uppercase text-slate-400 font-sans font-bold block">Master Publish Time</span>
+            <span class="text-white font-semibold" id="dev-meta-pubtime">---</span>
+          </div>
+          <div>
+            <span class="text-[9px] uppercase text-slate-400 font-sans font-bold block">Last Poll Check</span>
+            <span class="text-app-green" id="dev-meta-lastcheck">Just now</span>
+          </div>
+          <div>
+            <span class="text-[9px] uppercase text-slate-400 font-sans font-bold block">Tracked Payload</span>
+            <span class="text-slate-200" id="dev-meta-counts">6 Rigs · 28 WOs</span>
+          </div>
+        </div>
+
+        <button onclick="checkAndPullLiveUpdate(true)" class="w-full py-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-app-green border border-emerald-500/30 font-extrabold text-xs flex items-center justify-center space-x-2 active:scale-95 transition-all">
+          <i class="fa-solid fa-cloud-arrow-down"></i>
+          <span>Check &amp; Pull Latest GitHub Update Now</span>
+        </button>
+      </div>
+
+      <!-- Card 2: This Device's Cross-Verification Telemetry Passport -->
+      <div class="m-card p-4 space-y-3">
+        <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
+          <div>
+            <h3 class="text-sm font-extrabold text-white flex items-center space-x-1.5">
+              <i class="fa-solid fa-fingerprint text-app-blue"></i>
+              <span>This Device's Verification Passport</span>
+            </h3>
+            <p class="text-[10px] text-slate-400">Hardware, network &amp; session identity recorded on access</p>
+          </div>
+          <button onclick="copyDevicePassport()" class="px-2.5 py-1 rounded-lg bg-white/10 text-[10px] font-bold text-white border border-white/10">
+            <i class="fa-regular fa-copy mr-1"></i>Copy
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5 text-[11px] font-mono bg-black/50 p-3 rounded-xl border border-white/10">
+          <div>
+            <span class="text-[9px] uppercase text-slate-400 font-sans font-bold block">Device ID</span>
+            <span class="text-app-green font-extrabold" id="pass-dev-id">Detecting...</span>
+          </div>
+          <div>
+            <span class="text-[9px] uppercase text-slate-400 font-sans font-bold block">Device Model / Hardware</span>
+            <span class="text-white font-bold break-words" id="pass-dev-model">Detecting...</span>
+          </div>
+          <div>
+            <span class="text-[9px] uppercase text-slate-400 font-sans font-bold block">OS &amp; Browser Engine</span>
+            <span class="text-slate-200 break-words" id="pass-dev-os">Detecting...</span>
+          </div>
+          <div>
+            <span class="text-[9px] uppercase text-slate-400 font-sans font-bold block">App Container Mode</span>
+            <span class="text-app-teal font-bold" id="pass-dev-mode">Detecting...</span>
+          </div>
+          <div>
+            <span class="text-[9px] uppercase text-slate-400 font-sans font-bold block">Screen &amp; DPR</span>
+            <span class="text-slate-200" id="pass-dev-screen">Detecting...</span>
+          </div>
+          <div>
+            <span class="text-[9px] uppercase text-slate-400 font-sans font-bold block">Network IP &amp; Location</span>
+            <span class="text-amber-300 break-words" id="pass-dev-ip">Fetching IP...</span>
+          </div>
+        </div>
+
+        <!-- Optional Custom Device Label (e.g., "Paltro's Samsung S24") -->
+        <div class="flex items-center space-x-2">
+          <input type="text" id="custom-device-label" placeholder="Optional label (e.g. Paltro Android Phone)"
+                 class="flex-1 bg-black/60 border border-white/15 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500">
+          <button onclick="saveDeviceLabel()" class="px-3 py-2 rounded-xl bg-app-blue text-white text-xs font-bold shrink-0">
+            Save Name
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 3: GitHub Direct Access Logging Setup & Cross-Verification Table -->
+      <div class="m-card p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-sm font-extrabold text-white flex items-center space-x-1.5">
+              <i class="fa-brands fa-github text-white"></i>
+              <span>GitHub Device Access Audit Log</span>
+            </h3>
+            <p class="text-[10px] text-slate-400">Logs device access directly to <code class="text-app-teal">DEVICE_ACCESS_LOG.md</code> in GitHub</p>
+          </div>
+          <a href="https://github.com/Paltro-SD01/paltro-sd01.github.io/blob/main/DEVICE_ACCESS_LOG.md" target="_blank"
+             class="px-2.5 py-1 rounded-lg bg-app-blue/20 text-app-teal border border-app-blue/30 text-[10px] font-bold flex items-center space-x-1">
+            <span>View on GitHub</span>
+            <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+          </a>
+        </div>
+
+        <!-- GitHub Auto-Push Pairing Box -->
+        <div class="p-3 rounded-xl bg-black/60 border border-white/10 space-y-2">
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="font-bold text-slate-200">GitHub Cloud Logger Status:</span>
+            <span id="gh-logger-status" class="font-mono text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold">Local + Pairable</span>
+          </div>
+          <p class="text-[10px] text-slate-400 leading-relaxed">
+            To allow this phone to push its access log row directly into <code class="text-app-teal">Paltro-SD01/paltro-sd01.github.io/DEVICE_ACCESS_LOG.md</code> automatically on every visit, paste a GitHub token once (saved privately on this phone only) or scan the pairing QR from your PC:
+          </p>
+          <div class="flex items-center space-x-1.5">
+            <input type="password" id="gh-sync-token-input" placeholder="Paste ghp_... or github_pat_... (stored on phone only)"
+                   class="flex-1 bg-black/80 border border-white/15 rounded-xl px-2.5 py-1.5 text-[11px] font-mono text-white">
+            <button onclick="saveGhSyncToken()" class="px-3 py-1.5 rounded-xl bg-emerald-500 text-black font-extrabold text-[11px] shrink-0">
+              Pair &amp; Log
+            </button>
+          </div>
+          <div class="flex items-center justify-between pt-1">
+            <button onclick="pushDeviceAccessToGitHub(true)" class="text-[11px] font-bold text-app-teal hover:underline flex items-center space-x-1">
+              <i class="fa-solid fa-cloud-arrow-up text-[10px]"></i>
+              <span>Push Access Record to GitHub Now</span>
+            </button>
+            <a href="index.html?view=desktop" class="text-[10px] text-slate-400 underline">Switch to Desktop View</a>
+          </div>
+        </div>
+
+        <!-- Recorded Access Log Entries List -->
+        <div class="space-y-2 pt-1">
+          <div class="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            <span>Verified Access &amp; Sync History</span>
+            <span id="access-log-count" class="font-mono text-app-teal">0 entries</span>
+          </div>
+          <div id="mobile-access-log-list" class="space-y-2 max-h-80 overflow-y-auto pr-0.5"></div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- SLIDE-UP BOTTOM SHEET: WO SUB-CHANGELOG    -->
+  <!-- ========================================== -->
+  <div id="m-wo-sheet" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex flex-col justify-end">
+    <div onclick="closeMobileWoSheet()" class="flex-1"></div>
+    <div class="bg-[#0D1322] border-t border-white/15 rounded-t-3xl max-w-lg w-full mx-auto max-h-[84dvh] flex flex-col shadow-2xl">
+      <!-- Grab Handle -->
+      <div class="pt-2.5 pb-1 flex justify-center">
+        <div class="w-10 h-1 rounded-full bg-white/25"></div>
+      </div>
+      <!-- Sheet Header -->
+      <div class="px-4 py-2.5 border-b border-white/10 flex items-start justify-between">
+        <div class="min-w-0 pr-2">
+          <div class="flex items-center space-x-1.5">
+            <span id="sheet-wo-repo" class="px-2 py-0.5 rounded-md bg-app-blue/20 text-app-teal font-mono text-[10px] font-bold"></span>
+            <span id="sheet-wo-ver" class="px-2 py-0.5 rounded-md bg-purple-500/20 text-purple-300 font-mono text-[10px] font-bold"></span>
+            <span id="sheet-wo-status" class="px-2 py-0.5 rounded-full text-[10px] font-bold"></span>
+          </div>
+          <h3 id="sheet-wo-title" class="text-base font-extrabold text-white mt-1 truncate"></h3>
+          <p id="sheet-wo-path" class="text-[10px] font-mono text-slate-400 truncate"></p>
+        </div>
+        <button onclick="closeMobileWoSheet()" class="h-8 w-8 rounded-xl bg-white/10 text-slate-300 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+      <!-- Sheet Body -->
+      <div id="sheet-wo-body" class="p-4 overflow-y-auto space-y-3 flex-1"></div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- FIXED NATIVE ANDROID BOTTOM NAVIGATION BAR -->
+  <!-- ========================================== -->
+  <nav class="app-bottombar fixed bottom-0 inset-x-0 z-40">
+    <div class="grid grid-cols-5 max-w-lg mx-auto px-1.5 py-1 text-[10px]">
+      <button onclick="switchScreen('rigs')" id="bnav-rigs" class="flex flex-col items-center justify-center py-1.5 rounded-2xl text-app-blue font-extrabold bg-app-blue/15 transition-all">
+        <i class="fa-solid fa-cubes text-sm mb-0.5"></i>
+        <span>Rigs</span>
+      </button>
+      <button onclick="switchScreen('wos')" id="bnav-wos" class="flex flex-col items-center justify-center py-1.5 rounded-2xl text-slate-400 font-semibold transition-all">
+        <i class="fa-solid fa-list-check text-sm mb-0.5"></i>
+        <span>Work Orders</span>
+      </button>
+      <button onclick="switchScreen('commits')" id="bnav-commits" class="flex flex-col items-center justify-center py-1.5 rounded-2xl text-slate-400 font-semibold transition-all">
+        <i class="fa-solid fa-code-commit text-sm mb-0.5"></i>
+        <span>Commits</span>
+      </button>
+      <button onclick="switchScreen('tools')" id="bnav-tools" class="flex flex-col items-center justify-center py-1.5 rounded-2xl text-slate-400 font-semibold transition-all">
+        <i class="fa-solid fa-terminal text-sm mb-0.5"></i>
+        <span>Automator</span>
+      </button>
+      <button onclick="switchScreen('device')" id="bnav-device" class="flex flex-col items-center justify-center py-1.5 rounded-2xl text-slate-400 font-semibold transition-all relative">
+        <i class="fa-solid fa-shield-halved text-sm mb-0.5"></i>
+        <span>Sync &amp; Log</span>
+        <span class="absolute top-1.5 right-4 w-1.5 h-1.5 rounded-full bg-app-green"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Toast Banner -->
+  <div id="m-toast" class="fixed top-16 inset-x-4 max-w-sm mx-auto z-50 transform -translate-y-24 opacity-0 transition-all duration-300 pointer-events-none bg-white text-slate-950 px-4 py-2.5 rounded-2xl shadow-2xl flex items-center space-x-2 text-xs font-extrabold">
+    <i class="fa-solid fa-circle-check text-app-green text-sm"></i>
+    <span id="m-toast-msg">Synced!</span>
+  </div>
+
+  <!-- Initial Data Payload -->
+  <script src="data.js"></script>
+
+  <script>
+    // ==========================================
+    // STATE & CONFIGURATION
+    // ==========================================
+    let currentScreen = 'rigs';
+    let selectedWoRepo = 'ALL';
+    let selectedWoStatus = 'ALL';
+    let selectedCommitRepo = 'ALL';
+    let currentSyncId = (typeof DATA_SYNC_META !== 'undefined' && DATA_SYNC_META.sync_id) ? DATA_SYNC_META.sync_id : 'LOCAL';
+    let deferredInstallPrompt = null;
+
+    const MOBILE_CATEGORIES = [
+      ['Core Engineering', [
+        ['fix', '🛠️ Fix — Bug / SubVI / Error Fix'],
+        ['feat', '🚀 Feat — New VI / Control / Feature'],
+        ['ui', '🎨 UI — Front Panel / Graph / HMI'],
+        ['logic', '🧠 Logic — State Machine / PID / Timing']
+      ]],
+      ['Hardware, DAQ & Motion', [
+        ['hw', '🔌 Hardware — DAQ / Modbus / Serial / Motion'],
+        ['calib', '📐 Calibration — Sensor Scaling / Offset'],
+        ['safety', '🛡️ Safety — Interlocks / E-Stop / Limits'],
+        ['vision', '🔬 Vision — Camera / ROI / Wear Scar AI']
+      ]],
+      ['Data, Reports & Config', [
+        ['report', '📊 Reporting — TDMS / Excel / PDF / Logging'],
+        ['config', '⚙️ Config — INI / Recipe / Defaults'],
+        ['perf', '⚡ Performance — Memory / Loop Rate'],
+        ['refactor', '🧹 Refactor — SubVI Cleanup / Wiring']
+      ]],
+      ['Release, Build & Docs', [
+        ['build', '📦 Build — EXE / Installer / PyInstaller'],
+        ['test', '🧪 Test — Bench Run / Rig Validation'],
+        ['docs', '📝 Docs — Manual / Changelog / SOP'],
+        ['chore', '🔧 Chore — General Sync / Cleanup']
+      ]]
+    ];
+
+    const RIG_COLORS = {
+      'LAB-IQ-150': { border: 'border-cyan-500/35', badge: 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30', icon: 'text-cyan-400 bg-cyan-500/15' },
+      'BOCLE':      { border: 'border-amber-500/35', badge: 'bg-amber-500/15 text-amber-300 border-amber-500/30', icon: 'text-amber-400 bg-amber-500/15' },
+      'HFRR-ADV':   { border: 'border-emerald-500/35', badge: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30', icon: 'text-emerald-400 bg-emerald-500/15' },
+      'LAB-IQ-350': { border: 'border-purple-500/35', badge: 'bg-purple-500/15 text-purple-300 border-purple-500/30', icon: 'text-purple-400 bg-purple-500/15' },
+      'B2V2':       { border: 'border-blue-500/35', badge: 'bg-blue-500/15 text-blue-300 border-blue-500/30', icon: 'text-blue-400 bg-blue-500/15' },
+      'AIRJET':     { border: 'border-rose-500/35', badge: 'bg-rose-500/15 text-rose-300 border-rose-500/30', icon: 'text-rose-400 bg-rose-500/15' }
+    };
+
+    function esc(s) {
+      return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function showMobileToast(msg) {
+      const t = document.getElementById('m-toast');
+      document.getElementById('m-toast-msg').innerText = msg;
+      t.classList.remove('-translate-y-24', 'opacity-0');
+      setTimeout(() => t.classList.add('-translate-y-24', 'opacity-0'), 2600);
+    }
+
+    // ==========================================
+    // MULTI-CHANGE SPLITTER & BULLET RENDERER
+    // ==========================================
+    function splitSingleChangeLine(text) {
+      if (!text) return [];
+      let s = String(text).trim();
+      if (!s) return [];
+      s = s.replace(/^[A-Za-z]+(\([^)]*\))?!?:\s*/, '').trim();
+      if (s.includes(' | ')) {
+        const parts = s.split(/\s*\|\s*/).map(p => p.trim()).filter(Boolean);
+        if (parts.length > 1) {
+          let out = [];
+          parts.forEach(p => out.push(...splitSingleChangeLine(p)));
+          return out;
+        }
+      }
+      if (/(?:^|\s)1\.\s+/.test(s) && /\s2\.\s+/.test(s)) {
+        let prefixTag = '';
+        const tagMatch = s.match(/^(\[[A-Za-z-]+\])\s*(.*)$/);
+        if (tagMatch) {
+          prefixTag = tagMatch[1];
+          s = tagMatch[2];
+        }
+        const parts = s.split(/(?:^|\s+)(?:\d+)\.\s+/).map(p => p.trim()).filter(Boolean);
+        if (parts.length > 1) {
+          if (prefixTag) parts[0] = `${prefixTag} ${parts[0]}`;
+          return parts;
+        }
+      }
+      s = s.replace(/^(?:[-*•]|\d+[.)])\s+/, '').trim();
+      return s ? [s] : [];
+    }
+
+    function extractChanges(summaryStr, detailsArr) {
+      const out = [];
+      splitSingleChangeLine(summaryStr).forEach(it => { if (it && !out.includes(it)) out.push(it); });
+      if (Array.isArray(detailsArr)) {
+        detailsArr.forEach(line => {
+          splitSingleChangeLine(line).forEach(it => { if (it && !out.includes(it)) out.push(it); });
+        });
+      }
+      return out.length ? out : ['Initial repository code'];
+    }
+
+    function renderBulletsHtml(items) {
+      if (!items || !items.length) return `<span class="text-slate-500 italic text-xs">No summary</span>`;
+      if (items.length === 1) {
+        return `<div class="text-xs text-slate-200 leading-relaxed break-words">${esc(items[0])}</div>`;
+      }
+      return `<ul class="space-y-1 text-xs leading-relaxed break-words">` +
+        items.map((it, i) => `
+          <li class="flex items-start space-x-1.5">
+            <span class="text-app-teal font-mono font-bold text-[10px] mt-0.5 shrink-0">${i + 1}.</span>
+            <span class="${i === 0 ? 'font-semibold text-white' : 'text-slate-300'}">${esc(it)}</span>
+          </li>
+        `).join('') + `</ul>`;
+    }
+
+    // ==========================================
+    // SCREEN NAVIGATION
+    // ==========================================
+    function switchScreen(scr) {
+      currentScreen = scr;
+      ['rigs', 'wos', 'commits', 'tools', 'device'].forEach(s => {
+        const el = document.getElementById(`screen-${s}`);
+        const btn = document.getElementById(`bnav-${s}`);
+        if (el) el.classList.toggle('hidden', s !== scr);
+        if (btn) {
+          btn.className = s === scr
+            ? "flex flex-col items-center justify-center py-1.5 rounded-2xl text-app-blue font-extrabold bg-app-blue/15 transition-all relative"
+            : "flex flex-col items-center justify-center py-1.5 rounded-2xl text-slate-400 font-semibold transition-all relative";
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function jumpToRepoWos(repoId) {
+      selectedWoRepo = repoId;
+      selectedWoStatus = 'ALL';
+      renderMobileWoChips();
+      renderMobileWOs();
+      switchScreen('wos');
+    }
+
+    function jumpToRepoCommits(repoId) {
+      selectedCommitRepo = repoId;
+      renderMobileCommitChips();
+      renderMobileCommits();
+      switchScreen('commits');
+    }
+
+    function jumpToWosStatus(st) {
+      selectedWoRepo = 'ALL';
+      selectedWoStatus = st;
+      renderMobileWoChips();
+      renderMobileWOs();
+      switchScreen('wos');
+    }
+
+    // ==========================================
+    // RENDER SCREEN 1: HOME & RIGS
+    // ==========================================
+    function renderMobileHome() {
+      const totalRepos = REPOS_DATA.length;
+      const totalCommits = REPOS_DATA.reduce((a, r) => a + r.total_commits, 0);
+      const totalTags = REPOS_DATA.reduce((a, r) => a + r.tags_count, 0);
+      const allWOs = REPOS_DATA.flatMap(r => r.work_orders);
+      const closed = allWOs.filter(w => w.status === 'CLOSED').length;
+      const active = allWOs.filter(w => w.status === 'ACTIVE').length;
+      const testing = allWOs.filter(w => w.status === 'TESTING').length;
+
+      document.getElementById('m-count-closed').innerText = closed;
+      document.getElementById('m-count-active').innerText = active;
+      document.getElementById('m-count-testing').innerText = testing;
+
+      const meta = (typeof DATA_SYNC_META !== 'undefined') ? DATA_SYNC_META : {};
+      currentSyncId = meta.sync_id || 'LIVE';
+      document.getElementById('top-subtitle').innerText = `${totalRepos} Rigs · ${allWOs.length} WOs · ${currentSyncId}`;
+      document.getElementById('home-sync-id').innerText = currentSyncId;
+      document.getElementById('home-sync-time').innerText = meta.generated_at ? `Master synced: ${meta.generated_at}` : 'Live telemetry connected';
+
+      const kpis = [
+        { label: 'Test Rigs', val: totalRepos, sub: 'All 6 Online', icon: 'fa-server', color: 'text-app-blue bg-blue-500/15' },
+        { label: 'Work Orders', val: allWOs.length, sub: `${closed} Closed · ${active} Dev`, icon: 'fa-list-check', color: 'text-app-green bg-emerald-500/15' },
+        { label: 'Git Commits', val: totalCommits, sub: 'Tracked History', icon: 'fa-code-commit', color: 'text-purple-400 bg-purple-500/15' },
+        { label: 'Release Tags', val: totalTags, sub: 'Milestones', icon: 'fa-tag', color: 'text-amber-400 bg-amber-500/15' }
+      ];
+
+      document.getElementById('mobile-kpi-grid').innerHTML = kpis.map(k => `
+        <div class="m-card p-3 flex items-center space-x-3">
+          <div class="h-10 w-10 rounded-2xl ${k.color} flex items-center justify-center shrink-0">
+            <i class="fa-solid ${k.icon} text-sm"></i>
+          </div>
+          <div class="min-w-0">
+            <div class="text-lg font-extrabold text-white font-mono leading-tight">${k.val}</div>
+            <div class="text-[10px] font-bold text-slate-300 truncate">${k.label}</div>
+            <div class="text-[9px] text-slate-400 truncate">${k.sub}</div>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('mobile-rigs-list').innerHTML = REPOS_DATA.map(r => {
+        const c = RIG_COLORS[r.id] || RIG_COLORS['BOCLE'];
+        const latest = r.latest_commit || {};
+        const closedCount = r.work_orders.filter(w => w.status === 'CLOSED').length;
+        return `
+          <div class="m-card p-3.5 space-y-2.5 border ${c.border}">
+            <div class="flex items-start justify-between">
+              <div class="flex items-center space-x-2.5 min-w-0">
+                <div class="h-9 w-9 rounded-xl ${c.icon} flex items-center justify-center shrink-0">
+                  <i class="fa-solid fa-microchip text-sm"></i>
+                </div>
+                <div class="min-w-0">
+                  <h3 class="text-sm font-extrabold text-white truncate">${esc(r.name)}</h3>
+                  <p class="text-[10px] text-slate-400 truncate">${esc(r.category)}</p>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold border ${c.badge} shrink-0">
+                ${r.work_orders.length} WOs
+              </span>
+            </div>
+
+            <!-- Latest Commit Snippet -->
+            <div class="p-2.5 rounded-xl bg-black/50 border border-white/5 text-[11px] space-y-1">
+              <div class="flex items-center justify-between font-mono text-[10px] text-slate-400">
+                <span class="text-app-green font-bold"><i class="fa-solid fa-code-commit mr-1"></i>${esc(latest.short_hash || '---')}</span>
+                <span>${esc((latest.date || '').slice(0, 16))}</span>
+              </div>
+              <div class="text-slate-200 line-clamp-2 text-[11px]">${esc(latest.subject || 'Initial commit')}</div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="grid grid-cols-2 gap-2 pt-0.5 text-[11px] font-bold">
+              <button onclick="jumpToRepoWos('${r.id}')" class="py-2 px-3 rounded-xl bg-app-blue/20 text-app-teal border border-app-blue/30 flex items-center justify-center space-x-1.5 active:scale-95">
+                <i class="fa-solid fa-folder-tree text-[10px]"></i>
+                <span>Work Orders (${r.work_orders.length})</span>
+              </button>
+              <button onclick="jumpToRepoCommits('${r.id}')" class="py-2 px-3 rounded-xl bg-white/5 text-slate-200 border border-white/10 flex items-center justify-center space-x-1.5 active:scale-95">
+                <i class="fa-solid fa-clock-rotate-left text-[10px]"></i>
+                <span>Commits (${r.total_commits})</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ==========================================
+    // RENDER SCREEN 2: WORK ORDERS (CARDS)
+    // ==========================================
+    function renderMobileWoChips() {
+      const repoChips = document.getElementById('m-wo-repo-chips');
+      const allCount = REPOS_DATA.reduce((a, r) => a + r.work_orders.length, 0);
+      let html = `<button onclick="selectedWoRepo='ALL'; renderMobileWoChips(); renderMobileWOs();" class="px-2.5 py-1 rounded-xl text-[10px] font-bold border shrink-0 transition-all ${selectedWoRepo === 'ALL' ? 'chip-active' : 'chip-idle'}">All Rigs (${allCount})</button>`;
+      REPOS_DATA.forEach(r => {
+        const active = selectedWoRepo === r.id;
+        html += `<button onclick="selectedWoRepo='${r.id}'; renderMobileWoChips(); renderMobileWOs();" class="px-2.5 py-1 rounded-xl text-[10px] font-bold border shrink-0 transition-all ${active ? 'chip-active' : 'chip-idle'}">${esc(r.name)} (${r.work_orders.length})</button>`;
+      });
+      repoChips.innerHTML = html;
+
+      const statuses = [
+        ['ALL', 'All Status'],
+        ['CLOSED', '🔒 Closed'],
+        ['ACTIVE', '🛠️ In Dev'],
+        ['TESTING', '🧪 Testing']
+      ];
+      document.getElementById('m-wo-status-chips').innerHTML = statuses.map(([code, label]) => `
+        <button onclick="selectedWoStatus='${code}'; renderMobileWoChips(); renderMobileWOs();" class="px-2.5 py-1 rounded-lg text-[10px] font-bold border shrink-0 transition-all ${selectedWoStatus === code ? 'bg-white text-black border-white' : 'chip-idle'}">${label}</button>
+      `).join('');
+    }
+
+    function clearWoFilters() {
+      document.getElementById('m-wo-search').value = '';
+      selectedWoRepo = 'ALL';
+      selectedWoStatus = 'ALL';
+      renderMobileWoChips();
+      renderMobileWOs();
+    }
+
+    function renderMobileWOs() {
+      const q = (document.getElementById('m-wo-search').value || '').trim().toLowerCase();
+      let items = [];
+      REPOS_DATA.forEach(r => {
+        if (selectedWoRepo !== 'ALL' && r.id !== selectedWoRepo) return;
+        r.work_orders.forEach(w => items.push({ repo: r.name, repo_id: r.id, ...w }));
+      });
+
+      if (selectedWoStatus !== 'ALL') {
+        items = items.filter(w => w.status === selectedWoStatus);
+      }
+      if (q) {
+        items = items.filter(w =>
+          w.repo.toLowerCase().includes(q) ||
+          w.name.toLowerCase().includes(q) ||
+          (w.version || '').toLowerCase().includes(q) ||
+          (w.summary || '').toLowerCase().includes(q) ||
+          (w.details || []).some(d => d.toLowerCase().includes(q)) ||
+          (w.last_commit_hash || '').toLowerCase().includes(q)
+        );
+      }
+
+      document.getElementById('m-wo-count-label').innerText = `${items.length} WOs`;
+      const box = document.getElementById('mobile-wos-list');
+      if (!items.length) {
+        box.innerHTML = `<div class="m-card p-6 text-center text-xs text-slate-400">No Work Orders match this filter.</div>`;
+        return;
+      }
+
+      box.innerHTML = items.map(wo => {
+        let stClass = 'status-active';
+        if (wo.status === 'CLOSED') stClass = 'status-closed';
+        else if (wo.status === 'TESTING') stClass = 'status-testing';
+        else if (wo.status === 'DISCONTINUED') stClass = 'status-discontinued';
+
+        const changes = extractChanges(wo.summary, wo.details);
+        return `
+          <div class="m-card p-3.5 space-y-2.5">
+            <!-- Top Row: Repo + WO Name + Version + Status -->
+            <div class="flex items-start justify-between gap-2">
+              <div class="min-w-0">
+                <div class="flex items-center flex-wrap gap-1.5">
+                  <span class="px-2 py-0.5 rounded-md bg-white/10 text-slate-300 font-mono text-[10px] font-bold">${esc(wo.repo)}</span>
+                  <span class="px-2 py-0.5 rounded-md bg-purple-500/20 text-purple-300 border border-purple-500/30 font-mono text-[10px] font-extrabold">${esc(wo.version || 'v01')}</span>
+                </div>
+                <h3 class="text-sm font-extrabold text-app-teal font-mono mt-1">${esc(wo.name)}</h3>
+              </div>
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold shrink-0 ${stClass}">
+                ${esc(wo.status)}
+              </span>
+            </div>
+
+            <!-- Middle: Full Bulleted Change List -->
+            <div class="p-2.5 rounded-xl bg-black/50 border border-white/5">
+              <div class="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1">Latest Changes (${changes.length} item${changes.length === 1 ? '' : 's'}):</div>
+              ${renderBulletsHtml(changes)}
+            </div>
+
+            <!-- Bottom Row: Commit Hash, Date & Sub-Changelog Button -->
+            <div class="flex items-center justify-between pt-0.5 text-[10px] font-mono text-slate-400">
+              <div class="flex items-center space-x-2">
+                <span class="px-1.5 py-0.5 rounded bg-black/60 text-app-green font-bold border border-white/10">${esc(wo.last_commit_hash || '—')}</span>
+                <span>${esc((wo.last_commit_date || '—').slice(0, 16))}</span>
+              </div>
+              ${wo.has_detailed_changelog ? `
+                <button onclick="openMobileWoSheet('${esc(wo.repo)}', '${esc(wo.name)}')" class="px-2.5 py-1 rounded-lg bg-app-blue/20 text-app-teal border border-app-blue/35 font-sans font-bold text-[10px] flex items-center space-x-1 active:scale-95">
+                  <i class="fa-solid fa-clock-rotate-left text-[9px]"></i>
+                  <span>History (${wo.detailed_history_count})</span>
+                </button>
+              ` : `<span class="text-slate-500">${wo.file_count || 0} files</span>`}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openMobileWoSheet(repoName, woName) {
+      const repo = REPOS_DATA.find(r => r.name === repoName);
+      if (!repo) return;
+      const wo = repo.work_orders.find(w => w.name === woName);
+      if (!wo) return;
+
+      document.getElementById('sheet-wo-repo').innerText = repoName;
+      document.getElementById('sheet-wo-ver').innerText = wo.version || 'v01';
+      document.getElementById('sheet-wo-status').innerText = wo.status;
+      document.getElementById('sheet-wo-status').className = `px-2 py-0.5 rounded-full text-[10px] font-bold ${wo.status === 'CLOSED' ? 'status-closed' : 'status-active'}`;
+      document.getElementById('sheet-wo-title').innerText = wo.name;
+      document.getElementById('sheet-wo-path').innerText = `${wo.path}\\CHANGELOG.md`;
+
+      const hist = wo.detailed_history || [];
+      const body = document.getElementById('sheet-wo-body');
+      if (!hist.length) {
+        body.innerHTML = `<div class="text-center py-8 text-xs text-slate-400">No sub-changelog history recorded.</div>`;
+      } else {
+        const groups = {};
+        hist.forEach(h => {
+          const cat = h.category || 'Modifications';
+          if (!groups[cat]) groups[cat] = [];
+          groups[cat].push(h);
+        });
+        body.innerHTML = Object.entries(groups).map(([cat, list]) => `
+          <div class="space-y-2">
+            <div class="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-extrabold text-app-orange uppercase tracking-wider flex items-center justify-between">
+              <span>${esc(cat)}</span>
+              <span class="font-mono text-slate-400">${list.length}</span>
+            </div>
+            ${list.map(e => `
+              <div class="p-3 rounded-xl bg-black/50 border border-white/10 space-y-1.5">
+                <div class="flex items-center justify-between font-mono text-[10px] text-slate-400">
+                  <span class="px-1.5 py-0.5 rounded bg-white/10 text-app-green font-bold">${esc(e.commit_hash)}</span>
+                  <span>${esc(e.date)}</span>
+                </div>
+                ${renderBulletsHtml(extractChanges(e.summary, e.details))}
+              </div>
+            `).join('')}
+          </div>
+        `).join('');
+      }
+      document.getElementById('m-wo-sheet').classList.remove('hidden');
+    }
+
+    function closeMobileWoSheet() {
+      document.getElementById('m-wo-sheet').classList.add('hidden');
+    }
+
+    // ==========================================
+    // RENDER SCREEN 3: COMMITS STREAM
+    // ==========================================
+    function renderMobileCommitChips() {
+      const box = document.getElementById('m-commit-repo-chips');
+      let html = `<button onclick="selectedCommitRepo='ALL'; renderMobileCommitChips(); renderMobileCommits();" class="px-2.5 py-1 rounded-xl text-[10px] font-bold border shrink-0 ${selectedCommitRepo === 'ALL' ? 'chip-active' : 'chip-idle'}">All Rigs</button>`;
+      REPOS_DATA.forEach(r => {
+        const act = selectedCommitRepo === r.id;
+        html += `<button onclick="selectedCommitRepo='${r.id}'; renderMobileCommitChips(); renderMobileCommits();" class="px-2.5 py-1 rounded-xl text-[10px] font-bold border shrink-0 ${act ? 'chip-active' : 'chip-idle'}">${esc(r.name)} (${r.total_commits})</button>`;
+      });
+      box.innerHTML = html;
+    }
+
+    function renderMobileCommits() {
+      const q = (document.getElementById('m-commit-search').value || '').trim().toLowerCase();
+      let all = [];
+      REPOS_DATA.forEach(r => {
+        if (selectedCommitRepo !== 'ALL' && r.id !== selectedCommitRepo) return;
+        r.commits.forEach(c => all.push({ repo: r.name, gh_url: r.github_url, ...c }));
+      });
+      all.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      if (q) {
+        all = all.filter(c =>
+          c.repo.toLowerCase().includes(q) ||
+          c.subject.toLowerCase().includes(q) ||
+          (c.body || []).some(b => b.toLowerCase().includes(q)) ||
+          c.short_hash.toLowerCase().includes(q) ||
+          c.author.toLowerCase().includes(q)
+        );
+      }
+
+      const box = document.getElementById('mobile-commits-list');
+      if (!all.length) {
+        box.innerHTML = `<div class="m-card p-6 text-center text-xs text-slate-400">No commits match filter.</div>`;
+        return;
+      }
+
+      box.innerHTML = all.slice(0, 80).map((c, idx) => {
+        const changes = extractChanges(c.subject, c.body);
+        return `
+          <div class="m-card p-3.5 space-y-2">
+            <div class="flex items-center justify-between text-[10px] font-mono">
+              <div class="flex items-center space-x-1.5">
+                <span class="px-2 py-0.5 rounded bg-app-blue/20 text-app-teal font-bold">${esc(c.repo)}</span>
+                <span class="px-1.5 py-0.5 rounded bg-white/10 text-app-green font-bold">${esc(c.short_hash)}</span>
+              </div>
+              <span class="text-slate-400">${esc((c.date || '').slice(0, 16))}</span>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-black/40 border border-white/5">
+              ${renderBulletsHtml(changes)}
+            </div>
+
+            <div class="flex items-center justify-between text-[10px] text-slate-400 pt-0.5">
+              <span><i class="fa-solid fa-user-circle mr-1"></i>${esc(c.author)}</span>
+              <button onclick="document.getElementById('cfiles-${idx}').classList.toggle('hidden')" class="text-app-teal font-mono font-bold">
+                <i class="fa-regular fa-file-lines mr-1"></i>${c.files_count} files <i class="fa-solid fa-chevron-down text-[8px]"></i>
+              </button>
+            </div>
+
+            <div id="cfiles-${idx}" class="hidden pt-2 border-t border-white/10 space-y-1 font-mono text-[10px]">
+              ${(c.files || []).slice(0, 15).map(f => `
+                <div class="flex items-center space-x-1.5 truncate text-slate-300">
+                  <span class="font-bold ${f.status === 'M' ? 'text-app-orange' : 'text-app-green'}">[${esc(f.status)}]</span>
+                  <span class="truncate">${esc(f.path)}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ==========================================
+    // RENDER SCREEN 4: AUTOMATOR & TOOLS
+    // ==========================================
+    function setToolSubtab(sub) {
+      ['automator', 'sparse', 'guides'].forEach(s => {
+        document.getElementById(`tool-sub-${s}`).classList.toggle('hidden', s !== sub);
+        document.getElementById(`tbtn-${s}`).className = s === sub
+          ? "py-2 rounded-xl font-bold chip-active transition-all"
+          : "py-2 rounded-xl font-semibold text-slate-400 transition-all";
+      });
+    }
+
+    function woNumSort(name) {
+      const m = String(name).match(/(\d+)/);
+      return m ? parseInt(m[1], 10) : -1;
+    }
+
+    function initMobileAutomator() {
+      const repoSel = document.getElementById('mAutoRepo');
+      repoSel.innerHTML = REPOS_DATA.map(r => `<option value="${esc(r.local_path)}">${esc(r.name)} — ${esc(r.category)} (${r.work_orders.length} WOs)</option>`).join('');
+
+      const catSel = document.getElementById('mAutoCategory');
+      catSel.innerHTML = MOBILE_CATEGORIES.map(([grp, items]) =>
+        `<optgroup label="${esc(grp)}">` +
+        items.map(([val, lbl]) => `<option value="${val}">${esc(lbl)}</option>`).join('') +
+        `</optgroup>`
+      ).join('');
+
+      onMobileAutoRepoChange();
+      updateMobileSparse();
+    }
+
+    function onMobileAutoRepoChange() {
+      const repoPath = document.getElementById('mAutoRepo').value;
+      const repo = REPOS_DATA.find(r => r.local_path === repoPath);
+      const wos = repo ? [...repo.work_orders].sort((a, b) => woNumSort(b.name) - woNumSort(a.name)) : [];
+      document.getElementById('m-auto-wo-count').innerText = `${wos.length} WOs`;
+      const woSel = document.getElementById('mAutoWo');
+      woSel.innerHTML = wos.map(w => `<option value="${esc(w.name)}">${esc(w.name)} · ${esc(w.version || 'v01')} · ${esc(w.status)}</option>`).join('') +
+        `<option value="__new__">➕ New Work Order Folder...</option>`;
+      onMobileAutoWoChange();
+    }
+
+    function onMobileAutoWoChange() {
+      const val = document.getElementById('mAutoWo').value;
+      const newInp = document.getElementById('mAutoWoNew');
+      const meta = document.getElementById('mAutoWoMeta');
+      const isNew = val === '__new__';
+      newInp.classList.toggle('hidden', !isNew);
+      if (isNew) {
+        meta.innerText = 'Will create/commit new Work Order folder.';
+      } else {
+        const repo = REPOS_DATA.find(r => r.local_path === document.getElementById('mAutoRepo').value);
+        const w = repo && repo.work_orders.find(x => x.name === val);
+        meta.innerText = w ? `Version ${w.version || 'v01'} · ${w.status} · ${w.detailed_history_count || 0} commits` : '';
+      }
+      buildMobileAutoScript();
+    }
+
+    function psQuote(s) { return "'" + String(s).replace(/'/g, "''") + "'"; }
+
+    function buildMobileAutoScript() {
+      const repoPath = document.getElementById('mAutoRepo').value;
+      const woSel = document.getElementById('mAutoWo').value;
+      const wo = woSel === '__new__' ? document.getElementById('mAutoWoNew').value.trim() : woSel;
+      const stage = document.getElementById('mAutoStage').value;
+      const type = document.getElementById('mAutoCategory').value || 'fix';
+
+      const rawLines = document.getElementById('mAutoDesc').value.replace(/\r/g, '').split('\n').map(l => l.trim()).filter(Boolean);
+      const items = [];
+      rawLines.forEach(l => splitSingleChangeLine(l).forEach(it => { if (it) items.push(it); }));
+      if (!items.length) items.push('Updated work order files');
+
+      document.getElementById('mAutoChangesBadge').innerText = `${items.length} change${items.length === 1 ? '' : 's'} listed`;
+      document.getElementById('mAutoBulletsPreview').innerHTML = items.map((it, i) => `
+        <li class="flex items-start space-x-1.5">
+          <span class="px-1.5 rounded bg-app-blue/20 text-app-teal font-mono text-[10px] font-bold shrink-0">${i + 1}</span>
+          <span class="break-words">${esc(it)}</span>
+        </li>
+      `).join('');
+
+      const stageMap = { closed: '[CLOSED]', reopen: '[REOPENED]', testing: '[TESTING]', integration: '[INTEGRATION]' };
+      const tag = stageMap[stage] ? ` ${stageMap[stage]}` : '';
+      const subject = `${type}${wo ? '(' + wo + ')' : ''}:${tag} ${items[0]}`;
+      const rest = items.slice(1);
+
+      let ps = `Set-Location ${psQuote(repoPath)}\ngit checkout main\ngit pull origin main --rebase --autostash\ngit add .\n`;
+      let commitCmd = `git commit -m ${psQuote(subject)}`;
+      if (rest.length) {
+        ps += `$body = @'\n${rest.join('\n')}\n'@\n`;
+        commitCmd += ` -m $body`;
+      }
+      ps += `if (git status --porcelain) { ${commitCmd} }\n`;
+      ps += `python "D:\\Projects\\update_all_configs.py"\ngit add .\n`;
+      ps += `if (git status --porcelain) { git commit -m "chore: rebuild CHANGELOG.md and README work-order status [skip ci]" }\n`;
+      ps += `git push origin main\n`;
+      ps += `python "D:\\Projects\\paltro-sd01.github.io\\refresh_data.py"\n`;
+      ps += `Set-Location "D:\\Projects\\paltro-sd01.github.io"\ngit add data.js device_access_log.json DEVICE_ACCESS_LOG.md\n`;
+      ps += `if (git status --porcelain) { git commit -m "chore: auto-sync telemetry and work order metrics [skip ci]"; git push origin main; git push origin main:gh-pages --force }\n`;
+
+      document.getElementById('mAutoPsOutput').innerText = ps;
+    }
+
+    function copyMobileAutoPs() {
+      navigator.clipboard.writeText(document.getElementById('mAutoPsOutput').innerText);
+      showMobileToast('PowerShell script copied!');
+    }
+
+    function shareMobileAutoPs() {
+      const txt = document.getElementById('mAutoPsOutput').innerText;
+      if (navigator.share) {
+        navigator.share({ title: 'Paltro-SD01 Work Order Script', text: txt }).catch(() => {});
+      } else {
+        copyMobileAutoPs();
+      }
+    }
+
+    function getMobileSparseBat() {
+      const repo = document.getElementById('mSparseRepo').value.trim();
+      const sub = document.getElementById('mSparseSub').value.trim();
+      const drv = document.getElementById('mSparseDrive').value.trim();
+      const br = document.getElementById('mSparseBranch').value.trim();
+      const rName = repo.split('/').pop() || 'repo';
+      return `@echo off\n${drv}\ncd \\\nmkdir "${rName}_sparse"\ncd "${rName}_sparse"\ngit init\ngit remote add origin https://github.com/${repo}.git\ngit config core.sparseCheckout true\necho "${sub}/*" >> .git/info/sparse-checkout\ngit pull origin ${br}\npause`;
+    }
+
+    function updateMobileSparse() {
+      const el = document.getElementById('mSparsePreview');
+      if (el) el.innerText = getMobileSparseBat();
+    }
+
+    function copyMobileSparse() {
+      navigator.clipboard.writeText(getMobileSparseBat());
+      showMobileToast('Sparse .BAT commands copied!');
+    }
+
+    function downloadMobileSparse() {
+      const blob = new Blob([getMobileSparseBat()], { type: 'application/x-bat' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'download_folder.bat';
+      a.click();
+      showMobileToast('download_folder.bat downloaded!');
+    }
+
+    // ==========================================
+    // SCREEN 5: LIVE AUTO-UPDATE ENGINE & GITHUB DEVICE ACCESS LOGGER
+    // ==========================================
+    let currentDevicePassport = {
+      device_id: '',
+      device_name: '',
+      platform: '',
+      app_mode: '',
+      resolution: '',
+      network: 'Detecting network...',
+      sync_id: ''
+    };
+
+    function getOrCreateDeviceId() {
+      let id = localStorage.getItem('paltro_device_id');
+      if (!id) {
+        const rand = Math.random().toString(36).substring(2, 6).toUpperCase() + '-' +
+                     Math.random().toString(36).substring(2, 6).toUpperCase();
+        id = 'DEV-' + rand;
+        localStorage.setItem('paltro_device_id', id);
+      }
+      return id;
+    }
+
+    async function collectDevicePassport() {
+      const devId = getOrCreateDeviceId();
+      const customName = localStorage.getItem('paltro_device_label') || '';
+      if (customName) document.getElementById('custom-device-label').value = customName;
+
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true || location.search.includes('source=pwa') || location.search.includes('source=android');
+      const appMode = isStandalone ? 'Android Installed App (WebAPK)' : (/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent) ? 'Mobile Browser' : 'Desktop Browser');
+
+      let model = 'Mobile / Web Client';
+      let osVer = navigator.platform || 'Unknown OS';
+      const ua = navigator.userAgent || '';
+
+      // Parse Android model from User-Agent first
+      const androidMatch = ua.match(/Android\s+([\d.]+);\s*([^;)]+)/i);
+      if (androidMatch) {
+        osVer = `Android ${androidMatch[1]}`;
+        model = androidMatch[2].replace(/Build\/.*$/, '').trim();
+      } else if (/Windows NT/i.test(ua)) {
+        osVer = 'Windows Workstation';
+        model = 'PC Browser';
+      } else if (/iPhone|iPad/i.test(ua)) {
+        osVer = 'iOS';
+        model = 'iPhone / iPad';
+      }
+
+      // High-entropy Android Client Hints (gets exact phone model on Chrome Android!)
+      if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
+        try {
+          const hints = await navigator.userAgentData.getHighEntropyValues(['model', 'platform', 'platformVersion']);
+          if (hints.model) model = hints.model;
+          if (hints.platform) osVer = `${hints.platform} ${hints.platformVersion || ''}`.trim();
+        } catch (e) {}
+      }
+
+      const displayModel = customName ? `${customName} (${model})` : model;
+      const res = `${window.screen.width}×${window.screen.height} (@${window.devicePixelRatio || 1}x)`;
+
+      currentDevicePassport = {
+        timestamp: new Date().toISOString().replace('T', ' ').slice(0, 19),
+        device_id: devId,
+        device_name: displayModel,
+        platform: `${osVer} · ${navigator.hardwareConcurrency || '?'} Cores`,
+        app_mode: appMode,
+        resolution: res,
+        network: localStorage.getItem('paltro_last_net') || 'Lookup in progress...',
+        sync_id: currentSyncId,
+        event: 'App Access & Sync Verified'
+      };
+
+      updatePassportUI();
+
+      // Fetch IP & Geo asynchronously
+      try {
+        const r = await fetch('https://ipwho.is/', { cache: 'no-store' });
+        if (r.ok) {
+          const j = await r.json();
+          if (j && j.ip) {
+            const netStr = `${j.ip} (${j.city || ''}, ${j.country_code || ''}) · ${(j.connection && j.connection.isp) ? j.connection.isp : ''}`.replace(/\s+/g, ' ').trim();
+            currentDevicePassport.network = netStr;
+            localStorage.setItem('paltro_last_net', netStr);
+            updatePassportUI();
+          }
+        }
+      } catch (e) {
+        currentDevicePassport.network = navigator.onLine ? 'Online (Direct)' : 'Offline Cache';
+        updatePassportUI();
+      }
+
+      recordLocalAccessEntry(currentDevicePassport);
+      await loadAndMergeAccessLogs();
+
+      // If paired with GitHub token, auto-log this session to GitHub (throttled once per 10 mins per sync_id)
+      const lastGhPush = localStorage.getItem('paltro_last_gh_push_key');
+      const pushKey = `${devId}_${currentSyncId}_${new Date().toISOString().slice(0, 15)}`;
+      if (localStorage.getItem('paltro_gh_sync_token') && lastGhPush !== pushKey) {
+        localStorage.setItem('paltro_last_gh_push_key', pushKey);
+        pushDeviceAccessToGitHub(false);
+      }
+    }
+
+    function updatePassportUI() {
+      document.getElementById('top-device-short').innerText = currentDevicePassport.device_id.replace('DEV-', '');
+      document.getElementById('pass-dev-id').innerText = currentDevicePassport.device_id;
+      document.getElementById('pass-dev-model').innerText = currentDevicePassport.device_name;
+      document.getElementById('pass-dev-os').innerText = currentDevicePassport.platform;
+      document.getElementById('pass-dev-mode').innerText = currentDevicePassport.app_mode;
+      document.getElementById('pass-dev-screen').innerText = currentDevicePassport.resolution;
+      document.getElementById('pass-dev-ip').innerText = currentDevicePassport.network;
+
+      const meta = (typeof DATA_SYNC_META !== 'undefined') ? DATA_SYNC_META : {};
+      document.getElementById('dev-meta-syncid').innerText = currentSyncId;
+      document.getElementById('dev-meta-pubtime').innerText = meta.generated_at || '---';
+      document.getElementById('dev-meta-counts').innerText = `${REPOS_DATA.length} Rigs · ${REPOS_DATA.reduce((a, r) => a + r.work_orders.length, 0)} WOs`;
+
+      const hasToken = !!localStorage.getItem('paltro_gh_sync_token');
+      const st = document.getElementById('gh-logger-status');
+      if (hasToken) {
+        st.innerText = 'Paired — Auto-Logging to GitHub ✓';
+        st.className = 'font-mono text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-app-green font-bold';
+      }
+    }
+
+    function saveDeviceLabel() {
+      const val = document.getElementById('custom-device-label').value.trim();
+      localStorage.setItem('paltro_device_label', val);
+      collectDevicePassport();
+      showMobileToast('Device name saved & updated!');
+    }
+
+    function copyDevicePassport() {
+      const txt = JSON.stringify(currentDevicePassport, null, 2);
+      navigator.clipboard.writeText(txt);
+      showMobileToast('Device verification passport copied!');
+    }
+
+    function recordLocalAccessEntry(entry) {
+      let localLogs = [];
+      try { localLogs = JSON.parse(localStorage.getItem('paltro_device_logs') || '[]'); } catch (e) {}
+      if (!localLogs.length || localLogs[0].sync_id !== entry.sync_id || localLogs[0].device_id !== entry.device_id) {
+        localLogs.unshift({ ...entry });
+      } else {
+        localLogs[0] = { ...entry };
+      }
+      localStorage.setItem('paltro_device_logs', JSON.stringify(localLogs.slice(0, 50)));
+    }
+
+    async function loadAndMergeAccessLogs() {
+      let remoteLogs = [];
+      try {
+        const res = await fetch(`device_access_log.json?_t=${Date.now()}`, { cache: 'no-store' });
+        if (res.ok) remoteLogs = await res.json();
+      } catch (e) {}
+
+      let localLogs = [];
+      try { localLogs = JSON.parse(localStorage.getItem('paltro_device_logs') || '[]'); } catch (e) {}
+
+      const seen = new Set();
+      const merged = [];
+      [...localLogs, ...remoteLogs].forEach(item => {
+        const key = `${item.device_id}_${item.timestamp}`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          merged.push(item);
+        }
+      });
+
+      document.getElementById('access-log-count').innerText = `${merged.length} entries`;
+      document.getElementById('mobile-access-log-list').innerHTML = merged.map(e => `
+        <div class="p-2.5 rounded-xl bg-black/50 border border-white/10 text-[10px] space-y-1">
+          <div class="flex items-center justify-between font-mono">
+            <span class="px-1.5 py-0.5 rounded bg-emerald-500/15 text-app-green font-bold">${esc(e.device_id)}</span>
+            <span class="text-app-teal font-bold">${esc(e.sync_id)}</span>
+            <span class="text-slate-400">${esc(e.timestamp)}</span>
+          </div>
+          <div class="font-bold text-white text-[11px]">${esc(e.device_name)} <span class="text-slate-400 font-normal">· ${esc(e.app_mode)}</span></div>
+          <div class="text-slate-400 font-mono flex flex-wrap gap-x-2">
+            <span><i class="fa-solid fa-display mr-1"></i>${esc(e.resolution)}</span>
+            <span><i class="fa-solid fa-network-wired mr-1"></i>${esc(e.network)}</span>
+          </div>
+        </div>
+      `).join('');
+      return merged;
+    }
+
+    function saveGhSyncToken() {
+      const t = document.getElementById('gh-sync-token-input').value.trim();
+      if (!t) {
+        showMobileToast('Paste a valid GitHub token first');
+        return;
+      }
+      localStorage.setItem('paltro_gh_sync_token', t);
+      document.getElementById('gh-sync-token-input').value = '';
+      updatePassportUI();
+      pushDeviceAccessToGitHub(true);
+    }
+
+    async function pushDeviceAccessToGitHub(showFeedback = true) {
+      const token = localStorage.getItem('paltro_gh_sync_token');
+      if (!token) {
+        if (showFeedback) showMobileToast('Paste your GitHub Sync Token once in the box above to pair!');
+        return;
+      }
+
+      const repo = 'Paltro-SD01/paltro-sd01.github.io';
+      const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/vnd.github+json',
+        'Content-Type': 'application/json'
+      };
+
+      try {
+        if (showFeedback) showMobileToast('Logging device access to GitHub...');
+        // 1. Fetch current device_access_log.json
+        let shaJson = null;
+        let logs = [];
+        const getRes = await fetch(`https://api.github.com/repos/${repo}/contents/device_access_log.json`, { headers });
+        if (getRes.ok) {
+          const data = await getRes.json();
+          shaJson = data.sha;
+          const decoded = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
+          logs = JSON.parse(decoded);
+        }
+
+        const entry = { ...currentDevicePassport, timestamp: new Date().toISOString().replace('T', ' ').slice(0, 19) };
+        logs.unshift(entry);
+        logs = logs.slice(0, 200);
+
+        const jsonStr = JSON.stringify(logs, null, 2);
+        const b64Json = btoa(unescape(encodeURIComponent(jsonStr)));
+
+        await fetch(`https://api.github.com/repos/${repo}/contents/device_access_log.json`, {
+          method: 'PUT',
+          headers,
+          body: JSON.stringify({
+            message: `audit(device-log): ${entry.device_id} (${entry.device_name}) synced ${entry.sync_id} [skip ci]`,
+            content: b64Json,
+            ...(shaJson ? { sha: shaJson } : {})
+          })
+        });
+
+        // 2. Also update DEVICE_ACCESS_LOG.md table on GitHub
+        let shaMd = null;
+        const getMd = await fetch(`https://api.github.com/repos/${repo}/contents/DEVICE_ACCESS_LOG.md`, { headers });
+        if (getMd.ok) {
+          const mdData = await getMd.json();
+          shaMd = mdData.sha;
+        }
+
+        const mdLines = [
+          "# 🔐 Paltro-SD01 — Device Access & Sync Cross-Verification Log",
+          "",
+          `> **Latest Sync ID:** \`${currentSyncId}\`  `,
+          `> **Last Device Check-In:** \`${entry.timestamp}\` by **${entry.device_name}** (\`${entry.device_id}\`)  `,
+          "",
+          "| Timestamp | Device ID | Device / Model | OS / Platform | Mode | Screen Resolution | IP / Network | Sync Version | Event / Status |",
+          "| :--- | :---: | :--- | :--- | :---: | :---: | :--- | :---: | :--- |",
+          ...logs.map(e => `| \`${e.timestamp || '-'}\` | \`${e.device_id || '-'}\` | **${e.device_name || '-'}** | ${e.platform || '-'} | \`${e.app_mode || '-'}\` | \`${e.resolution || '-'}\` | ${e.network || '-'} | \`${e.sync_id || '-'}\` | ${e.event || 'Verified'} |`)
+        ];
+        const b64Md = btoa(unescape(encodeURIComponent(mdLines.join('\n') + '\n')));
+
+        await fetch(`https://api.github.com/repos/${repo}/contents/DEVICE_ACCESS_LOG.md`, {
+          method: 'PUT',
+          headers,
+          body: JSON.stringify({
+            message: `docs(device-log): update DEVICE_ACCESS_LOG.md for ${entry.device_id} [skip ci]`,
+            content: b64Md,
+            ...(shaMd ? { sha: shaMd } : {})
+          })
+        });
+
+        await loadAndMergeAccessLogs();
+        if (showFeedback) showMobileToast('Logged to GitHub DEVICE_ACCESS_LOG.md ✓');
+      } catch (err) {
+        if (showFeedback) showMobileToast('GitHub log error: check token permissions');
+      }
+    }
+
+    // ==========================================
+    // LIVE AUTO-UPDATE POLLER (HOT-RELOADS DATA.JS)
+    // ==========================================
+    async function checkAndPullLiveUpdate(manual = false) {
+      const icon = document.getElementById('sync-icon');
+      const spin2 = document.getElementById('device-sync-spinner');
+      if (icon) icon.classList.add('spin-sync');
+      if (spin2) spin2.classList.add('spin-sync');
+
+      try {
+        const res = await fetch(`data.js?_t=${Date.now()}`, { cache: 'no-store' });
+        if (res.ok) {
+          const text = await res.text();
+          const fn = new Function(text + '\nreturn { meta: typeof DATA_SYNC_META !== "undefined" ? DATA_SYNC_META : null, repos: REPOS_DATA };');
+          const parsed = fn();
+          const nowTime = new Date().toTimeString().slice(0, 8);
+          const checkEl = document.getElementById('dev-meta-lastcheck');
+          if (checkEl) checkEl.innerText = nowTime;
+
+          if (parsed && Array.isArray(parsed.repos)) {
+            const newSyncId = (parsed.meta && parsed.meta.sync_id) ? parsed.meta.sync_id : currentSyncId;
+            const changed = newSyncId !== currentSyncId || JSON.stringify(parsed.repos).length !== JSON.stringify(REPOS_DATA).length;
+            REPOS_DATA = parsed.repos;
+            if (parsed.meta) window.DATA_SYNC_META = parsed.meta;
+            currentSyncId = newSyncId;
+
+            renderAllMobileScreens();
+            updatePassportUI();
+
+            if (changed) {
+              currentDevicePassport.sync_id = newSyncId;
+              currentDevicePassport.event = `Auto-Updated to ${newSyncId}`;
+              recordLocalAccessEntry(currentDevicePassport);
+              showMobileToast(`⚡ Live Update Applied (${newSyncId})!`);
+            } else if (manual) {
+              showMobileToast(`✓ Up to date (${currentSyncId})`);
+            }
+          }
+        }
+      } catch (e) {
+        if (manual) showMobileToast('Offline — using cached telemetry');
+      } finally {
+        setTimeout(() => {
+          if (icon) icon.classList.remove('spin-sync');
+          if (spin2) spin2.classList.remove('spin-sync');
+        }, 450);
+      }
+    }
+
+    function renderAllMobileScreens() {
+      renderMobileHome();
+      renderMobileWoChips();
+      renderMobileWOs();
+      renderMobileCommitChips();
+      renderMobileCommits();
+    }
+
+    // ==========================================
+    // PWA INSTALL & LIFECYCLE HOOKS
+    // ==========================================
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      document.getElementById('top-install-btn').classList.remove('hidden');
+    });
+
+    async function triggerAppInstall() {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        await deferredInstallPrompt.userChoice;
+        deferredInstallPrompt = null;
+        document.getElementById('top-install-btn').classList.add('hidden');
+      } else {
+        showMobileToast('Tap Chrome menu ⋮ → "Install app"');
+      }
+    }
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        checkAndPullLiveUpdate(false);
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check if URL has a pairing token (#pair=...)
+      if (location.hash && location.hash.startsWith('#pair=')) {
+        const tok = decodeURIComponent(location.hash.replace('#pair=', '').trim());
+        if (tok) {
+          localStorage.setItem('paltro_gh_sync_token', tok);
+          history.replaceState(null, '', location.pathname + location.search);
+          setTimeout(() => showMobileToast('Phone Paired with GitHub Auto-Logger ✓'), 600);
+        }
+      }
+
+      const params = new URLSearchParams(location.search);
+      if (params.get('screen')) switchScreen(params.get('screen'));
+
+      renderAllMobileScreens();
+      initMobileAutomator();
+      collectDevicePassport();
+
+      // Auto-poll GitHub every 30 seconds for live updates
+      setInterval(() => checkAndPullLiveUpdate(false), 30000);
+    });
+  </script>
+</body>
+</html>

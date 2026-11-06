@@ -1,13 +1,13 @@
 {
-  "name": "Paltro-SD01 Engineering & Git Command Center",
+  "name": "Paltro-SD01 Mobile Command Center",
   "short_name": "Paltro-SD01",
-  "description": "Mobile & Desktop Engineering Telemetry, Work Order Registry, LabVIEW Release Automator, and Rig Guides.",
-  "start_url": "./index.html?source=pwa",
+  "description": "Dedicated Android Engineering App \u2014 Live Auto-Sync, Work Orders, Commits, Automator & Device Verification Log.",
+  "start_url": "./app.html?source=pwa",
   "scope": "./",
   "display": "standalone",
-  "orientation": "any",
-  "background_color": "#05070D",
-  "theme_color": "#05070D",
+  "orientation": "portrait-primary",
+  "background_color": "#060913",
+  "theme_color": "#060913",
   "categories": [
     "developer",
     "productivity",
@@ -29,10 +29,9 @@
   ],
   "shortcuts": [
     {
-      "name": "Work Orders Registry",
+      "name": "Work Orders",
       "short_name": "Work Orders",
-      "description": "View all 28 tracked Work Orders & changelogs",
-      "url": "./index.html?tab=changelog",
+      "url": "./app.html?screen=wos",
       "icons": [
         {
           "src": "icons/icon-192.png",
@@ -43,8 +42,7 @@
     {
       "name": "Work Order Automator",
       "short_name": "Automator",
-      "description": "Open Git Release & Changelog Automator",
-      "url": "./index.html?drawer=automator",
+      "url": "./app.html?screen=tools",
       "icons": [
         {
           "src": "icons/icon-192.png",
@@ -53,10 +51,9 @@
       ]
     },
     {
-      "name": "Live Commit Stream",
-      "short_name": "Commits",
-      "description": "Inspect real-time commits across 6 LabVIEW rigs",
-      "url": "./index.html?tab=timeline",
+      "name": "Device & Sync Log",
+      "short_name": "Sync Log",
+      "url": "./app.html?screen=device",
       "icons": [
         {
           "src": "icons/icon-192.png",

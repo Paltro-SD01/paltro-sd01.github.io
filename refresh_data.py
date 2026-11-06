@@ -289,13 +289,77 @@ def refresh_data():
         print('No repositories found on this machine - leaving data.js untouched.')
         return
 
-    # Output JS and JSON
-    js_content = "const REPOS_DATA = " + json.dumps(repos_data, ensure_ascii=False) + ";"
+    import hashlib, platform, socket
+    digest_src = "|".join(
+        f"{r['id']}:{r['total_commits']}:{(r['latest_commit'] or {}).get('short_hash','')}"
+        + ":" + ",".join(f"{w['name']}={w['version']}/{w['status']}/{w['last_commit_hash']}" for w in r['work_orders'])
+        for r in repos_data
+    )
+    sync_id = "SYNC-" + hashlib.sha256(digest_src.encode("utf-8")).hexdigest()[:8].upper()
+    now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    sync_meta = {
+        "sync_id": sync_id,
+        "generated_at": now_str,
+        "host": socket.gethostname(),
+        "total_repos": len(repos_data),
+        "total_commits": sum(r["total_commits"] for r in repos_data),
+        "total_work_orders": sum(len(r["work_orders"]) for r in repos_data),
+    }
+
+    # Output JS
+    js_content = (
+        "var DATA_SYNC_META = " + json.dumps(sync_meta, ensure_ascii=False) + ";\n"
+        "var REPOS_DATA = " + json.dumps(repos_data, ensure_ascii=False) + ";\n"
+    )
     data_js_path = os.path.join(DASHBOARD_DIR, 'data.js')
     with open(data_js_path, 'w', encoding='utf-8') as f:
         f.write(js_content)
-    
-    print(f"Successfully generated {data_js_path} ({os.path.getsize(data_js_path)} bytes)")
+
+    # Also update device_access_log.json and DEVICE_ACCESS_LOG.md for GitHub cross-verification
+    log_json_path = os.path.join(DASHBOARD_DIR, 'device_access_log.json')
+    try:
+        with open(log_json_path, 'r', encoding='utf-8') as lf:
+            access_log = json.load(lf)
+            if not isinstance(access_log, list):
+                access_log = []
+    except Exception:
+        access_log = []
+
+    ws_entry = {
+        "timestamp": now_str,
+        "device_id": f"WS-{socket.gethostname().upper()}",
+        "device_name": f"{socket.gethostname()} (Engineering Workstation)",
+        "platform": f"{platform.system()} {platform.release()} ({platform.machine()})",
+        "app_mode": "Workstation Master Publisher",
+        "resolution": "Desktop Master",
+        "network": "Local Workstation Git Sync",
+        "sync_id": sync_id,
+        "event": f"Published {sync_meta['total_work_orders']} WOs / {sync_meta['total_commits']} Commits"
+    }
+    if not access_log or access_log[0].get("sync_id") != sync_id or access_log[0].get("device_id") != ws_entry["device_id"]:
+        access_log.insert(0, ws_entry)
+        access_log = access_log[:200]
+        with open(log_json_path, 'w', encoding='utf-8') as lf:
+            json.dump(access_log, lf, indent=2, ensure_ascii=False)
+
+    md_lines = [
+        "# 🔐 Paltro-SD01 — Device Access & Sync Cross-Verification Log",
+        "",
+        f"> **Latest Master Sync ID:** `{sync_id}`  ",
+        f"> **Last Published:** `{now_str}`  ",
+        "> **Purpose:** Cross-verifies every Android phone, tablet, browser, and workstation that accesses or syncs with the Paltro-SD01 Engineering Command Center.",
+        "",
+        "| Timestamp | Device ID | Device / Model | OS / Platform | Mode | Screen Resolution | IP / Network | Sync Version | Event / Status |",
+        "| :--- | :---: | :--- | :--- | :---: | :---: | :--- | :---: | :--- |",
+    ]
+    for e in access_log:
+        md_lines.append(
+            f"| `{e.get('timestamp','-')}` | `{e.get('device_id','-')}` | **{e.get('device_name','-')}** | {e.get('platform','-')} | `{e.get('app_mode','-')}` | `{e.get('resolution','-')}` | {e.get('network','-')} | `{e.get('sync_id','-')}` | {e.get('event','Access Verified')} |"
+        )
+    with open(os.path.join(DASHBOARD_DIR, 'DEVICE_ACCESS_LOG.md'), 'w', encoding='utf-8') as mf:
+        mf.write("\n".join(md_lines) + "\n")
+
+    print(f"Successfully generated {data_js_path} ({os.path.getsize(data_js_path)} bytes) [Sync ID: {sync_id}]")
 
 if __name__ == '__main__':
     refresh_data()
