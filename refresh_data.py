@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import json
 import subprocess
@@ -45,7 +46,7 @@ REPOS_CONFIG = [
         'category': 'Multi-Parameter Tribometer',
         'description': 'Industrial mechanical test platform with RS-485 load cell communication and automated PDF reporting.',
         'local_path': r'D:\Projects\Software Repo\LAB-IQ 350',
-        'github_url': 'https://github.com/Paltro-SD01/LAB-IQ 350',
+        'github_url': 'https://github.com/Paltro-SD01/LAB-IQ-350',
         'work_order_folders': ['WO 2203', 'WO 2394']
     },
     {
@@ -68,6 +69,38 @@ REPOS_CONFIG = [
     }
 ]
 
+def list_wo_folders(repo_path, fallback=None):
+    """Auto-discovers Work Order folders that physically exist in the repository
+    (same rule as update_all_configs.py), so new WOs show up without editing this file."""
+    found = []
+    try:
+        for entry in os.listdir(repo_path):
+            up = entry.upper()
+            if os.path.isdir(os.path.join(repo_path, entry)) and ('WO' in up or 'WORKORDER' in up or 'EROSION' in up):
+                found.append(entry)
+    except OSError:
+        pass
+    found.sort()
+    return found or list(fallback or [])
+
+
+_PIPE_SPLIT = re.compile(r'(?<!\\)\|')
+
+
+def split_md_row(line):
+    """Splits a markdown table row on unescaped pipes."""
+    cells = _PIPE_SPLIT.split(line.strip())[1:-1]
+    return [c.strip().replace('\\|', '|') for c in cells]
+
+
+def split_summary(cell):
+    """'**Subject**<br>• line2<br>• line3' -> ('Subject', ['line2', 'line3'])."""
+    parts = [p.strip() for p in cell.split('<br>')]
+    subject = parts[0].replace('**', '').strip() if parts else ''
+    details = [p.lstrip('•').strip() for p in parts[1:] if p.strip()]
+    return subject, details
+
+
 def parse_changelog_table(file_path):
     if not os.path.exists(file_path):
         return []
@@ -82,7 +115,7 @@ def parse_changelog_table(file_path):
             in_table = True
             continue
         if in_table and line.startswith('|') and not line.startswith('| :---'):
-            parts = [p.strip() for p in line.split('|')[1:-1]]
+            parts = split_md_row(line)
             if len(parts) >= 4:
                 rows.append(parts)
         elif in_table and not line.startswith('|') and line.strip() != '':
@@ -105,14 +138,16 @@ def parse_wo_detailed_changelog(file_path):
             current_section = line_s.replace('### ', '').strip()
             continue
         if line_s.startswith('|') and not line_s.startswith('| :---') and not line_s.startswith('| Date'):
-            parts = [p.strip() for p in line_s.split('|')[1:-1]]
+            parts = split_md_row(line_s)
             if len(parts) >= 4:
                 clean_commit = parts[1].replace('`', '').strip()
+                subject, details = split_summary(parts[2])
                 entries.append({
                     'category': current_section,
                     'date': parts[0].strip(),
                     'commit_hash': clean_commit,
-                    'summary': parts[2].strip(),
+                    'summary': subject,
+                    'details': details,
                     'author': parts[3].replace('`', '').strip()
                 })
     return entries
@@ -135,12 +170,14 @@ def refresh_data():
         
         tags = subprocess.check_output(['git', '-C', p, 'tag', '-l', '--sort=-v:refname']).decode('utf-8', errors='ignore').split()
         
-        raw_log = subprocess.check_output(['git', '-C', p, 'log', '--format=@@@%H|%h|%an|%ae|%ad|%s', '--date=iso', '--name-status']).decode('utf-8', errors='ignore')
+        raw_log = subprocess.check_output(['git', '-C', p, 'log', '--format=@@@%H|%h|%an|%ae|%ad|%s%x1e%b%x1e', '--date=iso', '--name-status']).decode('utf-8', errors='ignore')
         raw_commits = raw_log.split('@@@')[1:]
         commits = []
         
         for rc in raw_commits:
-            lines = rc.strip().splitlines()
+            segs = rc.split('\x1e')
+            body_txt = segs[1].strip() if len(segs) > 2 else ''
+            lines = (segs[0] + ('\n' + segs[2] if len(segs) > 2 else '')).strip().splitlines()
             if not lines: continue
             hdr = lines[0].split('|', 5)
             if len(hdr) < 6: continue
@@ -161,6 +198,7 @@ def refresh_data():
                 'email': email,
                 'date': dt,
                 'subject': subj,
+                'body': [l.strip() for l in body_txt.splitlines() if l.strip()][:12],
                 'files_count': len(files),
                 'files': files[:15]
             })
@@ -177,18 +215,19 @@ def refresh_data():
             status_clean = r[2].replace('`', '').strip() if len(r) > 2 else ''
             hash_clean = r[3].replace('`', '').strip() if len(r) > 3 else ''
             dt_clean = r[4] if len(r) > 4 else ''
-            sum_clean = r[5] if len(r) > 5 else ''
+            sum_clean, sum_details = split_summary(r[5]) if len(r) > 5 else ('', [])
             root_table_map[wo_clean] = {
                 'version': ver_clean,
                 'status': status_clean,
                 'last_commit_hash': hash_clean,
                 'last_commit_date': dt_clean,
-                'summary': sum_clean
+                'summary': sum_clean,
+                'details': sum_details
             }
         
         # 2. Parse Sub-Changelog inside every Work Order folder (Full history of that particular Work Order)
         wo_data = []
-        for wo_folder in cfg['work_order_folders']:
+        for wo_folder in list_wo_folders(p, cfg.get('work_order_folders')):
             wo_path = os.path.join(p, wo_folder)
             wo_cl_path = os.path.join(wo_path, 'CHANGELOG.md')
             
@@ -201,8 +240,10 @@ def refresh_data():
             if not status: status = 'ACTIVE'
             if 'CLOSED' in status or '🔒' in status:
                 status = 'CLOSED'
-            elif 'TESTING' in status:
+            elif 'TESTING' in status or 'INTEGRATION' in status:
                 status = 'TESTING'
+            elif 'REOPENED' in status:
+                status = 'ACTIVE'
             elif 'DISCONTINUED' in wo_folder.upper():
                 status = 'DISCONTINUED'
             
@@ -219,6 +260,7 @@ def refresh_data():
                 'last_commit_hash': root_info.get('last_commit_hash', ''),
                 'last_commit_date': root_info.get('last_commit_date', ''),
                 'summary': root_info.get('summary', ''),
+                'details': root_info.get('details', []),
                 'has_detailed_changelog': os.path.exists(wo_cl_path),
                 'detailed_history_count': len(detailed_history),
                 'detailed_history': detailed_history
@@ -242,6 +284,10 @@ def refresh_data():
             'commits': commits
         })
         print(f"Processed {cfg['name']}: {len(commits)} total commits, {len(wo_data)} work orders parsed with full sub-changelogs.")
+
+    if not repos_data:
+        print('No repositories found on this machine - leaving data.js untouched.')
+        return
 
     # Output JS and JSON
     js_content = "const REPOS_DATA = " + json.dumps(repos_data, ensure_ascii=False) + ";"

@@ -1,0 +1,68 @@
+{
+  "name": "Paltro-SD01 Engineering & Git Command Center",
+  "short_name": "Paltro-SD01",
+  "description": "Mobile & Desktop Engineering Telemetry, Work Order Registry, LabVIEW Release Automator, and Rig Guides.",
+  "start_url": "./index.html?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#05070D",
+  "theme_color": "#05070D",
+  "categories": [
+    "developer",
+    "productivity",
+    "utilities"
+  ],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Work Orders Registry",
+      "short_name": "Work Orders",
+      "description": "View all 28 tracked Work Orders & changelogs",
+      "url": "./index.html?tab=changelog",
+      "icons": [
+        {
+          "src": "icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Work Order Automator",
+      "short_name": "Automator",
+      "description": "Open Git Release & Changelog Automator",
+      "url": "./index.html?drawer=automator",
+      "icons": [
+        {
+          "src": "icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Live Commit Stream",
+      "short_name": "Commits",
+      "description": "Inspect real-time commits across 6 LabVIEW rigs",
+      "url": "./index.html?tab=timeline",
+      "icons": [
+        {
+          "src": "icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

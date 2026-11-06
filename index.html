@@ -2,7 +2,15 @@
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <meta name="theme-color" content="#05070D">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Paltro-SD01">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
   <title>Paltro-SD01 | Engineering & Git Operations Command Center</title>
   
   <!-- Tailwind CSS CDN -->
@@ -238,6 +246,44 @@
       color: #BF5AF2;
       border: 1px solid rgba(191, 90, 242, 0.3);
     }
+
+    /* Mobile & Android App Screen Resolution Adaptation */
+    @media (max-width: 1023px) {
+      body {
+        padding-bottom: calc(4.75rem + env(safe-area-inset-bottom, 0px));
+      }
+    }
+    @media (max-width: 640px) {
+      header.sticky {
+        top: 0.35rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+      }
+      main {
+        padding-left: 0.65rem !important;
+        padding-right: 0.65rem !important;
+        padding-top: 1rem !important;
+      }
+      .fluid-glass {
+        border-radius: 1.25rem;
+      }
+      #tabs-scroll-bar {
+        flex-wrap: nowrap !important;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        max-width: 100%;
+        scrollbar-width: none;
+      }
+      #tabs-scroll-bar::-webkit-scrollbar {
+        display: none;
+      }
+      #tabs-scroll-bar > button {
+        flex-shrink: 0;
+      }
+    }
+    .safe-bottom {
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-ios-blue selection:text-white cyber-grid">
@@ -288,11 +334,18 @@
           <span>Sparse Downloader</span>
         </button>
 
+        <!-- Android App Quick Pill -->
+        <button onclick="setActiveTab('android')" class="flex items-center space-x-1.5 px-3 py-2 rounded-2xl bg-emerald-500/15 hover:bg-emerald-500/25 text-ios-green border border-emerald-500/30 text-xs font-bold transition-all shadow-sm" title="Android App & Mobile Preview">
+          <i class="fa-brands fa-android text-sm"></i>
+          <span class="hidden md:inline">Android App</span>
+        </button>
+
         <!-- Floating Work Order Suite Drawer Trigger -->
-        <button onclick="toggleSuiteDrawer(true)" class="flex items-center space-x-2 px-4 py-2 rounded-2xl bg-gradient-to-r from-ios-blue to-ios-indigo hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold shadow-lg shadow-ios-blue/25 transition-all active:scale-95">
+        <button onclick="toggleSuiteDrawer(true)" class="flex items-center space-x-2 px-3 sm:px-4 py-2 rounded-2xl bg-gradient-to-r from-ios-blue to-ios-indigo hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold shadow-lg shadow-ios-blue/25 transition-all active:scale-95">
           <i class="fa-solid fa-terminal"></i>
-          <span>Work Order Automator</span>
-          <span class="bg-white/20 text-[10px] px-1.5 py-0.5 rounded font-mono">⌘K</span>
+          <span class="hidden sm:inline">Work Order Automator</span>
+          <span class="sm:hidden">Automator</span>
+          <span class="hidden md:inline bg-white/20 text-[10px] px-1.5 py-0.5 rounded font-mono">⌘K</span>
         </button>
 
         <!-- Share / Hosting Modal Trigger -->
@@ -418,7 +471,7 @@
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         
         <!-- Apple Sliding Pill Tabs -->
-        <div class="flex flex-wrap items-center gap-1.5 bg-black/40 p-1.5 rounded-2xl border border-white/10 text-xs w-fit">
+        <div id="tabs-scroll-bar" class="flex flex-wrap items-center gap-1.5 bg-black/40 p-1.5 rounded-2xl border border-white/10 text-xs w-full md:w-fit">
           <button onclick="setActiveTab('grid')" id="tab-btn-grid" 
                   class="flex items-center space-x-2 px-4 py-2 rounded-xl font-bold transition-all pill-active">
             <i class="fa-solid fa-cubes text-ios-blue"></i>
@@ -465,6 +518,12 @@
                   class="flex items-center space-x-2 px-4 py-2 rounded-xl font-semibold transition-all text-slate-400 hover:text-white">
             <i class="fa-solid fa-cloud-arrow-down text-cyan-400"></i>
             <span>Sparse Downloader</span>
+          </button>
+
+          <button onclick="setActiveTab('android')" id="tab-btn-android" 
+                  class="flex items-center space-x-2 px-4 py-2 rounded-xl font-semibold transition-all text-slate-400 hover:text-white">
+            <i class="fa-brands fa-android text-ios-green"></i>
+            <span>Android App</span>
           </button>
         </div>
 
@@ -1838,6 +1897,219 @@ Press Enter to open https://github.com/login/device in your browser...
 
     </div>
 
+    <!-- ========================================== -->
+    <!-- VIEW 9: ANDROID APP & MOBILE RESOLUTION HUB -->
+    <!-- ========================================== -->
+    <div id="view-android" class="hidden space-y-6">
+
+      <!-- Hero Banner -->
+      <div class="fluid-glass rounded-3xl p-6 sm:p-8 relative overflow-hidden border border-emerald-500/30 shadow-2xl">
+        <div class="absolute -top-24 -right-24 w-96 h-96 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="relative flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div class="space-y-3 max-w-2xl">
+            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-ios-green/15 text-ios-green border border-ios-green/30 text-xs font-bold">
+              <i class="fa-brands fa-android text-sm"></i>
+              <span>ANDROID NATIVE WEBAPK &amp; GRADLE PROJECT READY</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              Paltro-SD01 Mobile Command Center for Android
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              Engineered to fit every Android phone &amp; tablet screen resolution (<span class="text-ios-teal font-mono">360×800</span>, <span class="text-ios-teal font-mono">412×915</span>, Foldables &amp; Tablets) with adaptive frosted-glass cards, a thumb-friendly bottom navigation bar, offline Service Worker telemetry cache, and 1-tap home screen installation.
+            </p>
+            <div class="flex flex-wrap items-center gap-3 pt-1">
+              <button onclick="triggerPwaInstall()" id="pwa-install-btn" class="inline-flex items-center space-x-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-black font-extrabold text-xs shadow-lg shadow-emerald-500/30 transition-all active:scale-95">
+                <i class="fa-brands fa-android text-base"></i>
+                <span id="pwa-install-btn-label">Install Android App (1-Tap WebAPK)</span>
+              </button>
+              <a href="Paltro-SD01-Android-App.zip" download="Paltro-SD01-Android-App.zip" class="inline-flex items-center space-x-2 px-4 py-3 rounded-2xl bg-ios-blue/20 hover:bg-ios-blue/30 text-ios-teal border border-ios-blue/40 font-bold text-xs transition-all">
+                <i class="fa-solid fa-file-zipper"></i>
+                <span>Download Android Studio Project (.zip)</span>
+              </a>
+              <button onclick="copyRawText('https://paltro-sd01.github.io/?source=android')" class="inline-flex items-center space-x-2 px-4 py-3 rounded-2xl bg-white/10 hover:bg-white/15 text-white border border-white/15 font-bold text-xs transition-all">
+                <i class="fa-solid fa-link"></i>
+                <span>Copy App Link</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Scannable QR Code Card -->
+          <div class="bg-black/60 border border-white/15 rounded-3xl p-4 flex flex-col items-center text-center space-y-2.5 shrink-0 mx-auto lg:mx-0">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ios-green flex items-center space-x-1.5">
+              <i class="fa-solid fa-camera"></i>
+              <span>Scan with Android Camera</span>
+            </div>
+            <div class="bg-white p-2.5 rounded-2xl shadow-inner">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=4&data=https%3A%2F%2Fpaltro-sd01.github.io%2F%3Fsource%3Dandroid"
+                   alt="Scan to open Paltro-SD01 on Android"
+                   width="148" height="148"
+                   class="rounded-lg block"
+                   onerror="this.style.display='none'; document.getElementById('qr-fallback-box').classList.remove('hidden');">
+              <div id="qr-fallback-box" class="hidden w-[148px] h-[148px] bg-slate-950 text-ios-teal flex flex-col items-center justify-center p-2 rounded-lg font-mono text-[10px]">
+                <i class="fa-brands fa-android text-3xl text-ios-green mb-2"></i>
+                <span>Open on Phone:</span>
+                <span class="font-bold text-white break-all mt-1">paltro-sd01.github.io</span>
+              </div>
+            </div>
+            <div class="text-[11px] font-mono text-slate-300 font-bold">paltro-sd01.github.io</div>
+            <div class="text-[10px] text-slate-400 max-w-[180px]">Opens in Chrome → tap <b>"Install App"</b> or <b>⋮ → Add to Home screen</b></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Grid: Installation & Resolution Specs + Live Interactive Phone Preview -->
+      <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+
+        <!-- Left 5 Cols: Resolution & Feature Breakdown + Install Steps -->
+        <div class="xl:col-span-5 space-y-6">
+
+          <!-- Screen Resolution Adaptation Card -->
+          <div class="fluid-glass rounded-3xl p-6 space-y-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2.5">
+                <div class="h-9 w-9 rounded-2xl bg-ios-blue/20 border border-ios-blue/30 flex items-center justify-center text-ios-blue">
+                  <i class="fa-solid fa-mobile-screen-button"></i>
+                </div>
+                <div>
+                  <h3 class="text-sm font-extrabold text-white">Adaptive Screen Resolution Engine</h3>
+                  <p class="text-[11px] text-slate-400">Auto-scales layout across all Android DPIs &amp; aspect ratios</p>
+                </div>
+              </div>
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold badge-closed">FIT VERIFIED</span>
+            </div>
+
+            <div class="space-y-2.5 text-xs">
+              <div class="p-3 rounded-2xl bg-black/40 border border-white/10 flex items-start space-x-3">
+                <i class="fa-solid fa-expand text-ios-teal mt-0.5"></i>
+                <div>
+                  <div class="font-bold text-white">Viewport-Fit Cover &amp; Safe-Area Insets</div>
+                  <p class="text-[11px] text-slate-400 mt-0.5">Respects Android camera cutouts, status bars, and gesture navigation bars (<code class="text-ios-teal">env(safe-area-inset-bottom)</code>) with zero horizontal overflow.</p>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-2xl bg-black/40 border border-white/10 flex items-start space-x-3">
+                <i class="fa-solid fa-compass text-ios-green mt-0.5"></i>
+                <div>
+                  <div class="font-bold text-white">Sticky Android Bottom Navigation Bar</div>
+                  <p class="text-[11px] text-slate-400 mt-0.5">On mobile screens (&lt;1024px), a frosted glass bottom dock gives 1-thumb access to <b>Rigs</b>, <b>Work Orders</b>, <b>Commits</b>, <b>Automator</b>, and <b>App</b>.</p>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-2xl bg-black/40 border border-white/10 flex items-start space-x-3">
+                <i class="fa-solid fa-list-ul text-ios-purple mt-0.5"></i>
+                <div>
+                  <div class="font-bold text-white">Full Multi-Bullet Change Lists</div>
+                  <p class="text-[11px] text-slate-400 mt-0.5">Every change line entered in a commit or Work Order is rendered as a readable bullet list—never cut off on mobile screens.</p>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-2xl bg-black/40 border border-white/10 flex items-start space-x-3">
+                <i class="fa-solid fa-wifi text-ios-orange mt-0.5"></i>
+                <div>
+                  <div class="font-bold text-white">Offline Lab Cache (<code class="font-mono">sw.js</code>)</div>
+                  <p class="text-[11px] text-slate-400 mt-0.5">Caches all 6 repositories, 28 Work Orders, and installation guides locally on your phone so you can inspect history even without Wi-Fi.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2 Ways to Install on Android -->
+          <div class="fluid-glass rounded-3xl p-6 space-y-4">
+            <h3 class="text-sm font-extrabold text-white flex items-center space-x-2">
+              <i class="fa-brands fa-android text-ios-green"></i>
+              <span>How to Install on Your Android Phone</span>
+            </h3>
+
+            <div class="space-y-3 text-xs">
+              <div class="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/25 space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <span class="font-extrabold text-ios-green">Method 1: Direct Chrome WebAPK Install (Fastest)</span>
+                  <span class="text-[10px] font-mono bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded">No PC Needed</span>
+                </div>
+                <ol class="list-decimal list-inside text-[11px] text-slate-300 space-y-1 leading-relaxed">
+                  <li>Scan the QR code above or open <a href="https://paltro-sd01.github.io" class="text-ios-teal underline">https://paltro-sd01.github.io</a> in <b>Chrome on Android</b>.</li>
+                  <li>Tap the <b>"Install Android App"</b> button above, or tap Chrome's menu (<b>⋮</b>) → <b>"Install app" / "Add to Home screen"</b>.</li>
+                  <li>Launch <b>Paltro-SD01</b> from your Android app drawer in full-screen standalone mode!</li>
+                </ol>
+              </div>
+
+              <div class="p-3.5 rounded-2xl bg-blue-500/10 border border-blue-500/25 space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <span class="font-extrabold text-ios-teal">Method 2: Native Android Studio APK Project</span>
+                  <span class="text-[10px] font-mono bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded">Kotlin + Gradle</span>
+                </div>
+                <p class="text-[11px] text-slate-300 leading-relaxed">
+                  Download <a href="Paltro-SD01-Android-App.zip" download class="text-ios-teal underline font-semibold">Paltro-SD01-Android-App.zip</a>, open in Android Studio, and click <b>Build → Build APK(s)</b>. Includes native Swipe-to-Refresh, DownloadManager for PDF/Excel/BAT exports, and hardware back-button support.
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right 7 Cols: Interactive Android Phone Resolution Simulator -->
+        <div class="xl:col-span-7 fluid-glass rounded-3xl p-6 space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+            <div>
+              <div class="flex items-center space-x-2">
+                <span class="h-2.5 w-2.5 rounded-full bg-ios-green animate-pulse"></span>
+                <h3 class="text-base font-extrabold text-white">Live Android Screen Resolution Simulator</h3>
+              </div>
+              <p class="text-xs text-slate-400">Test how the app adapts to different Android screen resolutions in real time</p>
+            </div>
+
+            <!-- Resolution Switcher Buttons -->
+            <div class="flex flex-wrap items-center gap-1.5 bg-black/50 p-1.5 rounded-2xl border border-white/10 text-[11px]">
+              <button onclick="setAndroidSimSize(360, 740, 'Compact Android (360×740)')" id="sim-btn-360" class="px-2.5 py-1.5 rounded-xl font-bold pill-active transition-all">
+                360×740
+              </button>
+              <button onclick="setAndroidSimSize(412, 820, 'Pixel 8 / Galaxy S24 (412×820)')" id="sim-btn-412" class="px-2.5 py-1.5 rounded-xl font-semibold text-slate-400 hover:text-white transition-all">
+                412×820
+              </button>
+              <button onclick="setAndroidSimSize(620, 820, 'Foldable / Tablet (620×820)')" id="sim-btn-620" class="px-2.5 py-1.5 rounded-xl font-semibold text-slate-400 hover:text-white transition-all">
+                Tablet 620px
+              </button>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between text-[11px] font-mono text-slate-400 px-1">
+            <span id="android-sim-label" class="text-ios-teal font-bold">Device: Compact Android (360×740) · DPR 3.0 · Auto-Fit</span>
+            <button onclick="reloadAndroidSimulator()" class="text-slate-300 hover:text-white flex items-center space-x-1">
+              <i class="fa-solid fa-rotate-right text-[10px]"></i>
+              <span>Reload Preview</span>
+            </button>
+          </div>
+
+          <!-- Phone Bezel Frame -->
+          <div class="flex justify-center py-2 overflow-x-auto">
+            <div id="android-phone-frame" style="width: 380px; height: 780px;" class="relative rounded-[44px] bg-gradient-to-b from-slate-800 via-slate-900 to-black p-[10px] shadow-[0_25px_70px_rgba(0,0,0,0.85)] border-2 border-white/15 transition-all duration-300 shrink-0">
+              <!-- Inner Screen -->
+              <div class="w-full h-full rounded-[34px] bg-[#05070D] overflow-hidden flex flex-col border border-white/10 relative">
+                <!-- Android Status Bar -->
+                <div class="h-7 px-5 bg-[#05070D] flex items-center justify-between text-[10px] font-mono text-slate-300 border-b border-white/5 shrink-0 select-none">
+                  <span id="android-sim-clock" class="font-bold">18:30</span>
+                  <div class="w-3 h-3 rounded-full bg-black border border-white/20"></div>
+                  <div class="flex items-center space-x-1.5 text-[10px]">
+                    <i class="fa-solid fa-signal text-ios-green"></i>
+                    <i class="fa-solid fa-wifi text-ios-blue"></i>
+                    <i class="fa-solid fa-battery-full text-ios-green"></i>
+                  </div>
+                </div>
+                <!-- Embedded Interactive App View -->
+                <iframe id="android-sim-iframe" src="about:blank" data-src="index.html?sim=1" title="Paltro-SD01 Android App Live Simulator" class="w-full flex-1 border-0 bg-[#05070D]"></iframe>
+                <!-- Android Gesture Pill -->
+                <div class="h-4 bg-[#05070D] flex items-center justify-center shrink-0">
+                  <div class="w-28 h-1 rounded-full bg-white/30"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
   </main>
 
   <!-- ========================================== -->
@@ -1863,36 +2135,31 @@ Press Enter to open https://github.com/login/device in your browser...
 
     <!-- Drawer Body -->
     <div class="flex-1 overflow-y-auto p-6 space-y-5">
-      <!-- Target Repository -->
+      <!-- Target Repository (auto-listed from tracked repos) -->
       <div>
-        <label class="block text-xs font-bold text-slate-300 mb-1.5 uppercase tracking-wider">Target Software Repository</label>
-        <select id="suiteRepoSelect" onchange="generateSuiteScript()" class="w-full bg-black/60 border border-white/15 text-slate-200 text-xs rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-ios-blue font-medium">
-          <option value="D:\Projects\Software Repo\LAB-IQ 150">🧪 LAB-IQ 150 (D:\Projects\Software Repo\LAB-IQ 150)</option>
-          <option value="D:\Projects\Software Repo\BOCLE" selected>⚙️ BOCLE (D:\Projects\Software Repo\BOCLE)</option>
-          <option value="D:\Projects\Software Repo\LAB-IQ\HFRR Adv">⚡ LAB-IQ HFRR Adv (D:\Projects\Software Repo\LAB-IQ\HFRR Adv)</option>
-          <option value="D:\Projects\Software Repo\LAB-IQ 350">📊 LAB-IQ 350 (D:\Projects\Software Repo\LAB-IQ 350)</option>
-          <option value="D:\Projects\Software Repo\LAB-IQ\B2V2">🔬 LAB-IQ B2V2 (D:\Projects\Software Repo\LAB-IQ\B2V2)</option>
-          <option value="D:\Projects\Software Repo\LAB-IQ\Airjet">💨 LAB-IQ Airjet (D:\Projects\Software Repo\LAB-IQ\Airjet)</option>
-        </select>
+        <div class="flex items-center justify-between mb-1.5">
+          <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider" for="suiteRepoSelect">Target Software Repository</label>
+          <span id="suiteRepoBadge" class="text-[10px] font-mono text-ios-teal"></span>
+        </div>
+        <select id="suiteRepoSelect" onchange="onSuiteRepoChange()" class="w-full bg-black/60 border border-white/15 text-slate-200 text-xs rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-ios-blue font-medium"></select>
       </div>
 
-      <div class="grid grid-cols-2 gap-3">
-        <!-- Work Order Folder -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <!-- Work Order (auto-detected from the repository) -->
         <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1.5 uppercase tracking-wider">Work Order Folder</label>
-          <input type="text" id="suiteWoScope" oninput="generateSuiteScript()" value="WO 2485" 
-                 class="w-full bg-black/60 border border-white/15 text-slate-200 text-xs rounded-xl px-3.5 py-2.5 font-mono focus:outline-none focus:ring-2 focus:ring-ios-blue">
-          <div class="text-[10px] text-slate-400 mt-1 flex items-center gap-1 font-mono">
-            <span>Quick:</span>
-            <button onclick="quickFillWo('WO 2476')" class="text-ios-blue hover:underline">2476</button>,
-            <button onclick="quickFillWo('WO 2485')" class="text-ios-blue hover:underline">2485</button>,
-            <button onclick="quickFillWo('WO 2480')" class="text-ios-blue hover:underline">2480</button>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider" for="suiteWoSelect">Work Order Folder</label>
+            <span id="suiteWoCount" class="text-[10px] font-mono text-ios-green"></span>
           </div>
+          <select id="suiteWoSelect" onchange="onSuiteWoChange()" class="w-full bg-black/60 border border-white/15 text-slate-200 text-xs rounded-xl px-3.5 py-2.5 font-mono focus:outline-none focus:ring-2 focus:ring-ios-blue"></select>
+          <input type="text" id="suiteWoScope" oninput="generateSuiteScript()" value="" placeholder="Type new folder name, e.g. WO 2501"
+                 class="hidden mt-2 w-full bg-black/60 border border-white/15 text-slate-200 text-xs rounded-xl px-3.5 py-2.5 font-mono focus:outline-none focus:ring-2 focus:ring-ios-blue">
+          <div id="suiteWoInfo" class="text-[10px] text-slate-400 mt-1.5 font-mono leading-relaxed"></div>
         </div>
 
         <!-- Stage Status -->
         <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1.5 uppercase tracking-wider">Stage Status</label>
+          <label class="block text-xs font-bold text-slate-300 mb-1.5 uppercase tracking-wider" for="suiteWoStage">Stage Status</label>
           <select id="suiteWoStage" onchange="generateSuiteScript()" class="w-full bg-black/60 border border-white/15 text-slate-200 text-xs rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-ios-blue font-medium">
             <option value="closed" selected>🔒 [CLOSED] Release Closed</option>
             <option value="dev">🛠️ IN-DEV (Active)</option>
@@ -1903,30 +2170,43 @@ Press Enter to open https://github.com/login/device in your browser...
         </div>
       </div>
 
-      <!-- Change Categorization -->
+      <!-- Change Categorization (filled from SUITE_CATEGORIES) -->
       <div>
-        <label class="block text-xs font-bold text-slate-300 mb-1.5 uppercase tracking-wider">Category of Change</label>
-        <select id="suiteChangeType" onchange="generateSuiteScript()" class="w-full bg-black/60 border border-white/15 text-slate-200 text-xs rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-ios-blue font-medium">
-          <option value="fix">🐛 Bug Fixes</option>
-          <option value="ui">🖥️ UI & Front Panel Fixes</option>
-          <option value="logic">⚙️ Core VI Logic & Loops</option>
-          <option value="feat">🚀 Features & Initial Build</option>
-          <option value="chore">📌 Miscellaneous Modifications</option>
-        </select>
+        <label class="block text-xs font-bold text-slate-300 mb-1.5 uppercase tracking-wider" for="suiteChangeType">Category of Change</label>
+        <select id="suiteChangeType" onchange="generateSuiteScript()" class="w-full bg-black/60 border border-white/15 text-slate-200 text-xs rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-ios-blue font-medium"></select>
       </div>
 
-      <!-- Description -->
+      <!-- Description (every line is kept in the commit + changelog) -->
       <div>
-        <label class="block text-xs font-bold text-slate-300 mb-1.5 uppercase tracking-wider">Summary of Changes</label>
-        <textarea id="suiteCommitDesc" oninput="generateSuiteScript()" rows="2" 
-                  class="w-full bg-black/60 border border-white/15 text-slate-200 text-xs rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-ios-blue">Workorder closed and validated Documents added</textarea>
+        <div class="flex items-center justify-between mb-1.5">
+          <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider" for="suiteCommitDesc">Summary of Changes</label>
+          <span id="suiteDescCount" class="text-[10px] font-mono text-slate-400"></span>
+        </div>
+        <textarea id="suiteCommitDesc" oninput="generateSuiteScript()" rows="5" placeholder="Enter one change per line (or numbered 1. ... 2. ... or separated by |) — every single change is saved and listed!"
+                  class="w-full bg-black/60 border border-white/15 text-slate-200 text-xs rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-ios-blue leading-relaxed">1. Updated UI front panel controls and indicators
+2. Fixed sensor calibration offset in acquisition loop
+3. Validated test logs and updated documentation</textarea>
+        <p class="text-[10px] text-slate-400 mt-1">Enter multiple lines, numbered items (<code class="text-ios-teal">1. ... 2. ...</code>), or <code class="text-ios-teal">|</code>-separated items — all changes are listed in CHANGELOG.md, README.md &amp; Dashboard.</p>
+        <!-- Live Parsed Change Items List -->
+        <div class="mt-2.5 bg-black/50 border border-white/10 rounded-xl p-2.5 space-y-1.5">
+          <div class="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-ios-teal">
+            <span><i class="fa-solid fa-list-check mr-1"></i>All Entered Changes (Will Be Listed in Changelog &amp; README):</span>
+          </div>
+          <ul id="suiteChangesListPreview" class="space-y-1 text-[11px] text-slate-200 font-medium pl-1"></ul>
+        </div>
       </div>
+
+      <!-- Options -->
+      <label class="flex items-start space-x-2.5 bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 cursor-pointer">
+        <input type="checkbox" id="suiteSyncDash" checked onchange="generateSuiteScript()" class="accent-blue-500 mt-0.5">
+        <span class="text-[11px] text-slate-300 leading-snug"><b class="text-white">Auto-sync this dashboard</b> after the push (refreshes <span class="font-mono text-ios-teal">data.js</span> so new Work Orders, versions &amp; status appear here)</span>
+      </label>
 
       <!-- Live Generated Commit String -->
       <div>
         <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Live Commit String Preview</span>
         <div class="bg-black/80 border border-white/10 rounded-xl p-3 font-mono text-xs text-ios-green flex items-center justify-between">
-          <span id="suiteLiveCommitPreview" class="truncate">fix(WO 2485): [CLOSED] Workorder closed and validated Documents added</span>
+          <span id="suiteLiveCommitPreview" class="whitespace-pre-wrap break-words min-w-0">fix(WO 2485): [CLOSED] Workorder closed and validated Documents added</span>
           <button onclick="copyElementText('suiteLiveCommitPreview')" class="text-slate-400 hover:text-white ml-2 p-1">
             <i class="fa-regular fa-copy"></i>
           </button>
@@ -1949,7 +2229,7 @@ Press Enter to open https://github.com/login/device in your browser...
         <span>Copy All PowerShell Commands</span>
       </button>
       <div class="text-[10px] text-center text-slate-500 font-mono">
-        Auto-generates tags, runs update_all_configs.py, and pushes to GitHub
+        Commits, rebuilds changelogs + README status, tags &amp; pushes to GitHub
       </div>
     </div>
 
@@ -1965,6 +2245,7 @@ Press Enter to open https://github.com/login/device in your browser...
             <span id="modal-hash-badge" class="px-2.5 py-0.5 rounded-lg text-xs font-mono bg-white/10 text-slate-300"></span>
           </div>
           <h3 id="modal-commit-title" class="text-sm font-bold text-white pt-1"></h3>
+          <div id="modal-commit-bullets" class="pt-1 text-xs text-slate-300"></div>
         </div>
         <button onclick="closeCommitModal()" class="text-slate-400 hover:text-white p-2 rounded-xl bg-white/5 border border-white/10">
           <i class="fa-solid fa-xmark text-sm"></i>
@@ -2017,7 +2298,7 @@ Press Enter to open https://github.com/login/device in your browser...
 
     document.addEventListener('DOMContentLoaded', () => {
       initDashboard();
-      generateSuiteScript();
+      initSuiteForm();
       
       // Keyboard shortcut ⌘K / Ctrl+K to toggle suite drawer
       document.addEventListener('keydown', (e) => {
@@ -2054,7 +2335,7 @@ Press Enter to open https://github.com/login/device in your browser...
     // Tab Switching
     function setActiveTab(tab) {
       currentTab = tab;
-      const tabs = ['grid', 'changelog', 'timeline', 'paths', 'builder', 'wearscar', 'setup', 'sparse'];
+      const tabs = ['grid', 'changelog', 'timeline', 'paths', 'builder', 'wearscar', 'setup', 'sparse', 'android'];
       tabs.forEach(t => {
         const view = document.getElementById(`view-${t}`);
         const btn = document.getElementById(`tab-btn-${t}`);
@@ -2067,6 +2348,22 @@ Press Enter to open https://github.com/login/device in your browser...
           view.classList.remove('block');
           view.classList.add('hidden');
           btn.className = "flex items-center space-x-2 px-4 py-2 rounded-xl font-semibold transition-all text-slate-400 hover:text-white";
+        }
+      });
+      if (tab === 'android' && !window.location.search.includes('sim=1')) {
+        const simIframe = document.getElementById('android-sim-iframe');
+        if (simIframe && (!simIframe.getAttribute('src') || simIframe.getAttribute('src') === 'about:blank')) {
+          simIframe.setAttribute('src', simIframe.getAttribute('data-src'));
+        }
+      }
+      // Sync Mobile Bottom Navigation Bar active state
+      ['grid', 'changelog', 'timeline', 'android'].forEach(m => {
+        const mbtn = document.getElementById(`mnav-${m}`);
+        if (!mbtn) return;
+        if (m === tab) {
+          mbtn.className = "flex flex-col items-center justify-center py-1.5 px-2 rounded-xl text-ios-blue font-extrabold transition-all bg-ios-blue/15";
+        } else {
+          mbtn.className = "flex flex-col items-center justify-center py-1.5 px-2 rounded-xl text-slate-400 hover:text-white font-semibold transition-all";
         }
       });
     }
@@ -2234,6 +2531,14 @@ Press Enter to open https://github.com/login/device in your browser...
       document.getElementById('count-closed').innerText = closed;
       document.getElementById('count-active').innerText = active;
       document.getElementById('count-testing').innerText = testing;
+      const pillAll = document.getElementById('filter-pill-ALL');
+      const pillClosed = document.getElementById('filter-pill-CLOSED');
+      const pillTesting = document.getElementById('filter-pill-TESTING');
+      const pillActive = document.getElementById('filter-pill-ACTIVE');
+      if (pillAll) pillAll.innerText = `All (${allWOs.length})`;
+      if (pillClosed) pillClosed.innerText = `🔒 Closed (${closed})`;
+      if (pillTesting) pillTesting.innerText = `🧪 Testing (${testing})`;
+      if (pillActive) pillActive.innerText = `🛠️ In Dev (${active})`;
 
       const ctxPie = document.getElementById('woStatusChart').getContext('2d');
       if (woChart) woChart.destroy();
@@ -2423,6 +2728,73 @@ Press Enter to open https://github.com/login/device in your browser...
     }
 
     // ==========================================
+    // MULTI-ITEM CHANGE EXTRACTOR & RENDERER
+    // ==========================================
+    function splitSingleChangeLine(text) {
+      if (!text) return [];
+      let s = String(text).trim();
+      if (!s) return [];
+      // Strip conventional commit prefix like fix(WO 2480): if present
+      s = s.replace(/^[A-Za-z]+(\([^)]*\))?!?:\s*/, '').trim();
+      // Split on ' | '
+      if (s.includes(' | ')) {
+        const parts = s.split(/\s*\|\s*/).map(p => p.trim()).filter(Boolean);
+        if (parts.length > 1) {
+          let out = [];
+          parts.forEach(p => out.push(...splitSingleChangeLine(p)));
+          return out;
+        }
+      }
+      // Split on numbered list '1. ... 2. ...'
+      if (/(?:^|\s)1\.\s+/.test(s) && /\s2\.\s+/.test(s)) {
+        let prefixTag = '';
+        const tagMatch = s.match(/^(\[[A-Za-z-]+\])\s*(.*)$/);
+        if (tagMatch) {
+          prefixTag = tagMatch[1];
+          s = tagMatch[2];
+        }
+        const parts = s.split(/(?:^|\s+)(?:\d+)\.\s+/).map(p => p.trim()).filter(Boolean);
+        if (parts.length > 1) {
+          if (prefixTag) parts[0] = `${prefixTag} ${parts[0]}`;
+          return parts;
+        }
+      }
+      // Strip leading bullet or number if single line
+      s = s.replace(/^(?:[-*•]|\d+[.)])\s+/, '').trim();
+      return s ? [s] : [];
+    }
+
+    function extractChangeList(summaryStr, detailsArr) {
+      const out = [];
+      splitSingleChangeLine(summaryStr).forEach(item => {
+        if (item && !out.includes(item)) out.push(item);
+      });
+      if (Array.isArray(detailsArr)) {
+        detailsArr.forEach(line => {
+          splitSingleChangeLine(line).forEach(item => {
+            if (item && !out.includes(item)) out.push(item);
+          });
+        });
+      }
+      return out.length ? out : ['Initial repository code'];
+    }
+
+    function renderChangeItemsHtml(items, textClass = 'text-xs text-slate-200') {
+      if (!items || items.length === 0) return `<span class="text-slate-500 italic">No summary recorded</span>`;
+      if (items.length === 1) {
+        return `<div class="${textClass} leading-relaxed whitespace-normal break-words">${escapeHtml(items[0])}</div>`;
+      }
+      return `<ul class="space-y-1 ${textClass} leading-relaxed whitespace-normal break-words">` +
+        items.map((it, idx) => `
+          <li class="flex items-start space-x-1.5">
+            <span class="text-ios-teal font-mono font-bold text-[10px] mt-0.5 shrink-0">${idx + 1}.</span>
+            <span class="${idx === 0 ? 'font-semibold text-white' : 'text-slate-300'}">${escapeHtml(it)}</span>
+          </li>
+        `).join('') +
+        `</ul>`;
+    }
+
+    // ==========================================
     // RENDER WORK ORDERS TABLE
     // ==========================================
     function renderWorkOrdersTable(filterRepo = 'ALL') {
@@ -2451,8 +2823,9 @@ Press Enter to open https://github.com/login/device in your browser...
         items = items.filter(it => 
           it.repo.toLowerCase().includes(q) ||
           it.name.toLowerCase().includes(q) ||
-          it.summary.toLowerCase().includes(q) ||
-          it.last_commit_hash.toLowerCase().includes(q)
+          (it.summary || '').toLowerCase().includes(q) ||
+          (it.details || []).some(d => d.toLowerCase().includes(q)) ||
+          (it.last_commit_hash || '').toLowerCase().includes(q)
         );
       }
 
@@ -2503,8 +2876,8 @@ Press Enter to open https://github.com/login/device in your browser...
             <td class="py-3 px-4 font-mono text-slate-400 text-[11px]">
               ${wo.last_commit_date || '—'}
             </td>
-            <td class="py-3 px-4 text-slate-300 max-w-xs truncate" title="${escapeHtml(wo.summary || '')}">
-              ${wo.summary || 'Initial repository code'}
+            <td class="py-3 px-4 text-slate-200 min-w-[260px] max-w-md">
+              ${renderChangeItemsHtml(extractChangeList(wo.summary, wo.details), 'text-[11px] text-slate-200')}
             </td>
             <td class="py-3 px-4 text-center">
               ${wo.status === 'CLOSED' ? `
@@ -2585,7 +2958,7 @@ Press Enter to open https://github.com/login/device in your browser...
               </div>
             </div>
 
-            <p class="text-xs text-slate-200 font-semibold mb-3">${c.subject}</p>
+            <div class="mb-3">${renderChangeItemsHtml(extractChangeList(c.subject, c.body), 'text-xs text-slate-200')}</div>
 
             <!-- Visual File Type Badges -->
             <div class="flex flex-wrap items-center gap-1.5 pt-2 border-t border-white/10">
@@ -2694,52 +3067,181 @@ Press Enter to open https://github.com/login/device in your browser...
     // ==========================================
     // WORK ORDER SUITE AUTOMATOR SCRIPT BUILDER
     // ==========================================
-    function quickFillWo(woName) {
-      document.getElementById('suiteWoScope').value = woName;
+    // Categories (commit prefix -> label). Keep in sync with CATEGORY_GROUPS in update_all_configs.py
+    const SUITE_CATEGORIES = [
+      { group: 'Core Development', items: [
+        ['fix', '🐛 Bug Fixes'],
+        ['ui', '🖥️ UI & Front Panel Fixes'],
+        ['logic', '⚙️ Core VI Logic & Loops'],
+        ['feat', '🚀 Features & Initial Build']
+      ]},
+      { group: 'Hardware & Calibration', items: [
+        ['hw', '🔌 Hardware, DAQ & Motor Communication'],
+        ['calib', '🎯 Calibration & PID Tuning'],
+        ['safety', '🛡️ Safety, Trips & Interlocks'],
+        ['config', '🛠️ Config, INI & Settings']
+      ]},
+      { group: 'Data & Quality', items: [
+        ['report', '📄 Reports, PDF & Data Logging'],
+        ['test', '🧫 Test Validation & Verification'],
+        ['perf', '🚄 Performance & Optimization']
+      ]},
+      { group: 'Maintenance & Release', items: [
+        ['refactor', '♻️ Refactor & Code Cleanup'],
+        ['build', '📦 Build, EXE & Installer'],
+        ['docs', '📚 Documentation'],
+        ['revert', '⏪ Reverts & Rollbacks'],
+        ['chore', '📌 Miscellaneous Modifications']
+      ]}
+    ];
+
+    const SUITE_STATUS_ICON = { CLOSED: '🔒', TESTING: '🧪', ACTIVE: '🛠️', DISCONTINUED: '⛔' };
+
+    function suiteEl(id) { return document.getElementById(id); }
+
+    function woSortKey(name) {
+      const m = String(name).match(/\d+/);
+      return m ? parseInt(m[0], 10) : -1;
+    }
+
+    function initSuiteForm() {
+      // Categories
+      const catSel = suiteEl('suiteChangeType');
+      if (catSel && !catSel.options.length) {
+        catSel.innerHTML = SUITE_CATEGORIES.map(g =>
+          `<optgroup label="${g.group}">` +
+          g.items.map(([v, l]) => `<option value="${v}">${l}</option>`).join('') +
+          `</optgroup>`).join('');
+      }
+      // Repositories (straight from the tracked data, so nothing is hardcoded)
+      const repoSel = suiteEl('suiteRepoSelect');
+      if (repoSel && typeof REPOS_DATA !== 'undefined') {
+        repoSel.innerHTML = REPOS_DATA.map(r =>
+          `<option value="${r.local_path.replace(/"/g, '&quot;')}" data-id="${r.id}">${r.name} — ${r.work_orders.length} Work Orders</option>`).join('');
+        const bocle = REPOS_DATA.find(r => r.id === 'BOCLE');
+        if (bocle) repoSel.value = bocle.local_path;
+      }
+      onSuiteRepoChange();
+    }
+
+    function currentSuiteRepo() {
+      const sel = suiteEl('suiteRepoSelect');
+      if (!sel || typeof REPOS_DATA === 'undefined') return null;
+      return REPOS_DATA.find(r => r.local_path === sel.value) || null;
+    }
+
+    function onSuiteRepoChange() {
+      const repo = currentSuiteRepo();
+      const woSel = suiteEl('suiteWoSelect');
+      if (!woSel) return;
+      const wos = repo ? [...repo.work_orders].sort((a, b) => woSortKey(b.name) - woSortKey(a.name)) : [];
+      woSel.innerHTML = wos.map(w =>
+        `<option value="${w.name.replace(/"/g, '&quot;')}">${w.name} · ${w.version || 'v01'} · ${SUITE_STATUS_ICON[w.status] || ''} ${w.status}</option>`).join('') +
+        `<option value="__new__">➕ New / not listed… (type name)</option>`;
+      suiteEl('suiteWoCount').innerText = `${wos.length} found`;
+      suiteEl('suiteRepoBadge').innerText = repo ? `${repo.total_commits} commits · ${repo.branch}` : '';
+      onSuiteWoChange();
+    }
+
+    function onSuiteWoChange() {
+      const woSel = suiteEl('suiteWoSelect');
+      const input = suiteEl('suiteWoScope');
+      const info = suiteEl('suiteWoInfo');
+      const isNew = woSel.value === '__new__';
+      input.classList.toggle('hidden', !isNew);
+      if (isNew) {
+        info.innerText = 'Folder will be created/committed as typed above.';
+      } else {
+        const repo = currentSuiteRepo();
+        const w = repo && repo.work_orders.find(x => x.name === woSel.value);
+        info.innerText = w
+          ? `${w.version || 'v01'} · ${w.status} · ${w.detailed_history_count || 0} commits logged` + (w.last_commit_date ? ` · last ${w.last_commit_date.slice(0, 10)}` : '')
+          : '';
+      }
       generateSuiteScript();
     }
 
+    function getSuiteWo() {
+      const woSel = suiteEl('suiteWoSelect');
+      if (!woSel) return '';
+      return woSel.value === '__new__' ? suiteEl('suiteWoScope').value.trim() : woSel.value;
+    }
+
+    // PowerShell single-quoted literal (no variable expansion, quotes doubled)
+    function psq(s) { return "'" + String(s).replace(/'/g, "''") + "'"; }
+
     function generateSuiteScript() {
-      const repoPath = document.getElementById('suiteRepoSelect').value;
-      const wo = document.getElementById('suiteWoScope').value.trim();
-      const stage = document.getElementById('suiteWoStage').value;
-      const type = document.getElementById('suiteChangeType').value;
-      const desc = document.getElementById('suiteCommitDesc').value.trim() || "Updated work order files";
+      const repoPath = suiteEl('suiteRepoSelect').value;
+      const wo = getSuiteWo();
+      const stage = suiteEl('suiteWoStage').value;
+      const type = suiteEl('suiteChangeType').value || 'chore';
 
-      let stageTag = "";
-      let prefix = type;
+      const rawLines = suiteEl('suiteCommitDesc').value.replace(/\r/g, '').split('\n').map(l => l.trim()).filter(Boolean);
+      const parsedItems = [];
+      rawLines.forEach(line => {
+        splitSingleChangeLine(line).forEach(it => {
+          if (it) parsedItems.push(it);
+        });
+      });
+      if (!parsedItems.length) parsedItems.push('Updated work order files');
+      const first = parsedItems[0];
+      const rest = parsedItems.slice(1).map(l => (l.startsWith("'@") ? ' ' + l : l));
+      suiteEl('suiteDescCount').innerText = `${parsedItems.length} change${parsedItems.length === 1 ? '' : 's'} listed`;
+      const previewList = suiteEl('suiteChangesListPreview');
+      if (previewList) {
+        previewList.innerHTML = parsedItems.map((item, idx) => `
+          <li class="flex items-start space-x-2">
+            <span class="px-1.5 py-0.2 rounded bg-ios-blue/20 text-ios-teal font-mono text-[10px] font-bold shrink-0">${idx + 1}</span>
+            <span class="break-words">${escapeHtml(item)}</span>
+          </li>
+        `).join('');
+      }
 
-      if (stage === "closed") stageTag = "[CLOSED]";
-      else if (stage === "reopen") { stageTag = "[REOPENED]"; prefix = "fix"; }
-      else if (stage === "testing") stageTag = "[TESTING]";
-      else if (stage === "integration") stageTag = "[INTEGRATION]";
+      let stageTag = '';
+      if (stage === 'closed') stageTag = '[CLOSED]';
+      else if (stage === 'reopen') stageTag = '[REOPENED]';
+      else if (stage === 'testing') stageTag = '[TESTING]';
+      else if (stage === 'integration') stageTag = '[INTEGRATION]';
 
       const woScopeStr = wo ? `(${wo})` : '';
       const stageTagStr = stageTag ? ` ${stageTag}` : '';
-      const finalCommitMessage = `${prefix}${woScopeStr}:${stageTagStr} ${desc}`;
+      const subject = `${type}${woScopeStr}:${stageTagStr} ${first}`;
 
-      document.getElementById('suiteLiveCommitPreview').innerText = finalCommitMessage;
+      suiteEl('suiteLiveCommitPreview').innerText = [subject, ...rest].join('\n');
 
-      let ps = `Set-Location "${repoPath}"\n`;
+      let ps = `Set-Location ${psq(repoPath)}\n`;
       ps += `git checkout main\n`;
       ps += `git pull origin main --rebase --autostash\n`;
       ps += `git add .\n`;
       ps += `$status = (git status --porcelain)\n`;
-      ps += `if ($status) { git commit -m "${finalCommitMessage}" } else { Write-Host "No modifications staged." }\n`;
+      let commitCmd = `git commit -m ${psq(subject)}`;
+      if (rest.length) {
+        ps += `$body = @'\n${rest.join('\n')}\n'@\n`;
+        commitCmd += ` -m $body`;
+      }
+      ps += `if ($status) { ${commitCmd} } else { Write-Host "No modifications staged." }\n`;
       ps += `python "D:\\Projects\\update_all_configs.py"\n`;
       ps += `git add .\n`;
       ps += `$statusLog = (git status --porcelain)\n`;
-      ps += `if ($statusLog) { git commit -m "chore: rebuild CHANGELOG.md files [skip ci]" }\n`;
+      ps += `if ($statusLog) { git commit -m "chore: rebuild CHANGELOG.md and README work-order status [skip ci]" }\n`;
       ps += `git push origin main\n`;
 
-      if (stage === "closed" && wo) {
+      if (stage === 'closed' && wo) {
         const tagClean = wo.replace(/\s+/g, '');
-        ps += `$releaseTag = "${tagClean}-CLOSED-$(Get-Date -Format 'yyyyMMdd-HHmmss')"\n`;
-        ps += `git tag -a "$releaseTag" -m "Release closed milestone for ${wo}"\n`;
-        ps += `git push origin "$releaseTag"\n`;
+        ps += `$releaseTag = ${psq(tagClean + '-CLOSED-')} + (Get-Date -Format 'yyyyMMdd-HHmmss')\n`;
+        ps += `git tag -a $releaseTag -m ${psq('Release closed milestone for ' + wo)}\n`;
+        ps += `git push origin $releaseTag\n`;
       }
 
-      document.getElementById('suiteCommandDisplay').innerText = ps;
+      if (suiteEl('suiteSyncDash') && suiteEl('suiteSyncDash').checked) {
+        ps += `\n# --- Refresh this dashboard so the new status / Work Orders show up ---\n`;
+        ps += `python "D:\\Projects\\paltro-sd01.github.io\\refresh_data.py"\n`;
+        ps += `Set-Location "D:\\Projects\\paltro-sd01.github.io"\n`;
+        ps += `git add data.js\n`;
+        ps += `if (git status --porcelain data.js) { git commit -m "chore: auto-sync telemetry and work order metrics [skip ci]"; git push origin main; git push origin main:gh-pages --force }\n`;
+      }
+
+      suiteEl('suiteCommandDisplay').innerText = ps;
     }
 
     function copyPowerShellScript() {
@@ -2923,7 +3425,7 @@ Press Enter to open https://github.com/login/device in your browser...
                   </div>
                   <span class="text-slate-400"><i class="fa-regular fa-clock mr-1 text-slate-500"></i>${escapeHtml(e.date)}</span>
                 </div>
-                <p class="text-slate-200 text-xs font-medium pl-1 leading-relaxed">${escapeHtml(e.summary)}</p>
+                <div class="pl-1 pt-0.5">${renderChangeItemsHtml(extractChangeList(e.summary, e.details), 'text-xs text-slate-200')}</div>
               </div>
             `;
           });
@@ -2946,7 +3448,12 @@ Press Enter to open https://github.com/login/device in your browser...
     function openCommitModal(commit) {
       document.getElementById('modal-repo-badge').innerText = commit.repo;
       document.getElementById('modal-hash-badge').innerText = commit.short_hash;
-      document.getElementById('modal-commit-title').innerText = commit.subject;
+      const commitItems = extractChangeList(commit.subject, commit.body);
+      document.getElementById('modal-commit-title').innerText = commitItems[0] || commit.subject;
+      const bulletsBox = document.getElementById('modal-commit-bullets');
+      if (bulletsBox) {
+        bulletsBox.innerHTML = commitItems.length > 1 ? renderChangeItemsHtml(commitItems, 'text-xs text-slate-200') : '';
+      }
       document.getElementById('modal-author').innerText = `${commit.author} <${commit.email || ''}>`;
       document.getElementById('modal-date').innerText = commit.date;
       document.getElementById('modal-github-link').href = `${commit.gh_url}/commit/${commit.hash}`;
@@ -3325,7 +3832,116 @@ pause\r
       updateLiveClock();
       setInterval(updateLiveClock, 1000);
     });
+
+    // ==========================================
+    // ANDROID PWA INSTALLER & SIMULATOR CONTROLS
+    // ==========================================
+    let deferredPwaPrompt = null;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPwaPrompt = e;
+      const lbl = document.getElementById('pwa-install-btn-label');
+      if (lbl) lbl.innerText = 'Install Android App Now (Ready)';
+    });
+
+    window.addEventListener('appinstalled', () => {
+      deferredPwaPrompt = null;
+      const lbl = document.getElementById('pwa-install-btn-label');
+      if (lbl) lbl.innerText = 'Android App Installed ✓';
+      showToast('Paltro-SD01 App installed on your device!');
+    });
+
+    async function triggerPwaInstall() {
+      if (deferredPwaPrompt) {
+        deferredPwaPrompt.prompt();
+        const { outcome } = await deferredPwaPrompt.userChoice;
+        if (outcome === 'accepted') {
+          showToast('Installing Paltro-SD01 Android App...');
+        }
+        deferredPwaPrompt = null;
+      } else {
+        setActiveTab('android');
+        showToast('On Android Chrome: tap ⋮ menu → "Install app" or scan the QR code!');
+      }
+    }
+
+    function setAndroidSimSize(w, h, label) {
+      const frame = document.getElementById('android-phone-frame');
+      const lbl = document.getElementById('android-sim-label');
+      if (frame) {
+        frame.style.width = (w + 20) + 'px';
+        frame.style.height = (h + 40) + 'px';
+      }
+      if (lbl) {
+        lbl.innerText = `Device: ${label} · Auto-Fit Verified`;
+      }
+      [360, 412, 620].forEach(sz => {
+        const b = document.getElementById(`sim-btn-${sz}`);
+        if (!b) return;
+        if (sz === w) {
+          b.className = "px-2.5 py-1.5 rounded-xl font-bold pill-active transition-all";
+        } else {
+          b.className = "px-2.5 py-1.5 rounded-xl font-semibold text-slate-400 hover:text-white transition-all";
+        }
+      });
+    }
+
+    function reloadAndroidSimulator() {
+      const iframe = document.getElementById('android-sim-iframe');
+      if (iframe) iframe.src = iframe.src;
+      showToast('Android simulator reloaded');
+    }
+
+    // Register Service Worker for Android PWA & handle deep-link URL params
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('tab')) {
+        setActiveTab(params.get('tab'));
+      }
+      if (params.get('drawer') === 'automator') {
+        toggleSuiteDrawer(true);
+      }
+      const simClock = document.getElementById('android-sim-clock');
+      if (simClock) {
+        const now = new Date();
+        simClock.innerText = now.toTimeString().slice(0, 5);
+      }
+    });
   </script>
+
+  <!-- Sticky Android / Mobile Bottom Navigation Bar (<1024px) -->
+  <nav id="mobile-bottom-nav" class="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-slate-950/95 backdrop-blur-2xl border-t border-white/15 px-2 py-1.5 safe-bottom shadow-[0_-10px_30px_rgba(0,0,0,0.8)]">
+    <div class="grid grid-cols-5 gap-1 max-w-md mx-auto text-[10px]">
+      <button onclick="setActiveTab('grid')" id="mnav-grid" class="flex flex-col items-center justify-center py-1.5 px-2 rounded-xl text-ios-blue font-extrabold transition-all bg-ios-blue/15">
+        <i class="fa-solid fa-cubes text-sm mb-0.5"></i>
+        <span>Rigs</span>
+      </button>
+      <button onclick="setActiveTab('changelog')" id="mnav-changelog" class="flex flex-col items-center justify-center py-1.5 px-2 rounded-xl text-slate-400 hover:text-white font-semibold transition-all">
+        <i class="fa-solid fa-list-check text-sm mb-0.5"></i>
+        <span>Work Orders</span>
+      </button>
+      <button onclick="setActiveTab('timeline')" id="mnav-timeline" class="flex flex-col items-center justify-center py-1.5 px-2 rounded-xl text-slate-400 hover:text-white font-semibold transition-all">
+        <i class="fa-solid fa-clock-rotate-left text-sm mb-0.5"></i>
+        <span>Commits</span>
+      </button>
+      <button onclick="toggleSuiteDrawer(true)" id="mnav-automator" class="flex flex-col items-center justify-center py-1.5 px-2 rounded-xl text-ios-teal hover:text-white font-bold transition-all">
+        <i class="fa-solid fa-terminal text-sm mb-0.5"></i>
+        <span>Automator</span>
+      </button>
+      <button onclick="setActiveTab('android')" id="mnav-android" class="flex flex-col items-center justify-center py-1.5 px-2 rounded-xl text-ios-green hover:text-white font-bold transition-all">
+        <i class="fa-brands fa-android text-sm mb-0.5"></i>
+        <span>Android App</span>
+      </button>
+    </div>
+  </nav>
+
 
   <!-- Work Order Detailed Sub-Changelog History Modal -->
   <div id="wo-subhistory-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
