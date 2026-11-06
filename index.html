@@ -2044,21 +2044,17 @@ Press Enter to open https://github.com/login/device in your browser...
               </a>
             </div>
 
-            <div class="p-3.5 rounded-2xl bg-black/50 border border-white/10 space-y-2 text-xs">
+            <div class="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/25 space-y-1.5 text-xs">
               <div class="font-bold text-white flex items-center justify-between">
-                <span>1-Scan Phone Pairing for Auto-GitHub Logging</span>
-                <span class="text-[10px] font-mono text-ios-teal">Optional</span>
+                <span class="flex items-center space-x-1.5">
+                  <span class="w-2 h-2 rounded-full bg-ios-green animate-pulse"></span>
+                  <span>100% Automatic Sync &amp; Device Access Logging</span>
+                </span>
+                <span class="text-[10px] font-mono bg-emerald-500/20 text-ios-green px-2 py-0.5 rounded font-bold">AUTO-ACTIVE ✓</span>
               </div>
-              <p class="text-[11px] text-slate-400 leading-relaxed">
-                Paste a GitHub Personal Access Token below to embed it into the QR code above. When you scan the QR code with your Android phone, your phone pairs automatically and pushes every access event (Model, OS, Resolution, IP, Sync ID) directly to <code class="text-ios-teal">DEVICE_ACCESS_LOG.md</code> on GitHub!
+              <p class="text-[11px] text-slate-300 leading-relaxed">
+                Whenever any phone or browser opens the app or receives an update, its device details (Device ID, Phone Model, OS, Screen Resolution, IP/Location, and Sync Version) are <b>automatically logged</b> to <code class="text-ios-teal">DEVICE_ACCESS_LOG.md</code> in GitHub—no manual button clicks or tokens required.
               </p>
-              <div class="flex items-center space-x-2">
-                <input type="password" id="desktop-pair-token" placeholder="Paste ghp_... token to generate Paired QR"
-                       class="flex-1 bg-black/70 border border-white/15 rounded-xl px-3 py-2 text-xs font-mono text-white">
-                <button onclick="generatePairedQrCode()" class="px-3.5 py-2 rounded-xl bg-ios-green text-black font-extrabold text-xs shrink-0">
-                  Update QR
-                </button>
-              </div>
             </div>
 
             <div class="space-y-2">
@@ -3964,10 +3960,43 @@ pause\r
       const box = document.getElementById('desktop-access-logs-box');
       if (!box) return;
       try {
-        const res = await fetch('device_access_log.json?_t=' + Date.now(), { cache: 'no-store' });
-        if (!res.ok) return;
-        const logs = await res.json();
-        box.innerHTML = logs.slice(0, 15).map(e => `
+        let remoteLogs = [];
+        try {
+          const res = await fetch('device_access_log.json?_t=' + Date.now(), { cache: 'no-store' });
+          if (res.ok) remoteLogs = await res.json();
+        } catch (e) {}
+
+        let relayLogs = [];
+        try {
+          const rRes = await fetch('https://ntfy.sh/paltro_sd01_device_log_84f29a1c/json?poll=1&since=48h', { cache: 'no-store' });
+          if (rRes.ok) {
+            const txt = await rRes.text();
+            txt.split('\n').forEach(line => {
+              if (!line.trim()) return;
+              try {
+                const outer = JSON.parse(line);
+                if (outer.event === 'message' && outer.message) {
+                  const p = JSON.parse(outer.message);
+                  if (p && p.device_id) relayLogs.unshift(p);
+                }
+              } catch (e) {}
+            });
+          }
+        } catch (e) {}
+
+        const seen = new Set();
+        const merged = [];
+        [...relayLogs, ...remoteLogs].forEach(item => {
+          if (!item || !item.device_id) return;
+          const k = `${item.device_id}_${(item.timestamp || '').slice(0, 16)}_${item.sync_id || ''}`;
+          if (!seen.has(k)) {
+            seen.add(k);
+            merged.push(item);
+          }
+        });
+        merged.sort((a, b) => String(b.timestamp || '').localeCompare(String(a.timestamp || '')));
+
+        box.innerHTML = merged.slice(0, 20).map(e => `
           <div class="p-2.5 rounded-xl bg-black/50 border border-white/10 space-y-1">
             <div class="flex items-center justify-between font-mono text-[10px]">
               <span class="px-1.5 py-0.5 rounded bg-ios-green/15 text-ios-green font-bold">${escapeHtml(e.device_id || '-')}</span>
@@ -4000,7 +4029,7 @@ pause\r
         }
       } catch (e) {}
     }
-    setInterval(pollDesktopLiveUpdate, 30000);
+    setInterval(() => { pollDesktopLiveUpdate(); loadDesktopAccessLogs(); }, 15000);
     document.addEventListener('DOMContentLoaded', () => {
       loadDesktopAccessLogs();
     });

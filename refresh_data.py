@@ -316,6 +316,43 @@ def refresh_data():
         f.write(js_content)
 
     # Also update device_access_log.json and DEVICE_ACCESS_LOG.md for GitHub cross-verification
+    sync_device_logs(sync_id=sync_id, now_str=now_str, sync_meta=sync_meta)
+
+    print(f"Successfully generated {data_js_path} ({os.path.getsize(data_js_path)} bytes) [Sync ID: {sync_id}]")
+
+
+RELAY_TOPIC_URL = "https://ntfy.sh/paltro_sd01_device_log_84f29a1c"
+
+
+def fetch_cloud_relay_logs():
+    """Fetches real-time device check-ins posted automatically by Android/Web clients."""
+    import urllib.request
+    entries = []
+    try:
+        req = urllib.request.Request(
+            f"{RELAY_TOPIC_URL}/json?poll=1&since=48h",
+            headers={"User-Agent": "Paltro-SD01-Sync-Engine/1.0"}
+        )
+        with urllib.request.urlopen(req, timeout=8) as resp:
+            for raw_line in resp.read().decode("utf-8", errors="ignore").splitlines():
+                raw_line = raw_line.strip()
+                if not raw_line:
+                    continue
+                try:
+                    outer = json.loads(raw_line)
+                    if outer.get("event") == "message" and outer.get("message"):
+                        payload = json.loads(outer["message"])
+                        if isinstance(payload, dict) and payload.get("device_id"):
+                            entries.append(payload)
+                except Exception:
+                    pass
+    except Exception:
+        pass
+    return entries
+
+
+def sync_device_logs(sync_id=None, now_str=None, sync_meta=None):
+    import platform, socket
     log_json_path = os.path.join(DASHBOARD_DIR, 'device_access_log.json')
     try:
         with open(log_json_path, 'r', encoding='utf-8') as lf:
@@ -325,41 +362,77 @@ def refresh_data():
     except Exception:
         access_log = []
 
-    ws_entry = {
-        "timestamp": now_str,
-        "device_id": f"WS-{socket.gethostname().upper()}",
-        "device_name": f"{socket.gethostname()} (Engineering Workstation)",
-        "platform": f"{platform.system()} {platform.release()} ({platform.machine()})",
-        "app_mode": "Workstation Master Publisher",
-        "resolution": "Desktop Master",
-        "network": "Local Workstation Git Sync",
-        "sync_id": sync_id,
-        "event": f"Published {sync_meta['total_work_orders']} WOs / {sync_meta['total_commits']} Commits"
-    }
-    if not access_log or access_log[0].get("sync_id") != sync_id or access_log[0].get("device_id") != ws_entry["device_id"]:
-        access_log.insert(0, ws_entry)
-        access_log = access_log[:200]
+    if not now_str:
+        now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    if not sync_id:
+        sync_id = access_log[0].get("sync_id", "LIVE") if access_log else "LIVE"
+
+    cloud_entries = fetch_cloud_relay_logs()
+    combined = []
+
+    if sync_meta:
+        ws_entry = {
+            "timestamp": now_str,
+            "device_id": f"WS-{socket.gethostname().upper()}",
+            "device_name": f"{socket.gethostname()} (Engineering Workstation)",
+            "platform": f"{platform.system()} {platform.release()} ({platform.machine()})",
+            "app_mode": "Workstation Master Publisher",
+            "resolution": "Desktop Master",
+            "network": "Local Workstation Git Sync",
+            "sync_id": sync_id,
+            "event": f"Published {sync_meta['total_work_orders']} WOs / {sync_meta['total_commits']} Commits"
+        }
+        combined.append(ws_entry)
+
+    # Newest cloud entries first
+    for ce in reversed(cloud_entries):
+        combined.append(ce)
+    for old in access_log:
+        combined.append(old)
+
+    # Deduplicate by (device_id, timestamp) or consecutive identical (device_id, sync_id, event)
+    deduped = []
+    seen_keys = set()
+    for item in combined:
+        k = f"{item.get('device_id','')}|{item.get('timestamp','')}"
+        if k in seen_keys:
+            continue
+        if deduped:
+            prev = deduped[-1]
+            if (prev.get("device_id") == item.get("device_id")
+                    and prev.get("sync_id") == item.get("sync_id")
+                    and prev.get("event") == item.get("event")
+                    and str(prev.get("timestamp", ""))[:15] == str(item.get("timestamp", ""))[:15]):
+                continue
+        seen_keys.add(k)
+        deduped.append(item)
+
+    deduped.sort(key=lambda x: str(x.get("timestamp", "")), reverse=True)
+    deduped = deduped[:250]
+
+    changed = json.dumps(deduped, sort_keys=True) != json.dumps(access_log, sort_keys=True)
+    if changed or not os.path.exists(os.path.join(DASHBOARD_DIR, 'DEVICE_ACCESS_LOG.md')):
         with open(log_json_path, 'w', encoding='utf-8') as lf:
-            json.dump(access_log, lf, indent=2, ensure_ascii=False)
+            json.dump(deduped, lf, indent=2, ensure_ascii=False)
 
-    md_lines = [
-        "# 🔐 Paltro-SD01 — Device Access & Sync Cross-Verification Log",
-        "",
-        f"> **Latest Master Sync ID:** `{sync_id}`  ",
-        f"> **Last Published:** `{now_str}`  ",
-        "> **Purpose:** Cross-verifies every Android phone, tablet, browser, and workstation that accesses or syncs with the Paltro-SD01 Engineering Command Center.",
-        "",
-        "| Timestamp | Device ID | Device / Model | OS / Platform | Mode | Screen Resolution | IP / Network | Sync Version | Event / Status |",
-        "| :--- | :---: | :--- | :--- | :---: | :---: | :--- | :---: | :--- |",
-    ]
-    for e in access_log:
-        md_lines.append(
-            f"| `{e.get('timestamp','-')}` | `{e.get('device_id','-')}` | **{e.get('device_name','-')}** | {e.get('platform','-')} | `{e.get('app_mode','-')}` | `{e.get('resolution','-')}` | {e.get('network','-')} | `{e.get('sync_id','-')}` | {e.get('event','Access Verified')} |"
-        )
-    with open(os.path.join(DASHBOARD_DIR, 'DEVICE_ACCESS_LOG.md'), 'w', encoding='utf-8') as mf:
-        mf.write("\n".join(md_lines) + "\n")
-
-    print(f"Successfully generated {data_js_path} ({os.path.getsize(data_js_path)} bytes) [Sync ID: {sync_id}]")
+        md_lines = [
+            "# 🔐 Paltro-SD01 — Automatic Device Access & Sync Cross-Verification Log",
+            "",
+            f"> **Latest Master Sync ID:** `{sync_id}`  ",
+            f"> **Last Updated:** `{now_str}`  ",
+            "> **Mode:** `100% Automatic Real-Time Device Telemetry & GitHub Audit Log`  ",
+            "> **Purpose:** Automatically logs every Android phone, tablet, browser, and workstation that accesses or syncs with the Paltro-SD01 Engineering Command Center.",
+            "",
+            "| Timestamp | Device ID | Device / Model | OS / Platform | Mode | Screen Resolution | IP / Network | Sync Version | Event / Status |",
+            "| :--- | :---: | :--- | :--- | :---: | :---: | :--- | :---: | :--- |",
+        ]
+        for e in deduped:
+            md_lines.append(
+                f"| `{e.get('timestamp','-')}` | `{e.get('device_id','-')}` | **{e.get('device_name','-')}** | {e.get('platform','-')} | `{e.get('app_mode','-')}` | `{e.get('resolution','-')}` | {e.get('network','-')} | `{e.get('sync_id','-')}` | {e.get('event','Auto-Verified')} |"
+            )
+        with open(os.path.join(DASHBOARD_DIR, 'DEVICE_ACCESS_LOG.md'), 'w', encoding='utf-8') as mf:
+            mf.write("\n".join(md_lines) + "\n")
+    return changed
 
 if __name__ == '__main__':
     refresh_data()
