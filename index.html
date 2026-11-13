@@ -2563,11 +2563,26 @@ Press Enter to open https://github.com/login/device in your browser...
         </div>
       </div>
 
-      <!-- Options -->
-      <label class="flex items-start space-x-2.5 bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 cursor-pointer">
-        <input type="checkbox" id="suiteSyncDash" checked onchange="generateSuiteScript()" class="accent-blue-500 mt-0.5">
-        <span class="text-[11px] text-slate-300 leading-snug"><b class="text-white">Auto-sync this dashboard</b> after the push (refreshes <span class="font-mono text-ios-teal">data.js</span> so new Work Orders, versions &amp; status appear here)</span>
-      </label>
+      <!-- Isolated Single Work Order Scope Control & Auto-Sync Option -->
+      <div class="space-y-2">
+        <label class="flex items-start space-x-2.5 bg-emerald-500/10 border border-emerald-500/30 rounded-xl px-3.5 py-2.5 cursor-pointer">
+          <input type="checkbox" id="suiteOnlySelectedWo" checked onchange="generateSuiteScript()" class="accent-emerald-500 mt-0.5">
+          <div class="text-[11px] leading-snug flex-1">
+            <div class="flex items-center justify-between">
+              <b class="text-ios-green">🎯 Update ONLY Selected Work Order to GitHub (Isolated Mode)</b>
+              <span class="px-1.5 py-0.5 rounded bg-emerald-500/20 text-ios-green font-mono text-[9px] font-bold">RECOMMENDED</span>
+            </div>
+            <p class="text-slate-300 mt-0.5" id="suiteScopeIsolationNote">
+              Stages, commits, and rebuilds changelog <b>strictly for the selected Work Order folder</b> (<code class="text-ios-teal" id="suiteIsolatedWoLabel">WO 2485</code>). Any other Work Orders in this repository remain untouched.
+            </p>
+          </div>
+        </label>
+
+        <label class="flex items-start space-x-2.5 bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 cursor-pointer">
+          <input type="checkbox" id="suiteSyncDash" checked onchange="generateSuiteScript()" class="accent-blue-500 mt-0.5">
+          <span class="text-[11px] text-slate-300 leading-snug"><b class="text-white">Auto-sync this dashboard</b> after the push (refreshes <span class="font-mono text-ios-teal">data.js</span> so new Work Orders, versions &amp; status appear here)</span>
+        </label>
+      </div>
 
       <!-- Live Generated Commit String -->
       <div>
@@ -4100,22 +4115,57 @@ Write-Host "\n[OK] Setup Complete! $env:COMPUTERNAME is now synced with the Palt
 
       suiteEl('suiteLiveCommitPreview').innerText = [subject, ...rest].join('\n');
 
-      let ps = `# Engineer: ${engObj ? engObj.name + ' (' + engObj.pc_name + ')' : 'Local Workstation'}\nSet-Location ${psq(effectiveRepoPath)}\n`;
-      ps += `git checkout main\n`;
-      ps += `git pull origin main --rebase --autostash\n`;
-      ps += `git add .\n`;
-      ps += `$status = (git status --porcelain)\n`;
-      let commitCmd = `git commit -m ${psq(subject)}`;
-      if (rest.length) {
-        ps += `$body = @'\n${rest.join('\n')}\n'@\n`;
-        commitCmd += ` -m $body`;
+      const onlySelectedWo = suiteEl('suiteOnlySelectedWo') ? suiteEl('suiteOnlySelectedWo').checked : true;
+      const isoLbl = suiteEl('suiteIsolatedWoLabel');
+      if (isoLbl) isoLbl.innerText = wo || 'Selected WO';
+
+      let ps = `# Engineer : ${engObj ? engObj.name + ' (' + engObj.pc_name + ')' : 'Local Workstation'}\n`;
+      if (onlySelectedWo && wo) {
+        const woChangelogRel = `${wo}/CHANGELOG.md`;
+        ps += `# Scope    : ISOLATED WORK ORDER ONLY (${wo}) — Other Work Orders in repo are NOT touched\n`;
+        ps += `Set-Location ${psq(effectiveRepoPath)}\n`;
+        ps += `git checkout main\n`;
+        ps += `git pull origin main --rebase --autostash\n\n`;
+        ps += `# 1. Unstage any other folders & stage ONLY selected Work Order ${psq(wo)}\n`;
+        ps += `git reset -q\n`;
+        ps += `if (-not (Test-Path ${psq(wo)})) { New-Item -ItemType Directory -Force -Path ${psq(wo)} | Out-Null }\n`;
+        ps += `git add -- ${psq(wo)}\n`;
+        ps += `$status = (git status --porcelain -- ${psq(wo)})\n`;
+        let commitCmd = `git commit --only ${psq(wo)} -m ${psq(subject)}`;
+        if (rest.length) {
+          ps += `$body = @'\n${rest.join('\n')}\n'@\n`;
+          commitCmd += ` -m $body`;
+        }
+        ps += `if (-not $status) {\n`;
+        ps += `    Set-Content -Path ${psq(wo + '\\.wo_status')} -Value ("Updated: " + (Get-Date -Format 'yyyy-MM-dd HH:mm:ss') + " | " + ${psq(subject)}) -Encoding UTF8\n`;
+        ps += `    git add -- ${psq(wo + '\\.wo_status')}\n`;
+        ps += `}\n`;
+        ps += `${commitCmd}\n\n`;
+        ps += `# 2. Rebuild CHANGELOG.md ONLY for ${psq(wo)} (plus root status table)\n`;
+        ps += `python "D:\\Projects\\update_all_configs.py" --repo ${psq(effectiveRepoPath)} --wo ${psq(wo)}\n`;
+        ps += `git add -- ${psq(woChangelogRel)} 'CHANGELOG.md' 'README.md'\n`;
+        ps += `$statusLog = (git status --porcelain -- ${psq(woChangelogRel)} 'CHANGELOG.md' 'README.md')\n`;
+        ps += `if ($statusLog) { git commit --only ${psq(woChangelogRel)} 'CHANGELOG.md' 'README.md' -m ${psq('chore(' + wo + '): rebuild WO CHANGELOG.md and README work-order status [skip ci]')} }\n`;
+        ps += `git push origin main\n`;
+      } else {
+        ps += `# Scope    : Full Repository\n`;
+        ps += `Set-Location ${psq(effectiveRepoPath)}\n`;
+        ps += `git checkout main\n`;
+        ps += `git pull origin main --rebase --autostash\n`;
+        ps += `git add .\n`;
+        ps += `$status = (git status --porcelain)\n`;
+        let commitCmd = `git commit -m ${psq(subject)}`;
+        if (rest.length) {
+          ps += `$body = @'\n${rest.join('\n')}\n'@\n`;
+          commitCmd += ` -m $body`;
+        }
+        ps += `if ($status) { ${commitCmd} } else { Write-Host "No modifications staged." }\n`;
+        ps += `python "D:\\Projects\\update_all_configs.py" --repo ${psq(effectiveRepoPath)}\n`;
+        ps += `git add .\n`;
+        ps += `$statusLog = (git status --porcelain)\n`;
+        ps += `if ($statusLog) { git commit -m "chore: rebuild CHANGELOG.md and README work-order status [skip ci]" }\n`;
+        ps += `git push origin main\n`;
       }
-      ps += `if ($status) { ${commitCmd} } else { Write-Host "No modifications staged." }\n`;
-      ps += `python "D:\\Projects\\update_all_configs.py"\n`;
-      ps += `git add .\n`;
-      ps += `$statusLog = (git status --porcelain)\n`;
-      ps += `if ($statusLog) { git commit -m "chore: rebuild CHANGELOG.md and README work-order status [skip ci]" }\n`;
-      ps += `git push origin main\n`;
 
       if (stage === 'closed' && wo) {
         const tagClean = wo.replace(/\s+/g, '');

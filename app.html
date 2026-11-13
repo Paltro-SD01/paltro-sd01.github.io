@@ -1356,15 +1356,21 @@
       const subject = `${type}${wo ? '(' + wo + ')' : ''}:${tag} ${items[0]}`;
       const rest = items.slice(1);
 
-      let ps = `Set-Location ${psQuote(repoPath)}\ngit checkout main\ngit pull origin main --rebase --autostash\ngit add .\n`;
-      let commitCmd = `git commit -m ${psQuote(subject)}`;
+      const woTarget = wo || 'WO';
+      const woCl = `${woTarget}/CHANGELOG.md`;
+      let ps = `# Scope: ISOLATED WORK ORDER ONLY (${woTarget})\nSet-Location ${psQuote(repoPath)}\ngit checkout main\ngit pull origin main --rebase --autostash\n`;
+      ps += `git reset -q\nif (-not (Test-Path ${psQuote(woTarget)})) { New-Item -ItemType Directory -Force -Path ${psQuote(woTarget)} | Out-Null }\n`;
+      ps += `git add -- ${psQuote(woTarget)}\n`;
+      let commitCmd = `git commit --only ${psQuote(woTarget)} -m ${psQuote(subject)}`;
       if (rest.length) {
         ps += `$body = @'\n${rest.join('\n')}\n'@\n`;
         commitCmd += ` -m $body`;
       }
-      ps += `if (git status --porcelain) { ${commitCmd} }\n`;
-      ps += `python "D:\\Projects\\update_all_configs.py"\ngit add .\n`;
-      ps += `if (git status --porcelain) { git commit -m "chore: rebuild CHANGELOG.md and README work-order status [skip ci]" }\n`;
+      ps += `if (-not (git status --porcelain -- ${psQuote(woTarget)})) { Set-Content -Path ${psQuote(woTarget + '\\.wo_status')} -Value ${psQuote(subject)} -Encoding UTF8; git add -- ${psQuote(woTarget + '\\.wo_status')} }\n`;
+      ps += `${commitCmd}\n`;
+      ps += `python "D:\\Projects\\update_all_configs.py" --repo ${psQuote(repoPath)} --wo ${psQuote(woTarget)}\n`;
+      ps += `git add -- ${psQuote(woCl)} 'CHANGELOG.md' 'README.md'\n`;
+      ps += `if (git status --porcelain -- ${psQuote(woCl)} 'CHANGELOG.md' 'README.md') { git commit --only ${psQuote(woCl)} 'CHANGELOG.md' 'README.md' -m ${psQuote('chore(' + woTarget + '): rebuild WO CHANGELOG.md and README work-order status [skip ci]')} }\n`;
       ps += `git push origin main\n`;
       ps += `python "D:\\Projects\\paltro-sd01.github.io\\refresh_data.py"\n`;
       ps += `Set-Location "D:\\Projects\\paltro-sd01.github.io"\ngit add data.js device_access_log.json DEVICE_ACCESS_LOG.md\n`;

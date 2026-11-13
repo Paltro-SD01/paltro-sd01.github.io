@@ -27,10 +27,25 @@ def find_git_cliff():
 GIT_CLIFF_BIN = find_git_cliff()
 GIT_BIN = shutil.which("git") or shutil.which("git.exe") or "git.exe"
 
+import argparse
+
+def parse_cli_args():
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument("--repo", "-r", default=None, help="Target only a single repository path")
+    parser.add_argument("--wo", "-w", default=None, help="Target only a single Work Order folder inside the repo")
+    args, unknown = parser.parse_known_args()
+    if not args.repo and len(unknown) >= 1 and not unknown[0].startswith("-"):
+        args.repo = unknown[0]
+    if not args.wo and len(unknown) >= 2 and not unknown[1].startswith("-"):
+        args.wo = unknown[1]
+    return args
+
+CLI_ARGS = parse_cli_args()
+
 def resolve_repositories():
-    """Auto-discovers the 6 Software Department repositories on ANY team PC or CLI target."""
-    if len(sys.argv) > 1:
-        arg_path = os.path.abspath(sys.argv[1])
+    """Auto-discovers the 6 Software Department repositories on ANY team PC, or targets ONLY --repo if specified."""
+    if CLI_ARGS.repo:
+        arg_path = os.path.abspath(CLI_ARGS.repo)
         if os.path.isdir(os.path.join(arg_path, ".git")):
             return [arg_path]
         if os.path.isdir(arg_path):
@@ -554,9 +569,11 @@ commit_parsers = [
                     .replace("__PARSERS__", parsers_toml))
 
 
-def process_repository(repo_path):
+def process_repository(repo_path, target_wo=None):
     print(f"\n=========================================")
     print(f" Processing Repository: {repo_path}")
+    if target_wo:
+        print(f" Scoped Work Order    : {target_wo} (ONLY this Work Order folder will be updated)")
     print(f"=========================================")
 
     if not os.path.exists(repo_path):
@@ -569,8 +586,16 @@ def process_repository(repo_path):
     # STEP 1b: Keep README 'Tracked Work Orders & Status' table in sync
     update_readme_status(repo_path, rows)
 
-    # STEP 2: Build Detailed CHANGELOG.md for Each Work Order Subfolder
-    for entry in list_wo_folders(repo_path):
+    # STEP 2: Build Detailed CHANGELOG.md for Work Order Subfolder(s)
+    wo_folders = list_wo_folders(repo_path)
+    if target_wo:
+        t_clean = target_wo.strip().lower()
+        matched = [w for w in wo_folders if w.lower() == t_clean]
+        if not matched and os.path.isdir(os.path.join(repo_path, target_wo.strip())):
+            matched = [target_wo.strip()]
+        wo_folders = matched
+
+    for entry in wo_folders:
         full_path = os.path.join(repo_path, entry)
         folder_cliff_path = os.path.join(full_path, ".cliff.toml")
         folder_changelog_path = os.path.join(full_path, "CHANGELOG.md")
@@ -605,5 +630,5 @@ def process_repository(repo_path):
 
 if __name__ == "__main__":
     for repo in REPOSITORIES:
-        process_repository(repo)
+        process_repository(repo, target_wo=CLI_ARGS.wo)
     print("\nMaster Summary Table, README status tables & Folder Changelogs with Versions Generated Successfully!")
