@@ -1,5 +1,93 @@
 [
   {
+    "timestamp": "2026-11-13 18:15:27",
+    "device_id": "WS-KIRAN",
+    "device_name": "Kiran (Engineering Workstation)",
+    "platform": "Windows 10 (AMD64)",
+    "app_mode": "Workstation Master Publisher",
+    "resolution": "Desktop Master",
+    "network": "Local Workstation Git Sync",
+    "sync_id": "SYNC-EDFCD3DA",
+    "event": "Published 30 WOs / 280 Commits"
+  },
+  {
+    "timestamp": "2026-11-13 17:58:11",
+    "device_id": "WS-KIRAN",
+    "device_name": "Kiran (Engineering Workstation)",
+    "platform": "Windows 10 (AMD64)",
+    "app_mode": "Workstation Master Publisher",
+    "resolution": "Desktop Master",
+    "network": "Local Workstation Git Sync",
+    "sync_id": "SYNC-EDFCD3DA",
+    "event": "Published 30 WOs / 280 Commits"
+  },
+  {
+    "timestamp": "2026-11-13 17:14:12",
+    "device_id": "WS-KIRAN",
+    "device_name": "Kiran (Engineering Workstation)",
+    "platform": "Windows 10 (AMD64)",
+    "app_mode": "Workstation Master Publisher",
+    "resolution": "Desktop Master",
+    "network": "Local Workstation Git Sync",
+    "sync_id": "SYNC-8BED2DF3",
+    "event": "Published 29 WOs / 278 Commits"
+  },
+  {
+    "timestamp": "2026-11-13 17:12:04",
+    "device_id": "WS-KIRAN",
+    "device_name": "Kiran (Engineering Workstation)",
+    "platform": "Windows 10 (AMD64)",
+    "app_mode": "Workstation Master Publisher",
+    "resolution": "Desktop Master",
+    "network": "Local Workstation Git Sync",
+    "sync_id": "SYNC-D19FFA2E",
+    "event": "Published 29 WOs / 276 Commits"
+  },
+  {
+    "timestamp": "2026-11-13 17:09:35",
+    "device_id": "WS-KIRAN",
+    "device_name": "Kiran (Engineering Workstation)",
+    "platform": "Windows 10 (AMD64)",
+    "app_mode": "Workstation Master Publisher",
+    "resolution": "Desktop Master",
+    "network": "Local Workstation Git Sync",
+    "sync_id": "SYNC-D19FFA2E",
+    "event": "Published 29 WOs / 276 Commits"
+  },
+  {
+    "timestamp": "2026-11-13 17:05:52",
+    "device_id": "WS-KIRAN",
+    "device_name": "Kiran (Engineering Workstation)",
+    "platform": "Windows 10 (AMD64)",
+    "app_mode": "Workstation Master Publisher",
+    "resolution": "Desktop Master",
+    "network": "Local Workstation Git Sync",
+    "sync_id": "SYNC-F66730B0",
+    "event": "Published 29 WOs / 274 Commits"
+  },
+  {
+    "timestamp": "2026-11-13 17:02:36",
+    "device_id": "WS-KIRAN",
+    "device_name": "Kiran (Engineering Workstation)",
+    "platform": "Windows 10 (AMD64)",
+    "app_mode": "Workstation Master Publisher",
+    "resolution": "Desktop Master",
+    "network": "Local Workstation Git Sync",
+    "sync_id": "SYNC-AAAB9347",
+    "event": "Published 29 WOs / 272 Commits"
+  },
+  {
+    "timestamp": "2026-11-13 16:56:57",
+    "device_id": "WS-KIRAN",
+    "device_name": "Kiran (Engineering Workstation)",
+    "platform": "Windows 10 (AMD64)",
+    "app_mode": "Workstation Master Publisher",
+    "resolution": "Desktop Master",
+    "network": "Local Workstation Git Sync",
+    "sync_id": "SYNC-DE9FBC36",
+    "event": "Published 29 WOs / 270 Commits"
+  },
+  {
     "timestamp": "2026-11-13 12:16:46",
     "device_id": "WS-KIRAN",
     "device_name": "Kiran (Engineering Workstation)",

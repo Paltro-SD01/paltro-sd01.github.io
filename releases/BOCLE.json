@@ -1,0 +1,12 @@
+{
+  "rig": "BOCLE",
+  "work_order": "WO 2485",
+  "latest_version": "3.0.0",
+  "version_tag": "v03",
+  "required_firmware": "FW-v2.1.4",
+  "exe_name": "BOCLE.exe",
+  "download_url": "https://github.com/Paltro-SD01/paltro-sd01.github.io/releases/download/BOCLE-v03/BOCLE.exe",
+  "sha256": "4B227777D4DD1FC61C6F884F48641D02B4D121D3FD328CB08B5531FCACDABF8A",
+  "published_at": "2026-11-13 18:05:00",
+  "release_notes": "1. Workorder closed and validated Documents added\n2. Updated stepper load cell & humidity interlock thresholds"
+}

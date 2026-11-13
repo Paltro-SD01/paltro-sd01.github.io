@@ -1,0 +1,12 @@
+{
+  "rig": "LAB-IQ-350",
+  "work_order": "WO 2488",
+  "latest_version": "8.0.0",
+  "version_tag": "v08",
+  "required_firmware": "FW-v2.0.1",
+  "exe_name": "LAB-IQ-350.exe",
+  "download_url": "https://github.com/Paltro-SD01/paltro-sd01.github.io/releases/download/LAB-IQ-350-v08/LAB-IQ-350.exe",
+  "sha256": "7902699BE42C8A8E46FBBB4501726517E86B22C56A189F7625A6DA49081B2451",
+  "published_at": "2026-11-13 18:05:00",
+  "release_notes": "1. High-temp 350C dual-SSR safety watchdog verified\n2. Updated TDMS report export formatting"
+}

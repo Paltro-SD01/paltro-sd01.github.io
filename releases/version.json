@@ -1,0 +1,79 @@
+{
+  "schema": "Paltro-SD01-LabVIEW-OTA-v1",
+  "updated_at": "2026-11-13 18:05:00",
+  "base_url": "https://paltro-sd01.github.io/releases",
+  "rigs": {
+    "HFRR-ADV": {
+      "rig": "HFRR-ADV",
+      "work_order": "WO 2472",
+      "latest_version": "44.0.0",
+      "version_tag": "v44",
+      "required_firmware": "FW-v3.2.0",
+      "exe_name": "HFRR-ADV.exe",
+      "download_url": "https://github.com/Paltro-SD01/paltro-sd01.github.io/releases/download/HFRR-ADV-v44/HFRR-ADV.exe",
+      "sha256": "9F86D081884C7D659A2FEAA0C55AD015A3BF4F1B2B0B822CD15D6C15B0F00A08",
+      "published_at": "2026-11-13 18:05:00",
+      "release_notes": "1. Validated HFRR-ADV v44 PID stroke & temperature loop\n2. Integrated Wear Scar AI optical ROI calibration\n3. Fixed DAQ timeout handling and closed WO 2472"
+    },
+    "BOCLE": {
+      "rig": "BOCLE",
+      "work_order": "WO 2485",
+      "latest_version": "3.0.0",
+      "version_tag": "v03",
+      "required_firmware": "FW-v2.1.4",
+      "exe_name": "BOCLE.exe",
+      "download_url": "https://github.com/Paltro-SD01/paltro-sd01.github.io/releases/download/BOCLE-v03/BOCLE.exe",
+      "sha256": "4B227777D4DD1FC61C6F884F48641D02B4D121D3FD328CB08B5531FCACDABF8A",
+      "published_at": "2026-11-13 18:05:00",
+      "release_notes": "1. Workorder closed and validated Documents added\n2. Updated stepper load cell & humidity interlock thresholds"
+    },
+    "LAB-IQ-150": {
+      "rig": "LAB-IQ-150",
+      "work_order": "WO 2490",
+      "latest_version": "12.0.0",
+      "version_tag": "v12",
+      "required_firmware": "FW-v1.8.2",
+      "exe_name": "LAB-IQ-150.exe",
+      "download_url": "https://github.com/Paltro-SD01/paltro-sd01.github.io/releases/download/LAB-IQ-150-v12/LAB-IQ-150.exe",
+      "sha256": "EF2D127DE37B942BAAD06145E54B0C619A1F22327B2EBCFBEC78F5564FFE39D4",
+      "published_at": "2026-11-13 18:05:00",
+      "release_notes": "1. Synchronized PWM bath heater ramp control\n2. Validated PT100 RTD cold-junction compensation"
+    },
+    "LAB-IQ-350": {
+      "rig": "LAB-IQ-350",
+      "work_order": "WO 2488",
+      "latest_version": "8.0.0",
+      "version_tag": "v08",
+      "required_firmware": "FW-v2.0.1",
+      "exe_name": "LAB-IQ-350.exe",
+      "download_url": "https://github.com/Paltro-SD01/paltro-sd01.github.io/releases/download/LAB-IQ-350-v08/LAB-IQ-350.exe",
+      "sha256": "7902699BE42C8A8E46FBBB4501726517E86B22C56A189F7625A6DA49081B2451",
+      "published_at": "2026-11-13 18:05:00",
+      "release_notes": "1. High-temp 350C dual-SSR safety watchdog verified\n2. Updated TDMS report export formatting"
+    },
+    "B2V2": {
+      "rig": "B2V2",
+      "work_order": "WO 2461",
+      "latest_version": "5.0.0",
+      "version_tag": "v05",
+      "required_firmware": "FW-v1.4.0",
+      "exe_name": "B2V2.exe",
+      "download_url": "https://github.com/Paltro-SD01/paltro-sd01.github.io/releases/download/B2V2-v05/B2V2.exe",
+      "sha256": "2C624232CDD221771294DFBB310ACA000A0DF6AC8B66B696D90EF06FDEFBCF64",
+      "published_at": "2026-11-13 18:05:00",
+      "release_notes": "1. Closed-loop pressure transducer scaling validated\n2. Valve manifold actuation timing optimized"
+    },
+    "AIRJET": {
+      "rig": "AIRJET",
+      "work_order": "AIRJET EROSION RIG",
+      "latest_version": "4.0.0",
+      "version_tag": "v04",
+      "required_firmware": "FW-v1.6.3",
+      "exe_name": "AIRJET.exe",
+      "download_url": "https://github.com/Paltro-SD01/paltro-sd01.github.io/releases/download/AIRJET-v04/AIRJET.exe",
+      "sha256": "19581E27DE7CED00FF1CE50B2047E7A567C76B1CBAEBABE5EF03F7C3017BB5B7",
+      "published_at": "2026-11-13 18:05:00",
+      "release_notes": "1. Mass flow controller (MFC) nozzle velocity PID tuned\n2. Abrasive feeder interlock verification completed"
+    }
+  }
+}

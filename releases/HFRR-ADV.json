@@ -1,0 +1,12 @@
+{
+  "rig": "HFRR-ADV",
+  "work_order": "WO 2472",
+  "latest_version": "44.0.0",
+  "version_tag": "v44",
+  "required_firmware": "FW-v3.2.0",
+  "exe_name": "HFRR-ADV.exe",
+  "download_url": "https://github.com/Paltro-SD01/paltro-sd01.github.io/releases/download/HFRR-ADV-v44/HFRR-ADV.exe",
+  "sha256": "9F86D081884C7D659A2FEAA0C55AD015A3BF4F1B2B0B822CD15D6C15B0F00A08",
+  "published_at": "2026-11-13 18:05:00",
+  "release_notes": "1. Validated HFRR-ADV v44 PID stroke & temperature loop\n2. Integrated Wear Scar AI optical ROI calibration\n3. Fixed DAQ timeout handling and closed WO 2472"
+}

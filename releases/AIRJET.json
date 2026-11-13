@@ -1,0 +1,12 @@
+{
+  "rig": "AIRJET",
+  "work_order": "AIRJET EROSION RIG",
+  "latest_version": "4.0.0",
+  "version_tag": "v04",
+  "required_firmware": "FW-v1.6.3",
+  "exe_name": "AIRJET.exe",
+  "download_url": "https://github.com/Paltro-SD01/paltro-sd01.github.io/releases/download/AIRJET-v04/AIRJET.exe",
+  "sha256": "19581E27DE7CED00FF1CE50B2047E7A567C76B1CBAEBABE5EF03F7C3017BB5B7",
+  "published_at": "2026-11-13 18:05:00",
+  "release_notes": "1. Mass flow controller (MFC) nozzle velocity PID tuned\n2. Abrasive feeder interlock verification completed"
+}

@@ -1,0 +1,12 @@
+{
+  "rig": "B2V2",
+  "work_order": "WO 2461",
+  "latest_version": "5.0.0",
+  "version_tag": "v05",
+  "required_firmware": "FW-v1.4.0",
+  "exe_name": "B2V2.exe",
+  "download_url": "https://github.com/Paltro-SD01/paltro-sd01.github.io/releases/download/B2V2-v05/B2V2.exe",
+  "sha256": "2C624232CDD221771294DFBB310ACA000A0DF6AC8B66B696D90EF06FDEFBCF64",
+  "published_at": "2026-11-13 18:05:00",
+  "release_notes": "1. Closed-loop pressure transducer scaling validated\n2. Valve manifold actuation timing optimized"
+}

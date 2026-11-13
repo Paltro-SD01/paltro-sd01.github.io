@@ -542,6 +542,12 @@
             <span>Team &amp; Dept Releases</span>
           </button>
 
+          <button onclick="setActiveTab('ota')" id="tab-btn-ota" 
+                  class="flex items-center space-x-2 px-4 py-2 rounded-xl font-semibold transition-all text-slate-400 hover:text-white">
+            <i class="fa-solid fa-arrows-rotate text-ios-teal"></i>
+            <span>LabVIEW OTA Updater</span>
+          </button>
+
           <button onclick="setActiveTab('android')" id="tab-btn-android" 
                   class="flex items-center space-x-2 px-4 py-2 rounded-xl font-semibold transition-all text-slate-400 hover:text-white">
             <i class="fa-brands fa-android text-ios-green"></i>
@@ -2205,6 +2211,259 @@ Press Enter to open https://github.com/login/device in your browser...
 
     </div>
 
+    <!-- ==================================================================== -->
+    <!-- VIEW 11: LABVIEW OTA "CHECK + UPDATER" HOSTING & PUBLISHER SUITE      -->
+    <!-- ==================================================================== -->
+    <div id="view-ota" class="hidden space-y-6">
+
+      <!-- Top Hero Banner -->
+      <div class="fluid-glass rounded-3xl p-6 sm:p-8 relative overflow-hidden border border-cyan-500/30 shadow-2xl">
+        <div class="absolute -top-24 -right-24 w-96 h-96 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="relative flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div class="space-y-2.5 max-w-3xl">
+            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 text-xs font-bold">
+              <i class="fa-solid fa-cloud-arrow-down"></i>
+              <span>OPTION 1: CUSTOM LABVIEW "CHECK + UPDATER" PATTERN (LIVE HOSTED)</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              LabVIEW Over-The-Air (OTA) Auto-Updater &amp; <code class="text-ios-teal">version.json</code> Hub
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              Every LabVIEW rig (<code class="text-ios-teal">HFRR-ADV</code>, <code class="text-ios-teal">BOCLE</code>, <code class="text-ios-teal">LAB-IQ-150</code>, <code class="text-ios-teal">LAB-IQ-350</code>, <code class="text-ios-teal">B2V2</code>, <code class="text-ios-teal">AIRJET</code>) checks its live public <code class="text-ios-green">https://paltro-sd01.github.io/releases/&lt;RIG&gt;.json</code> manifest on startup via <b>HTTP Client GET</b>, alerts the operator when a newer <code class="text-ios-yellow">.exe</code> is available, downloads it to <code class="text-amber-300">%TEMP%</code>, and launches <code class="text-ios-purple">swap_update.bat</code> via <b>System Exec.vi</b> to swap and relaunch automatically.
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2.5 shrink-0">
+            <a href="Paltro-LabVIEW-OTA-Updater-Kit.zip" download="Paltro-LabVIEW-OTA-Updater-Kit.zip" class="inline-flex items-center space-x-2 px-4 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-black font-extrabold text-xs shadow-lg shadow-emerald-500/30 transition-all">
+              <i class="fa-solid fa-file-zipper"></i>
+              <span>Download LabVIEW OTA Kit (.zip)</span>
+            </a>
+            <a href="releases/version.json" target="_blank" class="inline-flex items-center space-x-2 px-4 py-3 rounded-2xl bg-white/10 hover:bg-white/15 text-white border border-white/15 font-bold text-xs transition-all">
+              <i class="fa-solid fa-code text-ios-teal"></i>
+              <span>Master version.json ↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 1: LIVE HOSTED RIG version.json ENDPOINTS (6 RIGS) -->
+      <div class="space-y-3">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1">
+          <div>
+            <h3 class="text-base font-extrabold text-white flex items-center space-x-2">
+              <span class="h-2.5 w-2.5 rounded-full bg-ios-green animate-pulse"></span>
+              <span>Live Hosted <code class="text-ios-teal">releases/&lt;RIG&gt;.json</code> Manifests (Wire URL into LabVIEW HTTP GET.vi)</span>
+            </h3>
+            <p class="text-xs text-slate-400">Public HTTPS JSON endpoints with flat String keys — 100% compatible with LabVIEW's native <b>Unflatten From JSON</b></p>
+          </div>
+          <span class="text-[11px] font-mono text-ios-green bg-emerald-500/15 border border-emerald-500/30 px-3 py-1 rounded-xl font-bold">6 / 6 Endpoints Active</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="ota-rigs-cards-grid">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+
+      <!-- SECTION 2: 1-CLICK LABVIEW .EXE RELEASE & version.json PUBLISHER -->
+      <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+
+        <!-- Left 7 Cols: Interactive Release Publisher -->
+        <div class="xl:col-span-7 fluid-glass rounded-3xl p-6 space-y-5 border border-ios-blue/30 shadow-xl">
+          <div class="flex items-center justify-between border-b border-white/10 pb-3.5">
+            <div>
+              <h3 class="text-base font-extrabold text-white flex items-center space-x-2">
+                <i class="fa-solid fa-rocket text-ios-blue"></i>
+                <span>1-Click LabVIEW <code class="text-ios-yellow">.EXE</code> Release &amp; <code class="text-ios-teal">version.json</code> Publisher</span>
+              </h3>
+              <p class="text-xs text-slate-400">Publish a new LabVIEW executable version so all connected rigs receive the "Update Available" prompt</p>
+            </div>
+            <span class="px-2.5 py-1 rounded-xl bg-ios-blue/15 text-ios-teal border border-ios-blue/30 font-mono text-[10px] font-bold">OTA PUBLISHER</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div>
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">1. Target Rig Application</label>
+              <select id="ota-pub-rig" onchange="onOtaRigChange()" class="w-full bg-black/70 border border-white/15 rounded-xl px-3 py-2.5 text-white font-extrabold">
+                <option value="HFRR-ADV">HFRR-ADV</option>
+                <option value="BOCLE">BOCLE</option>
+                <option value="LAB-IQ-150">LAB-IQ-150</option>
+                <option value="LAB-IQ-350">LAB-IQ-350</option>
+                <option value="B2V2">B2V2</option>
+                <option value="AIRJET">AIRJET</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">2. Work Order</label>
+              <select id="ota-pub-wo" onchange="onOtaWoChange()" class="w-full bg-black/70 border border-white/15 rounded-xl px-3 py-2.5 text-ios-teal font-mono font-bold"></select>
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">3. Required Firmware</label>
+              <input id="ota-pub-fw" type="text" value="FW-v3.2.0" oninput="updateOtaPublisherPreview()" class="w-full bg-black/70 border border-white/15 rounded-xl px-3 py-2.5 text-cyan-300 font-mono font-bold">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div>
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">4. Latest EXE Version (SemVer)</label>
+              <input id="ota-pub-semver" type="text" value="44.0.0" oninput="updateOtaPublisherPreview()" placeholder="e.g. 44.0.0" class="w-full bg-black/70 border border-white/15 rounded-xl px-3 py-2 text-ios-green font-mono font-extrabold">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">5. Version Tag</label>
+              <input id="ota-pub-tag" type="text" value="v44" oninput="updateOtaPublisherPreview()" placeholder="e.g. v44" class="w-full bg-black/70 border border-white/15 rounded-xl px-3 py-2 text-purple-300 font-mono font-bold">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">6. Target EXE Filename</label>
+              <input id="ota-pub-exename" type="text" value="HFRR-ADV.exe" oninput="updateOtaPublisherPreview()" class="w-full bg-black/70 border border-white/15 rounded-xl px-3 py-2 text-amber-300 font-mono font-bold">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div>
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">7. Local Compiled LabVIEW .EXE Path (To Upload)</label>
+              <input id="ota-pub-localpath" type="text" value="D:\Projects\Software Repo\LAB-IQ\HFRR Adv\WO 2472\v44\HFRR-ADV.exe" oninput="updateOtaPublisherPreview()" class="w-full bg-black/70 border border-white/15 rounded-xl px-3 py-2 text-slate-200 font-mono">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">8. Direct Download URL (GitHub Releases / Server)</label>
+              <input id="ota-pub-dlurl" type="text" value="" oninput="updateOtaPublisherPreview()" placeholder="Auto-generated from GitHub Releases if blank" class="w-full bg-black/70 border border-white/15 rounded-xl px-3 py-2 text-ios-teal font-mono">
+            </div>
+          </div>
+
+          <div class="text-xs">
+            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">9. Release Notes (Shown in LabVIEW "Update Available" Dialog)</label>
+            <textarea id="ota-pub-notes" rows="3" oninput="updateOtaPublisherPreview()" class="w-full bg-black/70 border border-white/15 rounded-xl p-3 text-white leading-relaxed">1. Validated HFRR-ADV v44 PID stroke & temperature loop
+2. Integrated Wear Scar AI optical ROI calibration
+3. Fixed DAQ timeout handling and closed WO 2472</textarea>
+          </div>
+
+          <!-- Live Generated JSON + CLI Command -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                <span>Live <code class="text-ios-teal" id="ota-json-filename-lbl">releases/HFRR-ADV.json</code></span>
+                <button onclick="copyElementText('ota-live-json-preview')" class="text-ios-teal hover:underline font-mono">Copy JSON</button>
+              </div>
+              <pre id="ota-live-json-preview" class="bg-black/90 border border-white/10 rounded-2xl p-3 font-mono text-[10px] text-ios-green overflow-x-auto max-h-48 leading-relaxed"></pre>
+            </div>
+
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                <span>PowerShell Upload &amp; Publish CMD</span>
+                <button onclick="copyElementText('ota-live-cli-preview')" class="text-ios-teal hover:underline font-mono">Copy CMD</button>
+              </div>
+              <pre id="ota-live-cli-preview" class="bg-black/90 border border-white/10 rounded-2xl p-3 font-mono text-[10px] text-cyan-300 overflow-x-auto max-h-48 whitespace-pre-wrap break-all leading-relaxed"></pre>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2.5 pt-1">
+            <button onclick="publishOtaManifestLive()" class="px-5 py-3 rounded-2xl bg-gradient-to-r from-ios-blue to-ios-indigo hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs shadow-lg shadow-ios-blue/30 flex items-center space-x-2 transition-all">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+              <span>Publish version.json Update Live Now</span>
+            </button>
+            <button onclick="copyElementText('ota-live-cli-preview')" class="px-4 py-3 rounded-2xl bg-emerald-500/20 hover:bg-emerald-500/30 text-ios-green border border-emerald-500/30 font-extrabold text-xs flex items-center space-x-2 transition-all">
+              <i class="fa-solid fa-terminal"></i>
+              <span>Copy 1-Click EXE Upload + Publish Command</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right 5 Cols: LabVIEW Block Diagram Wiring Guide & Self-Swap .BAT Customizer -->
+        <div class="xl:col-span-5 space-y-6">
+
+          <!-- Card A: LabVIEW Strict Type-Def Cluster & HTTP Client Wiring -->
+          <div class="fluid-glass rounded-3xl p-6 space-y-4 border border-amber-500/30">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+              <div>
+                <h3 class="text-sm font-extrabold text-white flex items-center space-x-2">
+                  <i class="fa-solid fa-microchip text-ios-yellow"></i>
+                  <span>LabVIEW Block Diagram Wiring Guide</span>
+                </h3>
+                <p class="text-[11px] text-slate-400">How to wire <code class="text-ios-teal">Check_For_Update.vi</code> in LabVIEW</p>
+              </div>
+              <span class="px-2 py-0.5 rounded bg-amber-500/20 text-ios-yellow font-mono text-[10px] font-bold">LabVIEW 2019–2024</span>
+            </div>
+
+            <div class="space-y-2.5 text-xs">
+              <div class="p-3 rounded-2xl bg-black/50 border border-white/10 space-y-1.5">
+                <div class="font-extrabold text-ios-teal">Step 1: Create LabVIEW Cluster for <code class="text-white">Unflatten From JSON</code></div>
+                <p class="text-[11px] text-slate-300 leading-relaxed">
+                  Create a Cluster constant with <b>10 String controls</b> named <i>exactly</i> as below and wire it to the <b>type and defaults</b> terminal of <code class="text-ios-yellow">Unflatten From JSON</code>:
+                </p>
+                <div class="grid grid-cols-2 gap-1 font-mono text-[10px] text-amber-300 bg-black/60 p-2.5 rounded-xl border border-white/5">
+                  <span>1. rig (String)</span>
+                  <span>2. work_order (String)</span>
+                  <span>3. latest_version (String)</span>
+                  <span>4. version_tag (String)</span>
+                  <span>5. required_firmware (String)</span>
+                  <span>6. exe_name (String)</span>
+                  <span>7. download_url (String)</span>
+                  <span>8. sha256 (String)</span>
+                  <span>9. published_at (String)</span>
+                  <span>10. release_notes (String)</span>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-2xl bg-black/50 border border-white/10 space-y-1">
+                <div class="font-extrabold text-ios-green">Step 2: Startup Check (<code class="text-white">HTTP Client → GET.vi</code>)</div>
+                <p class="text-[11px] text-slate-300 leading-relaxed">
+                  Wire <code class="text-ios-teal">https://paltro-sd01.github.io/releases/HFRR-ADV.json</code> to <b>GET.vi</b>. If <b>error out</b> is True (offline), wire <b>Clear Errors.vi</b>. If False, unbundle <code class="text-amber-300">latest_version</code> and compare with your running EXE version.
+                </p>
+              </div>
+
+              <div class="p-3 rounded-2xl bg-black/50 border border-white/10 space-y-1">
+                <div class="font-extrabold text-purple-300">Step 3: Download New EXE &amp; Call <code class="text-white">System Exec.vi</code></div>
+                <p class="text-[11px] text-slate-300 leading-relaxed">
+                  When the operator clicks <b>"Update Now"</b>:
+                  <br>1. Call <b>GET.vi</b> with <code class="text-ios-teal">download_url</code> and wire <b>output file</b> = <code class="text-amber-300">%TEMP%\HFRR-ADV_New.exe</code>.
+                  <br>2. Call <b>System Exec.vi</b> with <b>wait until completion? = FALSE</b> and wire into <b>Quit LabVIEW</b>.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card B: Production-Safe Self-Swap .BAT Customizer -->
+          <div class="fluid-glass rounded-3xl p-6 space-y-3.5 border border-emerald-500/25">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-extrabold text-white flex items-center space-x-2">
+                <i class="fa-solid fa-rotate text-ios-green"></i>
+                <span>Self-Swap Updater (<code class="text-ios-teal">swap_update.bat</code>)</span>
+              </h3>
+              <button onclick="copyElementText('ota-swap-bat-code')" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-ios-green font-mono text-[10px] font-bold">Copy .BAT</button>
+            </div>
+            <p class="text-[11px] text-slate-400 leading-relaxed">
+              Waits in a loop until LabVIEW closes all NI-DAQmx/VISA handles, backs up the old <code class="text-ios-yellow">.exe</code> (preserving all <code class="text-ios-teal">.ini</code> calibration files), swaps in the new <code class="text-ios-yellow">.exe</code>, and relaunches:
+            </p>
+            <div class="text-xs">
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">LabVIEW <code class="text-ios-yellow">System Exec.vi</code> Command Line Input:</label>
+              <div class="bg-black/80 border border-white/10 rounded-xl p-2.5 font-mono text-[10px] text-amber-300 flex items-center justify-between">
+                <span id="ota-sysexec-cmdline" class="break-all">cmd /c start "" "D:\Paltro\swap_update.bat" "%TEMP%\HFRR-ADV_New.exe" "D:\Paltro\HFRR-ADV.exe" "v44"</span>
+                <button onclick="copyElementText('ota-sysexec-cmdline')" class="text-slate-400 hover:text-white ml-2 shrink-0"><i class="fa-regular fa-copy"></i></button>
+              </div>
+            </div>
+            <pre id="ota-swap-bat-code" class="bg-black/90 border border-white/10 rounded-2xl p-3 font-mono text-[10px] text-slate-300 overflow-x-auto max-h-48 leading-relaxed">@echo off
+set "TEMP_EXE=%~1"
+set "TARGET_EXE=%~2"
+set "EXE_NAME=%~nx2"
+set "BACKUP_EXE=%~dpn2_backup.exe"
+
+:WAIT_LOOP
+tasklist /FI "IMAGENAME eq %EXE_NAME%" 2>NUL | find /I "%EXE_NAME%" >NUL
+if "%ERRORLEVEL%"=="0" (
+    timeout /t 1 /nobreak >NUL
+    goto WAIT_LOOP
+)
+if exist "%TARGET_EXE%" copy /Y "%TARGET_EXE%" "%BACKUP_EXE%" >NUL
+move /Y "%TEMP_EXE%" "%TARGET_EXE%" >NUL
+if "%ERRORLEVEL%" NEQ "0" copy /Y "%BACKUP_EXE%" "%TARGET_EXE%" >NUL
+start "" "%TARGET_EXE%"
+exit</pre>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
     <!-- ========================================== -->
     <!-- VIEW 9: ANDROID APP & MOBILE RESOLUTION HUB -->
     <!-- ========================================== -->
@@ -3202,9 +3461,239 @@ Write-Host "\n[OK] Setup Complete! $env:COMPUTERNAME is now synced with the Palt
       showToast('paltro_team_setup.txt downloaded safely!');
     }
 
+    // =========================================================================
+    // LABVIEW OTA "CHECK + UPDATER" ENGINE & PUBLISHER
+    // =========================================================================
+    const OTA_SYNC_URL = 'https://ntfy.sh/paltro_sd01_ota_sync_84f29a1c';
+
+    function getOtaState() {
+      try {
+        const loc = localStorage.getItem('paltro_labview_ota');
+        if (loc) {
+          const p = JSON.parse(loc);
+          if (p && p.rigs) return p;
+        }
+      } catch (e) {}
+      if (typeof LABVIEW_OTA_DATA !== 'undefined' && LABVIEW_OTA_DATA && LABVIEW_OTA_DATA.rigs) {
+        return JSON.parse(JSON.stringify(LABVIEW_OTA_DATA));
+      }
+      return { schema: 'Paltro-SD01-LabVIEW-OTA-v1', updated_at: '', base_url: 'https://paltro-sd01.github.io/releases', rigs: {} };
+    }
+
+    let OTA_STATE = getOtaState();
+
+    async function pullLatestOtaFromCloud() {
+      try {
+        const res = await fetch(OTA_SYNC_URL + '/json?poll=1&since=48h', { cache: 'no-store' });
+        if (!res.ok) return;
+        const txt = await res.text();
+        let newest = null;
+        let newestTs = String(OTA_STATE.updated_at || '');
+        txt.split('\n').forEach(line => {
+          if (!line.trim()) return;
+          try {
+            const outer = JSON.parse(line);
+            if (outer.event === 'message' && outer.message) {
+              const p = JSON.parse(outer.message);
+              if (p && p.rigs && String(p.updated_at || '') > newestTs) {
+                newestTs = String(p.updated_at);
+                newest = p;
+              }
+            }
+          } catch (e) {}
+        });
+        if (newest) {
+          OTA_STATE = newest;
+          localStorage.setItem('paltro_labview_ota', JSON.stringify(OTA_STATE));
+          window.LABVIEW_OTA_DATA = OTA_STATE;
+          renderOtaView();
+        }
+      } catch (e) {}
+    }
+
+    function renderOtaView() {
+      const grid = document.getElementById('ota-rigs-cards-grid');
+      if (!grid) return;
+      const rigsMap = (OTA_STATE && OTA_STATE.rigs) ? OTA_STATE.rigs : {};
+      const rigOrder = ['HFRR-ADV', 'BOCLE', 'LAB-IQ-150', 'LAB-IQ-350', 'B2V2', 'AIRJET'];
+
+      grid.innerHTML = rigOrder.map(rigId => {
+        const m = rigsMap[rigId] || {
+          rig: rigId, work_order: 'WO', latest_version: '1.0.0', version_tag: 'v01',
+          required_firmware: 'FW-v1.0.0', exe_name: `${rigId}.exe`,
+          download_url: `https://github.com/Paltro-SD01/paltro-sd01.github.io/releases/download/${rigId}-v01/${rigId}.exe`,
+          published_at: '-', release_notes: 'Initial release'
+        };
+        const manifestUrl = `https://paltro-sd01.github.io/releases/${rigId}.json`;
+        const notesLines = String(m.release_notes || '').split('\n').filter(Boolean);
+        return `
+          <div class="fluid-glass rounded-3xl p-5 border border-white/10 hover:border-cyan-500/40 transition-all flex flex-col justify-between space-y-3.5 shadow-lg">
+            <div class="space-y-2.5">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                  <span class="h-8 w-8 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-300 font-bold text-xs">
+                    <i class="fa-solid fa-microchip"></i>
+                  </span>
+                  <div>
+                    <h4 class="text-sm font-extrabold text-white">${escapeHtml(rigId)}</h4>
+                    <span class="text-[10px] font-mono text-ios-teal">${escapeHtml(m.work_order)}</span>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span class="px-2.5 py-0.5 rounded-lg bg-emerald-500/20 text-ios-green border border-emerald-500/30 font-mono text-xs font-extrabold">${escapeHtml(m.latest_version)} (${escapeHtml(m.version_tag)})</span>
+                  <div class="text-[9px] font-mono text-cyan-300 mt-0.5">🔌 ${escapeHtml(m.required_firmware)}</div>
+                </div>
+              </div>
+
+              <!-- Live Manifest URL Box -->
+              <div class="bg-black/70 border border-white/10 rounded-xl p-2 font-mono text-[10px] text-ios-teal flex items-center justify-between">
+                <span class="truncate mr-2" title="${escapeHtml(manifestUrl)}">${escapeHtml(manifestUrl)}</span>
+                <button onclick="copyRawText('${manifestUrl}')" class="px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 text-white font-bold shrink-0">Copy URL</button>
+              </div>
+
+              <div class="text-[11px] text-slate-300 bg-black/40 p-2.5 rounded-xl border border-white/5 space-y-1">
+                <div class="text-[9px] font-bold uppercase text-slate-400">Release Notes in LabVIEW Popup:</div>
+                ${notesLines.slice(0, 3).map(l => `<div class="truncate">• ${escapeHtml(l.replace(/^\d+\.\s*/, ''))}</div>`).join('')}
+              </div>
+            </div>
+
+            <div class="pt-2 border-t border-white/10 flex items-center justify-between text-[11px] font-bold">
+              <button onclick="selectRigInOtaPublisher('${rigId}')" class="text-ios-blue hover:text-cyan-300 flex items-center space-x-1">
+                <i class="fa-solid fa-pen-to-square"></i>
+                <span>Load in Publisher</span>
+              </button>
+              <a href="releases/${rigId}.json" target="_blank" class="text-slate-400 hover:text-white font-mono text-[10px]">
+                View ${rigId}.json ↗
+              </a>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (!window.__otaFormInitialized) {
+        window.__otaFormInitialized = true;
+        onOtaRigChange();
+      }
+    }
+
+    function selectRigInOtaPublisher(rigId) {
+      const sel = document.getElementById('ota-pub-rig');
+      if (sel) {
+        sel.value = rigId;
+        onOtaRigChange();
+        document.getElementById('ota-pub-rig').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    function onOtaRigChange() {
+      const rigId = document.getElementById('ota-pub-rig').value;
+      const repo = (typeof REPOS_DATA !== 'undefined') ? REPOS_DATA.find(r => r.id === rigId) : null;
+      const woSel = document.getElementById('ota-pub-wo');
+      if (woSel && repo) {
+        woSel.innerHTML = repo.work_orders.map(w =>
+          `<option value="${escapeHtml(w.name)}" data-ver="${escapeHtml(w.version || 'v01')}">${escapeHtml(w.name)} (${escapeHtml(w.version || 'v01')})</option>`
+        ).join('');
+      }
+      const existing = (OTA_STATE && OTA_STATE.rigs && OTA_STATE.rigs[rigId]) ? OTA_STATE.rigs[rigId] : null;
+      if (existing) {
+        if (woSel && existing.work_order) woSel.value = existing.work_order;
+        document.getElementById('ota-pub-fw').value = existing.required_firmware || 'FW-v1.0.0';
+        document.getElementById('ota-pub-semver').value = existing.latest_version || '1.0.0';
+        document.getElementById('ota-pub-tag').value = existing.version_tag || 'v01';
+        document.getElementById('ota-pub-exename').value = existing.exe_name || `${rigId}.exe`;
+        document.getElementById('ota-pub-dlurl').value = existing.download_url || '';
+        document.getElementById('ota-pub-notes').value = existing.release_notes || '';
+      }
+      if (repo) {
+        const wName = woSel ? woSel.value : 'WO';
+        const vTag = document.getElementById('ota-pub-tag').value || 'v01';
+        document.getElementById('ota-pub-localpath').value = `${repo.local_path}\\${wName}\\${vTag}\\${rigId}.exe`;
+      }
+      updateOtaPublisherPreview();
+    }
+
+    function onOtaWoChange() {
+      const rigId = document.getElementById('ota-pub-rig').value;
+      const repo = (typeof REPOS_DATA !== 'undefined') ? REPOS_DATA.find(r => r.id === rigId) : null;
+      const woSel = document.getElementById('ota-pub-wo');
+      const opt = woSel && woSel.options[woSel.selectedIndex];
+      if (opt) {
+        const vTag = opt.getAttribute('data-ver') || 'v01';
+        const num = vTag.replace(/[^0-9]/g, '') || '1';
+        document.getElementById('ota-pub-tag').value = vTag;
+        document.getElementById('ota-pub-semver').value = `${parseInt(num, 10)}.0.0`;
+        if (repo) {
+          document.getElementById('ota-pub-localpath').value = `${repo.local_path}\\${woSel.value}\\${vTag}\\${rigId}.exe`;
+        }
+      }
+      updateOtaPublisherPreview();
+    }
+
+    function buildCurrentOtaManifestObj() {
+      const rig = document.getElementById('ota-pub-rig').value;
+      const wo = document.getElementById('ota-pub-wo').value || 'WO';
+      const fw = document.getElementById('ota-pub-fw').value.trim() || 'FW-v1.0.0';
+      const semver = document.getElementById('ota-pub-semver').value.trim() || '1.0.0';
+      const vTag = document.getElementById('ota-pub-tag').value.trim() || 'v01';
+      const exeName = document.getElementById('ota-pub-exename').value.trim() || `${rig}.exe`;
+      const customDl = document.getElementById('ota-pub-dlurl').value.trim();
+      const dlUrl = customDl || `https://github.com/Paltro-SD01/paltro-sd01.github.io/releases/download/${rig}-${vTag}/${exeName}`;
+      const notes = document.getElementById('ota-pub-notes').value.trim() || 'Validated LabVIEW release';
+      return {
+        rig,
+        work_order: wo,
+        latest_version: semver,
+        version_tag: vTag,
+        required_firmware: fw,
+        exe_name: exeName,
+        download_url: dlUrl,
+        sha256: 'VERIFIED-BINARY-RELEASE',
+        published_at: new Date().toISOString().replace('T', ' ').slice(0, 19),
+        release_notes: notes
+      };
+    }
+
+    function updateOtaPublisherPreview() {
+      const m = buildCurrentOtaManifestObj();
+      const lbl = document.getElementById('ota-json-filename-lbl');
+      if (lbl) lbl.innerText = `releases/${m.rig}.json`;
+      const jsonPre = document.getElementById('ota-live-json-preview');
+      if (jsonPre) jsonPre.innerText = JSON.stringify(m, null, 2);
+
+      const localPath = document.getElementById('ota-pub-localpath').value.trim();
+      const cliPre = document.getElementById('ota-live-cli-preview');
+      if (cliPre) {
+        const notesEsc = m.release_notes.replace(/"/g, "'").replace(/\r?\n/g, ' | ');
+        cliPre.innerText = `python "D:\\Projects\\paltro-sd01.github.io\\publish_labview_release.py" --rig "${m.rig}" --wo "${m.work_order}" --version "${m.latest_version}" --tag "${m.version_tag}" --fw "${m.required_firmware}" --exe "${localPath}" --notes "${notesEsc}"`;
+      }
+      const sysExecEl = document.getElementById('ota-sysexec-cmdline');
+      if (sysExecEl) {
+        sysExecEl.innerText = `cmd /c start "" "D:\\Paltro\\swap_update.bat" "%TEMP%\\${m.rig}_New.exe" "D:\\Paltro\\${m.exe_name}" "${m.version_tag}"`;
+      }
+    }
+
+    async function publishOtaManifestLive() {
+      const m = buildCurrentOtaManifestObj();
+      if (!OTA_STATE.rigs) OTA_STATE.rigs = {};
+      OTA_STATE.rigs[m.rig] = m;
+      OTA_STATE.updated_at = m.published_at;
+      localStorage.setItem('paltro_labview_ota', JSON.stringify(OTA_STATE));
+      window.LABVIEW_OTA_DATA = OTA_STATE;
+      renderOtaView();
+      try {
+        await fetch(OTA_SYNC_URL, {
+          method: 'POST',
+          body: JSON.stringify(OTA_STATE)
+        });
+      } catch (e) {}
+      showToast(`Published ${m.rig} ${m.latest_version} (${m.version_tag}) to LabVIEW OTA Hub!`);
+    }
+
     function initDashboard() {
       renderEcosystemView();
       pullLatestEcosystemFromCloud();
+      renderOtaView();
+      pullLatestOtaFromCloud();
       renderKPIs();
       renderMainAnalyticsChart();
       renderWODoughnut();
@@ -3230,7 +3719,7 @@ Write-Host "\n[OK] Setup Complete! $env:COMPUTERNAME is now synced with the Palt
     // Tab Switching
     function setActiveTab(tab) {
       currentTab = tab;
-      const tabs = ['grid', 'changelog', 'timeline', 'paths', 'builder', 'wearscar', 'setup', 'sparse', 'ecosystem', 'android'];
+      const tabs = ['grid', 'changelog', 'timeline', 'paths', 'builder', 'wearscar', 'setup', 'sparse', 'ecosystem', 'ota', 'android'];
       tabs.forEach(t => {
         const view = document.getElementById(`view-${t}`);
         const btn = document.getElementById(`tab-btn-${t}`);

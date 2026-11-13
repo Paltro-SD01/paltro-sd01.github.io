@@ -348,11 +348,13 @@ def refresh_data():
 
     # Sync Team Roster, Multi-Department Repos & Software<->Firmware Release Links
     ecosystem_data, _ = sync_team_ecosystem(repos_data=repos_data, now_str=now_str)
+    ota_data, _ = sync_ota_releases(repos_data=repos_data, ecosystem_data=ecosystem_data, now_str=now_str)
 
     # Output JS
     js_content = (
         "var DATA_SYNC_META = " + json.dumps(sync_meta, ensure_ascii=False) + ";\n"
         "var TEAM_ECOSYSTEM_DATA = " + json.dumps(ecosystem_data, ensure_ascii=False) + ";\n"
+        "var LABVIEW_OTA_DATA = " + json.dumps(ota_data, ensure_ascii=False) + ";\n"
         "var REPOS_DATA = " + json.dumps(repos_data, ensure_ascii=False) + ";\n"
     )
     data_js_path = os.path.join(DASHBOARD_DIR, 'data.js')
@@ -367,6 +369,64 @@ def refresh_data():
 
 RELAY_TOPIC_URL = "https://ntfy.sh/paltro_sd01_device_log_84f29a1c"
 ECOSYSTEM_TOPIC_URL = "https://ntfy.sh/paltro_sd01_ecosystem_sync_84f29a1c"
+OTA_TOPIC_URL = "https://ntfy.sh/paltro_sd01_ota_sync_84f29a1c"
+
+
+def sync_ota_releases(repos_data=None, ecosystem_data=None, now_str=None):
+    """Syncs /releases/<RIG>.json and /releases/version.json with cloud edits and latest WO versions."""
+    import urllib.request
+    releases_dir = os.path.join(DASHBOARD_DIR, "releases")
+    os.makedirs(releases_dir, exist_ok=True)
+    master_path = os.path.join(releases_dir, "version.json")
+    try:
+        with open(master_path, "r", encoding="utf-8") as mf:
+            master = json.load(mf)
+    except Exception:
+        master = {"schema": "Paltro-SD01-LabVIEW-OTA-v1", "updated_at": now_str or "", "base_url": "https://paltro-sd01.github.io/releases", "rigs": {}}
+
+    orig_dump = json.dumps(master, sort_keys=True)
+
+    # Pull any live OTA manifest edits broadcast from the Dashboard UI
+    try:
+        req = urllib.request.Request(
+            f"{OTA_TOPIC_URL}/json?poll=1&since=48h",
+            headers={"User-Agent": "Paltro-SD01-OTA-Sync/1.0"}
+        )
+        newest_cloud = None
+        newest_ts = str(master.get("updated_at", ""))
+        with urllib.request.urlopen(req, timeout=6) as resp:
+            for raw_line in resp.read().decode("utf-8", errors="ignore").splitlines():
+                if not raw_line.strip():
+                    continue
+                try:
+                    outer = json.loads(raw_line)
+                    if outer.get("event") == "message" and outer.get("message"):
+                        p = json.loads(outer["message"])
+                        if isinstance(p, dict) and "rigs" in p:
+                            ts = str(p.get("updated_at", ""))
+                            if ts >= newest_ts:
+                                newest_ts = ts
+                                newest_cloud = p
+                except Exception:
+                    pass
+        if newest_cloud:
+            master = newest_cloud
+    except Exception:
+        pass
+
+    rigs_dict = master.setdefault("rigs", {})
+    for rig_id, r_manifest in rigs_dict.items():
+        rig_file = os.path.join(releases_dir, f"{rig_id}.json")
+        if not os.path.exists(rig_file) or json.dumps(master, sort_keys=True) != orig_dump:
+            with open(rig_file, "w", encoding="utf-8") as rf:
+                json.dump(r_manifest, rf, indent=2, ensure_ascii=False)
+
+    changed = json.dumps(master, sort_keys=True) != orig_dump
+    if changed or not os.path.exists(master_path):
+        with open(master_path, "w", encoding="utf-8") as mf:
+            json.dump(master, mf, indent=2, ensure_ascii=False)
+
+    return master, changed
 
 
 def sync_team_ecosystem(repos_data=None, now_str=None):

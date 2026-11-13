@@ -1,0 +1,12 @@
+{
+  "rig": "LAB-IQ-150",
+  "work_order": "WO 2490",
+  "latest_version": "12.0.0",
+  "version_tag": "v12",
+  "required_firmware": "FW-v1.8.2",
+  "exe_name": "LAB-IQ-150.exe",
+  "download_url": "https://github.com/Paltro-SD01/paltro-sd01.github.io/releases/download/LAB-IQ-150-v12/LAB-IQ-150.exe",
+  "sha256": "EF2D127DE37B942BAAD06145E54B0C619A1F22327B2EBCFBEC78F5564FFE39D4",
+  "published_at": "2026-11-13 18:05:00",
+  "release_notes": "1. Synchronized PWM bath heater ramp control\n2. Validated PT100 RTD cold-junction compensation"
+}
