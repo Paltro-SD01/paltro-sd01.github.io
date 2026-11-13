@@ -1943,9 +1943,13 @@ Press Enter to open https://github.com/login/device in your browser...
           </div>
 
           <div class="flex flex-wrap items-center gap-2.5 shrink-0">
-            <a href="paltro_team_setup.ps1" download="paltro_team_setup.ps1" class="inline-flex items-center space-x-2 px-4 py-3 rounded-2xl bg-gradient-to-r from-ios-blue to-ios-indigo hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs shadow-lg shadow-ios-blue/30 transition-all">
+            <button onclick="openTeamPcSetupModal()" class="inline-flex items-center space-x-2 px-4 py-3 rounded-2xl bg-gradient-to-r from-ios-blue to-ios-indigo hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs shadow-lg shadow-ios-blue/30 transition-all">
               <i class="fa-solid fa-laptop-code"></i>
-              <span>Download New PC Setup Script (.ps1)</span>
+              <span>Setup New Team PC (Copy / Safe .zip)</span>
+            </button>
+            <a href="Paltro-Team-PC-Setup.zip" download="Paltro-Team-PC-Setup.zip" class="inline-flex items-center space-x-2 px-4 py-3 rounded-2xl bg-emerald-500/20 hover:bg-emerald-500/30 text-ios-green border border-emerald-500/40 font-extrabold text-xs transition-all">
+              <i class="fa-solid fa-file-zipper"></i>
+              <span>Download Setup Bundle (.zip)</span>
             </a>
             <a href="https://github.com/Paltro-SD01/paltro-sd01.github.io/blob/main/TEAM_ECOSYSTEM_AND_RELEASES.md" target="_blank" class="inline-flex items-center space-x-2 px-4 py-3 rounded-2xl bg-white/10 hover:bg-white/15 text-white border border-white/15 font-bold text-xs transition-all">
               <i class="fa-brands fa-github"></i>
@@ -2164,17 +2168,34 @@ Press Enter to open https://github.com/login/device in your browser...
           </div>
 
           <!-- 1-Command Multi-PC Onboarding Card -->
-          <div class="fluid-glass rounded-3xl p-6 space-y-3 border border-emerald-500/25">
-            <h3 class="text-sm font-extrabold text-white flex items-center space-x-2">
-              <i class="fa-solid fa-terminal text-ios-green"></i>
-              <span>Onboard Any Team PC in 1 Command</span>
-            </h3>
+          <div class="fluid-glass rounded-3xl p-6 space-y-3.5 border border-emerald-500/25">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-extrabold text-white flex items-center space-x-2">
+                <i class="fa-solid fa-terminal text-ios-green"></i>
+                <span>Onboard Any Team PC (No .ps1 Browser Block)</span>
+              </h3>
+              <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-ios-green font-mono text-[10px] font-bold">SAFE BYPASS ✓</span>
+            </div>
             <p class="text-[11px] text-slate-400 leading-relaxed">
-              Run this in PowerShell on any of your 5–6 team PCs. It clones all 6 Software Department repos to that PC's drive (`D:\` or `C:\`), configures path-independent changelog scripts, and registers the PC in the live roster:
+              Windows Chrome/Edge blocks direct <code class="text-ios-red">.ps1</code> file downloads with <i>"Virus scan failed"</i>. Instead, <b>copy &amp; paste</b> the 1-line command below directly into PowerShell (zero file download needed), or download the <b>.zip bundle</b>:
             </p>
-            <div class="bg-black/80 border border-white/10 rounded-2xl p-3 font-mono text-[11px] text-ios-green flex items-center justify-between">
-              <span id="team-onboard-cmd" class="break-all">irm https://paltro-sd01.github.io/paltro_team_setup.ps1 | iex</span>
-              <button onclick="copyElementText('team-onboard-cmd')" class="text-slate-400 hover:text-white ml-2 p-1 shrink-0"><i class="fa-regular fa-copy"></i></button>
+            <div class="bg-black/80 border border-emerald-500/30 rounded-2xl p-3 font-mono text-[11px] text-ios-green flex items-center justify-between">
+              <span id="team-onboard-cmd" class="break-all">irm https://paltro-sd01.github.io/paltro_team_setup.txt | iex</span>
+              <button onclick="copyElementText('team-onboard-cmd')" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-ios-green hover:bg-emerald-500/30 ml-2 shrink-0 text-[10px] font-bold">Copy CMD</button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 text-[11px] font-bold">
+              <button onclick="openTeamPcSetupModal()" class="py-2 px-3 rounded-xl bg-ios-blue/20 hover:bg-ios-blue/30 text-ios-teal border border-ios-blue/30 flex items-center justify-center space-x-1.5">
+                <i class="fa-solid fa-sliders"></i>
+                <span>Open Setup Generator</span>
+              </button>
+              <button onclick="copyFullTeamSetupScript()" class="py-2 px-3 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/30 flex items-center justify-center space-x-1.5">
+                <i class="fa-regular fa-clipboard"></i>
+                <span>Copy Full Script</span>
+              </button>
+              <a href="Paltro-Team-PC-Setup.zip" download="Paltro-Team-PC-Setup.zip" class="py-2 px-3 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-ios-green border border-emerald-500/30 flex items-center justify-center space-x-1.5">
+                <i class="fa-solid fa-file-zipper"></i>
+                <span>Download .ZIP</span>
+              </a>
             </div>
           </div>
 
@@ -3047,6 +3068,123 @@ Press Enter to open https://github.com/login/device in your browser...
     function deleteFirmwareRelease(idx) {
       ECO_STATE.firmware_releases.splice(idx, 1);
       persistEcosystemState('Firmware release removed');
+    }
+
+    function buildCustomizedTeamSetupScript(engName, dept, rootPath) {
+      const eng = (engName || '$env:USERNAME').replace(/"/g, '');
+      const dp = (dept || 'SOFTWARE').replace(/"/g, '');
+      const rp = (rootPath || 'D:\\Projects\\Software Repo').replace(/"/g, '');
+      return `# ==============================================================================
+# PALTRO-SD01 | MULTI-PC TEAM ECOSYSTEM ONBOARDING & AUTO-SYNC SCRIPT
+# Paste directly into PowerShell on the target PC (No browser file download needed!)
+# ==============================================================================
+$EngineerName = "${eng}"
+$Department   = "${dp}"
+$WorkspaceRoot = "${rp}"
+
+Write-Host "==========================================================" -ForegroundColor Cyan
+Write-Host "  PALTRO-SD01 | MULTI-PC ENGINEERING ECOSYSTEM SETUP" -ForegroundColor Cyan
+Write-Host "==========================================================" -ForegroundColor Cyan
+Write-Host "Engineer   : $EngineerName ($env:COMPUTERNAME)" -ForegroundColor Green
+Write-Host "Department : $Department" -ForegroundColor Green
+Write-Host "Repo Root  : $WorkspaceRoot" -ForegroundColor Yellow
+
+New-Item -ItemType Directory -Force -Path $WorkspaceRoot | Out-Null
+New-Item -ItemType Directory -Force -Path (Join-Path $WorkspaceRoot "LAB-IQ") | Out-Null
+$ParentDir = Split-Path -Parent $WorkspaceRoot
+
+if (-not (Get-Command "git-cliff" -ErrorAction SilentlyContinue)) {
+    winget install --id orhun.git-cliff -e --accept-source-agreements --accept-package-agreements
+}
+
+$Repos = @(
+    @{ Name = "LAB-IQ-150"; Url = "https://github.com/Paltro-SD01/LAB-IQ-150.git"; Path = (Join-Path $WorkspaceRoot "LAB-IQ 150") },
+    @{ Name = "BOCLE";      Url = "https://github.com/Paltro-SD01/BOCLE.git";      Path = (Join-Path $WorkspaceRoot "BOCLE") },
+    @{ Name = "HFRR-ADV";   Url = "https://github.com/Paltro-SD01/HFRR-ADV.git";   Path = (Join-Path $WorkspaceRoot "LAB-IQ\HFRR Adv") },
+    @{ Name = "LAB-IQ-350"; Url = "https://github.com/Paltro-SD01/LAB-IQ-350.git"; Path = (Join-Path $WorkspaceRoot "LAB-IQ 350") },
+    @{ Name = "B2V2";       Url = "https://github.com/Paltro-SD01/B2V2.git";       Path = (Join-Path $WorkspaceRoot "LAB-IQ\B2V2") },
+    @{ Name = "AIRJET";     Url = "https://github.com/Paltro-SD01/AIRJET.git";     Path = (Join-Path $WorkspaceRoot "LAB-IQ\Airjet") }
+)
+
+foreach ($r in $Repos) {
+    if (Test-Path (Join-Path $r.Path ".git")) {
+        Write-Host "  -> Pulling latest $($r.Name)..." -ForegroundColor Gray
+        git -C $r.Path pull origin main --rebase --autostash
+    } else {
+        Write-Host "  -> Cloning $($r.Name) into $($r.Path)..." -ForegroundColor Green
+        git clone $r.Url $r.Path
+    }
+}
+
+$DashPath = Join-Path $ParentDir "paltro-sd01.github.io"
+if (Test-Path (Join-Path $DashPath ".git")) {
+    git -C $DashPath pull origin main --rebase --autostash
+} else {
+    git clone "https://github.com/Paltro-SD01/paltro-sd01.github.io.git" $DashPath
+}
+
+if (Test-Path (Join-Path $DashPath "update_all_configs.py")) {
+    Copy-Item (Join-Path $DashPath "update_all_configs.py") (Join-Path $ParentDir "update_all_configs.py") -Force
+}
+
+$LocalConfig = @{
+    engineer_name = $EngineerName
+    pc_name       = $env:COMPUTERNAME
+    department    = $Department
+    repo_root     = $WorkspaceRoot
+    dashboard_dir = $DashPath
+    configured_at = (Get-Date -Format "yyyy-MM-dd HH:mm:ss")
+} | ConvertTo-Json -Depth 3
+
+Set-Content -Path (Join-Path $DashPath "team_local_config.json") -Value $LocalConfig -Encoding UTF8
+Set-Content -Path (Join-Path $ParentDir "team_local_config.json") -Value $LocalConfig -Encoding UTF8
+[Environment]::SetEnvironmentVariable("PALTRO_REPO_ROOT", $WorkspaceRoot, "User")
+
+Write-Host "\n[OK] Setup Complete! $env:COMPUTERNAME is now synced with the Paltro-SD01 Ecosystem." -ForegroundColor Green`;
+    }
+
+    function openTeamPcSetupModal() {
+      const m = document.getElementById('team-pc-setup-modal');
+      if (!m) return;
+      updateTeamPcModalScript();
+      m.classList.remove('hidden');
+    }
+
+    function closeTeamPcSetupModal() {
+      const m = document.getElementById('team-pc-setup-modal');
+      if (m) m.classList.add('hidden');
+    }
+
+    function updateTeamPcModalScript() {
+      const eng = (document.getElementById('pcsetup-eng') && document.getElementById('pcsetup-eng').value.trim()) || 'Software Engineer';
+      const dept = (document.getElementById('pcsetup-dept') && document.getElementById('pcsetup-dept').value) || 'SOFTWARE';
+      const root = (document.getElementById('pcsetup-root') && document.getElementById('pcsetup-root').value.trim()) || 'D:\\Projects\\Software Repo';
+      const pre = document.getElementById('pcsetup-script-preview');
+      if (pre) {
+        pre.innerText = buildCustomizedTeamSetupScript(eng, dept, root);
+      }
+    }
+
+    function copyFullTeamSetupScript() {
+      const pre = document.getElementById('pcsetup-script-preview');
+      const txt = pre && pre.innerText ? pre.innerText : buildCustomizedTeamSetupScript('Software Engineer', 'SOFTWARE', 'D:\\Projects\\Software Repo');
+      navigator.clipboard.writeText(txt).then(() => {
+        showToast('Full setup script copied! Paste directly into PowerShell on any PC.');
+      });
+    }
+
+    function downloadTeamSetupTxt() {
+      const pre = document.getElementById('pcsetup-script-preview');
+      const txt = pre && pre.innerText ? pre.innerText : buildCustomizedTeamSetupScript('Software Engineer', 'SOFTWARE', 'D:\\Projects\\Software Repo');
+      const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'paltro_team_setup.txt';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(a.href);
+      showToast('paltro_team_setup.txt downloaded safely!');
     }
 
     function initDashboard() {
@@ -4819,6 +4957,86 @@ pause\r
       <div class="pt-2 border-t border-white/10 flex justify-end">
         <button onclick="closeDetailedWoHistoryModal()" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-xs font-bold text-white transition-all">
           Close History
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Team PC Setup & Safe Download Modal -->
+  <div id="team-pc-setup-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="fluid-glass bg-slate-950 max-w-3xl w-full rounded-3xl border border-emerald-500/30 shadow-2xl p-6 sm:p-7 space-y-4 max-h-[90vh] flex flex-col">
+      <div class="flex items-start justify-between border-b border-white/10 pb-3">
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="px-2.5 py-0.5 rounded-md text-[10px] font-mono font-bold bg-emerald-500/20 text-ios-green border border-emerald-500/30 uppercase">Zero Browser Block</span>
+            <span class="px-2.5 py-0.5 rounded-md text-[10px] font-mono font-bold bg-ios-blue/20 text-ios-teal border border-ios-blue/30">5–6 Engineer Multi-PC Setup</span>
+          </div>
+          <h3 class="text-base sm:text-lg font-extrabold text-white mt-1.5">Onboard Any New Team Workstation PC</h3>
+          <p class="text-xs text-slate-400">Bypasses Chrome/Edge's <code class="text-ios-red">.ps1 Virus scan failed</code> block via direct Copy-Paste or <code class="text-ios-green">.ZIP</code> package</p>
+        </div>
+        <button onclick="closeTeamPcSetupModal()" class="text-slate-400 hover:text-white p-2 rounded-xl bg-white/5 border border-white/10">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <!-- Method 1: 1-Line PowerShell Command (Zero File Download) -->
+      <div class="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-extrabold text-ios-green"><i class="fa-solid fa-bolt mr-1"></i>Method 1 (Fastest — No File Download Needed): Paste in PowerShell</span>
+          <span class="text-[10px] font-mono text-emerald-300">Uses .txt endpoint</span>
+        </div>
+        <div class="bg-black/80 border border-white/15 rounded-xl p-2.5 font-mono text-xs text-ios-green flex items-center justify-between">
+          <span id="modal-onboard-1line" class="break-all">irm https://paltro-sd01.github.io/paltro_team_setup.txt | iex</span>
+          <button onclick="copyElementText('modal-onboard-1line')" class="px-3 py-1.5 rounded-lg bg-ios-green text-black font-extrabold text-[11px] hover:bg-emerald-400 ml-3 shrink-0">
+            <i class="fa-regular fa-copy mr-1"></i>Copy 1-Line Command
+          </button>
+        </div>
+      </div>
+
+      <!-- Customize Engineer & Path for Full Copy-Paste Script -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+        <div>
+          <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Engineer Name</label>
+          <input id="pcsetup-eng" type="text" value="Software Engineer 2" oninput="updateTeamPcModalScript()" class="w-full bg-black/70 border border-white/15 rounded-xl px-3 py-2 text-white font-bold">
+        </div>
+        <div>
+          <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Department</label>
+          <select id="pcsetup-dept" onchange="updateTeamPcModalScript()" class="w-full bg-black/70 border border-white/15 rounded-xl px-3 py-2 text-white font-bold">
+            <option value="SOFTWARE">SOFTWARE DEPT</option>
+            <option value="FIRMWARE">FIRMWARE DEPT</option>
+            <option value="HARDWARE">HARDWARE / PCB DEPT</option>
+            <option value="QA_MECH">RIG INTEGRATION &amp; QA</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Target Repo Path on PC</label>
+          <input id="pcsetup-root" type="text" value="D:\Projects\Software Repo" oninput="updateTeamPcModalScript()" class="w-full bg-black/70 border border-white/15 rounded-xl px-3 py-2 text-amber-300 font-mono">
+        </div>
+      </div>
+
+      <!-- Full Script Preview Box -->
+      <div class="flex-1 overflow-y-auto bg-black/90 border border-white/10 rounded-2xl p-3.5 font-mono text-[11px] text-slate-300 max-h-56">
+        <pre id="pcsetup-script-preview" class="whitespace-pre-wrap break-words text-ios-teal"></pre>
+      </div>
+
+      <!-- Action Buttons Footer -->
+      <div class="pt-2 border-t border-white/10 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="copyFullTeamSetupScript()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-ios-blue to-ios-indigo hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-extrabold shadow-lg shadow-ios-blue/30 flex items-center space-x-1.5">
+            <i class="fa-regular fa-clipboard"></i>
+            <span>Copy Full Script (Paste in PowerShell)</span>
+          </button>
+          <a href="Paltro-Team-PC-Setup.zip" download="Paltro-Team-PC-Setup.zip" class="px-4 py-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-ios-green border border-emerald-500/40 text-xs font-extrabold flex items-center space-x-1.5">
+            <i class="fa-solid fa-file-zipper"></i>
+            <span>Download Safe .ZIP Bundle</span>
+          </a>
+          <button onclick="downloadTeamSetupTxt()" class="px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 border border-white/15 text-xs font-bold flex items-center space-x-1.5">
+            <i class="fa-regular fa-file-lines"></i>
+            <span>Download as .TXT</span>
+          </button>
+        </div>
+        <button onclick="closeTeamPcSetupModal()" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-xs font-bold text-white">
+          Close
         </button>
       </div>
     </div>
