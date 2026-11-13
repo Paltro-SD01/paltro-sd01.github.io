@@ -1,5 +1,16 @@
 [
   {
+    "timestamp": "2026-11-13 12:16:46",
+    "device_id": "WS-KIRAN",
+    "device_name": "Kiran (Engineering Workstation)",
+    "platform": "Windows 10 (AMD64)",
+    "app_mode": "Workstation Master Publisher",
+    "resolution": "Desktop Master",
+    "network": "Local Workstation Git Sync",
+    "sync_id": "SYNC-7C2B5821",
+    "event": "Published 29 WOs / 268 Commits"
+  },
+  {
     "timestamp": "2026-11-06 19:31:35",
     "device_id": "WS-KIRAN",
     "device_name": "Kiran (Engineering Workstation)",

@@ -279,20 +279,76 @@
     <section id="screen-tools" class="hidden space-y-3">
 
       <!-- Sub-navigation Switcher -->
-      <div class="grid grid-cols-3 gap-1.5 p-1 rounded-2xl bg-black/60 border border-white/10 text-[11px]">
-        <button onclick="setToolSubtab('automator')" id="tbtn-automator" class="py-2 rounded-xl font-bold chip-active transition-all">
+      <div class="grid grid-cols-4 gap-1 p-1 rounded-2xl bg-black/60 border border-white/10 text-[10px]">
+        <button onclick="setToolSubtab('teamfw')" id="tbtn-teamfw" class="py-2 rounded-xl font-bold chip-active transition-all">
+          <i class="fa-solid fa-sitemap mr-1"></i>Team &amp; FW
+        </button>
+        <button onclick="setToolSubtab('automator')" id="tbtn-automator" class="py-2 rounded-xl font-semibold text-slate-400 transition-all">
           <i class="fa-solid fa-terminal mr-1"></i>Automator
         </button>
         <button onclick="setToolSubtab('sparse')" id="tbtn-sparse" class="py-2 rounded-xl font-semibold text-slate-400 transition-all">
-          <i class="fa-solid fa-cloud-arrow-down mr-1"></i>Sparse BAT
+          <i class="fa-solid fa-cloud-arrow-down mr-1"></i>Sparse
         </button>
         <button onclick="setToolSubtab('guides')" id="tbtn-guides" class="py-2 rounded-xl font-semibold text-slate-400 transition-all">
           <i class="fa-solid fa-book-open mr-1"></i>Guides
         </button>
       </div>
 
+      <!-- Subtab 0: Multi-PC Team Roster & SW <-> FW Linked Releases -->
+      <div id="tool-sub-teamfw" class="space-y-3">
+        <!-- Cross-Department Linked Releases Card -->
+        <div class="m-card p-3.5 space-y-2.5 border border-cyan-500/30">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-xs font-extrabold text-white flex items-center space-x-1.5">
+                <i class="fa-solid fa-link text-cyan-400"></i>
+                <span>Software ↔ Firmware Release Links</span>
+              </h3>
+              <p class="text-[10px] text-slate-400">Cross-department validated release pairs</p>
+            </div>
+            <span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono text-[9px] font-bold">SW ↔ FW</span>
+          </div>
+          <div id="m-eco-links-list" class="space-y-2"></div>
+        </div>
+
+        <!-- Team Roster Card -->
+        <div class="m-card p-3.5 space-y-2.5 border border-purple-500/30">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-xs font-extrabold text-white flex items-center space-x-1.5">
+                <i class="fa-solid fa-users-gear text-purple-400"></i>
+                <span>Multi-PC Team Roster (Editable)</span>
+              </h3>
+              <p class="text-[10px] text-slate-400">Active workstations &amp; checked-out Work Orders</p>
+            </div>
+            <button onclick="document.getElementById('m-add-eng-box').classList.toggle('hidden')" class="px-2.5 py-1 rounded-lg bg-app-blue text-white text-[10px] font-bold">+ Add PC</button>
+          </div>
+
+          <div id="m-add-eng-box" class="hidden p-2.5 rounded-xl bg-black/60 border border-white/10 space-y-2 text-[11px]">
+            <input id="m-tm-name" type="text" placeholder="Engineer Name" class="w-full bg-black/80 border border-white/15 rounded-lg px-2.5 py-1.5 text-white">
+            <div class="grid grid-cols-2 gap-1.5">
+              <select id="m-tm-dept" class="bg-black/80 border border-white/15 rounded-lg px-2 py-1.5 text-white">
+                <option value="SOFTWARE">SOFTWARE</option>
+                <option value="FIRMWARE">FIRMWARE</option>
+                <option value="HARDWARE">HARDWARE</option>
+                <option value="QA_MECH">QA_MECH</option>
+              </select>
+              <input id="m-tm-pc" type="text" placeholder="PC Name (e.g. SW-PC-05)" class="bg-black/80 border border-white/15 rounded-lg px-2.5 py-1.5 text-app-teal font-mono">
+            </div>
+            <input id="m-tm-path" type="text" value="D:\Projects\Software Repo" placeholder="Repo Root Path" class="w-full bg-black/80 border border-white/15 rounded-lg px-2.5 py-1.5 text-amber-300 font-mono">
+            <div class="grid grid-cols-2 gap-1.5">
+              <input id="m-tm-repo" type="text" placeholder="Active Repo (e.g. HFRR-ADV)" class="bg-black/80 border border-white/15 rounded-lg px-2.5 py-1.5 text-white font-mono">
+              <input id="m-tm-wo" type="text" placeholder="Active WO (e.g. WO 2472)" class="bg-black/80 border border-white/15 rounded-lg px-2.5 py-1.5 text-app-green font-mono">
+            </div>
+            <button onclick="saveMobileTeamMember()" class="w-full py-2 rounded-lg bg-app-green text-black font-extrabold text-xs">Save to Ecosystem</button>
+          </div>
+
+          <div id="m-eco-roster-list" class="space-y-2"></div>
+        </div>
+      </div>
+
       <!-- Subtab A: Mobile Work Order Automator -->
-      <div id="tool-sub-automator" class="m-card p-4 space-y-3.5">
+      <div id="tool-sub-automator" class="hidden m-card p-4 space-y-3.5">
         <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
           <div>
             <h3 class="text-sm font-extrabold text-white">Work Order Release Automator</h3>
@@ -979,6 +1035,8 @@
                 <div class="flex items-center flex-wrap gap-1.5">
                   <span class="px-2 py-0.5 rounded-md bg-white/10 text-slate-300 font-mono text-[10px] font-bold">${esc(wo.repo)}</span>
                   <span class="px-2 py-0.5 rounded-md bg-purple-500/20 text-purple-300 border border-purple-500/30 font-mono text-[10px] font-extrabold">${esc(wo.version || 'v01')}</span>
+                  ${getMobileFwBadge(wo.repo_id, wo.name)}
+                  ${getMobileEngBadge(wo.repo_id, wo.name)}
                 </div>
                 <h3 class="text-sm font-extrabold text-app-teal font-mono mt-1">${esc(wo.name)}</h3>
               </div>
@@ -1137,8 +1195,86 @@
     // ==========================================
     // RENDER SCREEN 4: AUTOMATOR & TOOLS
     // ==========================================
+    const MOBILE_ECO_SYNC_URL = 'https://ntfy.sh/paltro_sd01_ecosystem_sync_84f29a1c';
+    function getMobileEco() {
+      try {
+        const loc = localStorage.getItem('paltro_team_ecosystem');
+        if (loc) return JSON.parse(loc);
+      } catch (e) {}
+      return (typeof TEAM_ECOSYSTEM_DATA !== 'undefined' && TEAM_ECOSYSTEM_DATA) ? TEAM_ECOSYSTEM_DATA : { team_roster: [], firmware_releases: [], release_links: [] };
+    }
+    let M_ECO = getMobileEco();
+
+    function getMobileFwBadge(repoId, woName) {
+      const lnk = (M_ECO.release_links || []).find(l => l.sw_repo === repoId && l.sw_wo === woName);
+      if (!lnk) return '';
+      return `<span class="px-1.5 py-0.5 rounded-md bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-mono text-[9px] font-bold">🔌 ${esc(lnk.fw_version)}</span>`;
+    }
+
+    function getMobileEngBadge(repoId, woName) {
+      const eng = (M_ECO.team_roster || []).find(m => m.active_repo === repoId && m.active_wo === woName);
+      if (!eng) return '';
+      return `<span class="px-1.5 py-0.5 rounded-md bg-emerald-500/20 text-app-green border border-emerald-500/30 font-sans text-[9px] font-bold">👨‍💻 ${esc(eng.name.split(' ')[0])} (${esc(eng.pc_name)})</span>`;
+    }
+
+    function renderMobileEcosystem() {
+      const linksBox = document.getElementById('m-eco-links-list');
+      if (linksBox) {
+        linksBox.innerHTML = (M_ECO.release_links || []).map(l => `
+          <div class="p-2.5 rounded-xl bg-black/50 border border-white/10 text-[11px] space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="font-extrabold text-white">${esc(l.rig)} · <span class="text-app-teal font-mono">${esc(l.sw_wo)} (${esc(l.sw_version)})</span></span>
+              <span class="px-2 py-0.5 rounded-full text-[9px] font-bold status-closed">${esc(l.compatibility)}</span>
+            </div>
+            <div class="flex items-center space-x-2 font-mono text-[10px]">
+              <span class="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold">🔌 ${esc(l.fw_version)}</span>
+              <span class="text-amber-300">${esc(l.hw_revision || 'PCB')}</span>
+              <span class="text-slate-400">by ${esc(l.verified_by || '-')}</span>
+            </div>
+            <div class="text-[10px] text-slate-300">${esc(l.notes || '')}</div>
+          </div>
+        `).join('');
+      }
+      const rosterBox = document.getElementById('m-eco-roster-list');
+      if (rosterBox) {
+        rosterBox.innerHTML = (M_ECO.team_roster || []).map(m => `
+          <div class="p-2.5 rounded-xl bg-black/50 border border-white/10 text-[11px] space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="font-extrabold text-white">${esc(m.name)} <span class="text-[10px] font-mono text-purple-300">[${esc(m.department)}]</span></span>
+              <span class="font-mono text-[10px] text-app-teal font-bold">${esc(m.pc_name)}</span>
+            </div>
+            <div class="text-[10px] font-mono text-amber-300 truncate">${esc(m.repo_root)}</div>
+            <div class="text-[10px] font-mono text-app-green font-bold">Active Lock: ${esc(m.active_repo || '-')} / ${esc(m.active_wo || '-')}</div>
+          </div>
+        `).join('');
+      }
+    }
+
+    async function saveMobileTeamMember() {
+      const entry = {
+        id: `ENG-0${(M_ECO.team_roster || []).length + 1}`,
+        name: document.getElementById('m-tm-name').value.trim() || 'Team Engineer',
+        role: 'Engineer',
+        department: document.getElementById('m-tm-dept').value,
+        pc_name: document.getElementById('m-tm-pc').value.trim() || 'SW-PC',
+        repo_root: document.getElementById('m-tm-path').value.trim() || 'D:\\Projects\\Software Repo',
+        git_user: 'Paltro-SD01',
+        active_repo: document.getElementById('m-tm-repo').value.trim(),
+        active_wo: document.getElementById('m-tm-wo').value.trim(),
+        status: 'ONLINE'
+      };
+      M_ECO.team_roster.push(entry);
+      M_ECO.updated_at = new Date().toISOString().replace('T', ' ').slice(0, 19);
+      localStorage.setItem('paltro_team_ecosystem', JSON.stringify(M_ECO));
+      document.getElementById('m-add-eng-box').classList.add('hidden');
+      renderMobileEcosystem();
+      renderMobileWOs();
+      try { await fetch(MOBILE_ECO_SYNC_URL, { method: 'POST', body: JSON.stringify(M_ECO) }); } catch (e) {}
+      showMobileToast('Saved to Team Roster & Synced!');
+    }
+
     function setToolSubtab(sub) {
-      ['automator', 'sparse', 'guides'].forEach(s => {
+      ['teamfw', 'automator', 'sparse', 'guides'].forEach(s => {
         document.getElementById(`tool-sub-${s}`).classList.toggle('hidden', s !== sub);
         document.getElementById(`tbtn-${s}`).className = s === sub
           ? "py-2 rounded-xl font-bold chip-active transition-all"
@@ -1644,6 +1780,7 @@
     }
 
     function renderAllMobileScreens() {
+      renderMobileEcosystem();
       renderMobileHome();
       renderMobileWoChips();
       renderMobileWOs();

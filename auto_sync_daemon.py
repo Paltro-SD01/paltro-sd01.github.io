@@ -14,7 +14,7 @@ def get_repos_quick_state():
     """Returns a fast state fingerprint of all 6 local LabVIEW repositories (HEAD commit + WO/version folders)."""
     parts = []
     for cfg in refresh_data.REPOS_CONFIG:
-        p = cfg["path"]
+        p = cfg["local_path"]
         if not os.path.exists(p):
             continue
         try:
@@ -42,16 +42,23 @@ def get_repos_quick_state():
 
 
 def push_dashboard_changes(reason):
-    """Commits and pushes any updated telemetry or device access logs in paltro-sd01.github.io."""
+    """Commits and pushes any updated telemetry, team ecosystem, or device access logs in paltro-sd01.github.io."""
+    tracked_files = [
+        "data.js",
+        "device_access_log.json",
+        "DEVICE_ACCESS_LOG.md",
+        "team_ecosystem.json",
+        "TEAM_ECOSYSTEM_AND_RELEASES.md",
+    ]
     try:
         st = subprocess.check_output(
-            ["git", "-C", DASHBOARD_DIR, "status", "--porcelain", "data.js", "device_access_log.json", "DEVICE_ACCESS_LOG.md"],
+            ["git", "-C", DASHBOARD_DIR, "status", "--porcelain"] + tracked_files,
             stderr=subprocess.DEVNULL
         ).decode("utf-8", errors="ignore").strip()
         if not st:
             return False
         subprocess.run(
-            ["git", "-C", DASHBOARD_DIR, "add", "data.js", "device_access_log.json", "DEVICE_ACCESS_LOG.md"],
+            ["git", "-C", DASHBOARD_DIR, "add"] + tracked_files,
             check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
         )
         subprocess.run(
@@ -84,7 +91,13 @@ def run_daemon():
                 push_dashboard_changes("auto-sync repository updates & work orders")
                 last_repo_state = get_repos_quick_state()
 
-            # 2. Pull any new mobile/web device access check-ins and auto-commit to GitHub DEVICE_ACCESS_LOG.md
+            # 2. Check if Team Roster / Firmware / Release Links were edited on Dashboard/Android
+            _, eco_changed = refresh_data.sync_team_ecosystem()
+            if eco_changed:
+                refresh_data.refresh_data()
+                push_dashboard_changes("auto-sync team roster & cross-department release links")
+
+            # 3. Pull any new mobile/web device access check-ins and auto-commit to GitHub DEVICE_ACCESS_LOG.md
             logs_changed = refresh_data.sync_device_logs()
             if logs_changed:
                 push_dashboard_changes("auto-log device access telemetry to DEVICE_ACCESS_LOG.md")

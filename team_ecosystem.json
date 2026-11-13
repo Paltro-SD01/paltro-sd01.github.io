@@ -1,0 +1,276 @@
+{
+  "updated_at": "2026-11-13 11:30:00",
+  "ecosystem_version": "ECO-1.0",
+  "departments": [
+    {
+      "id": "SOFTWARE",
+      "name": "Software Engineering Dept",
+      "code": "SW",
+      "lead": "Paltro-SD01",
+      "stack": "NI LabVIEW Real-Time, Python 3.9, Vision AI, TDMS",
+      "repos_count": 6,
+      "color": "blue"
+    },
+    {
+      "id": "FIRMWARE",
+      "name": "Firmware & Embedded Dept",
+      "code": "FW",
+      "lead": "FW-Lead",
+      "stack": "STM32 / ARM Cortex-M, PIC, PLC Modbus RTU/TCP, FPGA",
+      "repos_count": 6,
+      "color": "purple"
+    },
+    {
+      "id": "HARDWARE",
+      "name": "Electronics & PCB Dept",
+      "code": "HW",
+      "lead": "HW-Lead",
+      "stack": "DAQ Conditioning, Motor Drives, Load Cell & RTD Boards",
+      "repos_count": 4,
+      "color": "orange"
+    },
+    {
+      "id": "QA_MECH",
+      "name": "Rig Integration & QA Dept",
+      "code": "QA",
+      "lead": "QA-Lead",
+      "stack": "ASTM D6079 / D5001 / D6891 Rig Calibration & Release Sign-Off",
+      "repos_count": 6,
+      "color": "green"
+    }
+  ],
+  "team_roster": [
+    {
+      "id": "ENG-01",
+      "name": "Paltro-SD01 (Lead)",
+      "role": "Lead Software Architect",
+      "department": "SOFTWARE",
+      "pc_name": "WS-PALTRO-MASTER",
+      "repo_root": "D:\\Projects\\Software Repo",
+      "git_user": "Paltro-SD01",
+      "active_repo": "HFRR-ADV",
+      "active_wo": "WO 2472",
+      "status": "ONLINE"
+    },
+    {
+      "id": "ENG-02",
+      "name": "Software Engineer 2",
+      "role": "LabVIEW & DAQ Engineer",
+      "department": "SOFTWARE",
+      "pc_name": "SW-PC-02",
+      "repo_root": "D:\\Projects\\Software Repo",
+      "git_user": "paltro-swe2",
+      "active_repo": "BOCLE",
+      "active_wo": "WO 2485",
+      "status": "ONLINE"
+    },
+    {
+      "id": "ENG-03",
+      "name": "Software Engineer 3",
+      "role": "LabVIEW HMI & Reports Engineer",
+      "department": "SOFTWARE",
+      "pc_name": "SW-PC-03",
+      "repo_root": "C:\\Projects\\Software Repo",
+      "git_user": "paltro-swe3",
+      "active_repo": "LAB-IQ-150",
+      "active_wo": "WO 2487",
+      "status": "ONLINE"
+    },
+    {
+      "id": "ENG-04",
+      "name": "Software Engineer 4",
+      "role": "Python Vision AI & Metrology",
+      "department": "SOFTWARE",
+      "pc_name": "SW-PC-04",
+      "repo_root": "D:\\Projects\\Software Repo",
+      "git_user": "paltro-swe4",
+      "active_repo": "HFRR-ADV",
+      "active_wo": "WO 2486",
+      "status": "ONLINE"
+    },
+    {
+      "id": "ENG-05",
+      "name": "Firmware Engineer 1",
+      "role": "Embedded MCU & Modbus Lead",
+      "department": "FIRMWARE",
+      "pc_name": "FW-PC-01",
+      "repo_root": "D:\\Projects\\Firmware Repo",
+      "git_user": "paltro-fwe1",
+      "active_repo": "FW-HFRR-ADV",
+      "active_wo": "FW-v3.2",
+      "status": "ONLINE"
+    },
+    {
+      "id": "ENG-06",
+      "name": "QA & Rig Validation Engineer",
+      "role": "Bench Integration & Release QA",
+      "department": "QA_MECH",
+      "pc_name": "RIG-BENCH-PC-06",
+      "repo_root": "D:\\Projects\\Software Repo",
+      "git_user": "paltro-qa1",
+      "active_repo": "LAB-IQ-350",
+      "active_wo": "WO 2494",
+      "status": "ONLINE"
+    }
+  ],
+  "firmware_releases": [
+    {
+      "id": "FW-HFRR-ADV",
+      "rig": "HFRR-ADV",
+      "fw_repo": "Paltro-SD01/FW-HFRR-ADV",
+      "mcu_target": "STM32F4 / Industrial Controller",
+      "version": "FW-v3.2.0",
+      "protocol": "Modbus RTU / Serial 115200",
+      "checksum": "CRC-8A4F",
+      "date": "2026-11-10",
+      "status": "RELEASED",
+      "notes": "High-frequency stroke PID loop + RTD thermal interlocks"
+    },
+    {
+      "id": "FW-BOCLE",
+      "rig": "BOCLE",
+      "fw_repo": "Paltro-SD01/FW-BOCLE",
+      "mcu_target": "Embedded Rig Controller",
+      "version": "FW-v2.4.1",
+      "protocol": "NI-DAQmx / Serial Interlock",
+      "checksum": "CRC-3C19",
+      "date": "2026-10-28",
+      "status": "RELEASED",
+      "notes": "Humidity & temperature loop stabilization + motor RPM ramp"
+    },
+    {
+      "id": "FW-LAB-IQ-150",
+      "rig": "LAB-IQ-150",
+      "fw_repo": "Paltro-SD01/FW-LAB-IQ-150",
+      "mcu_target": "LAB-IQ 150 Control Board",
+      "version": "FW-v1.9.0",
+      "protocol": "USB-Serial / DAQ",
+      "checksum": "CRC-77D2",
+      "date": "2026-10-20",
+      "status": "RELEASED",
+      "notes": "Thermal cutoff safety watchdog & flow sensor calibration"
+    },
+    {
+      "id": "FW-LAB-IQ-350",
+      "rig": "LAB-IQ-350",
+      "fw_repo": "Paltro-SD01/FW-LAB-IQ-350",
+      "mcu_target": "LAB-IQ 350 Mainboard",
+      "version": "FW-v2.1.0",
+      "protocol": "Modbus / DAQ",
+      "checksum": "CRC-51E0",
+      "date": "2026-10-18",
+      "status": "TESTING",
+      "notes": "Updated pressure transducer ADC filter for WO 2494"
+    },
+    {
+      "id": "FW-B2V2",
+      "rig": "B2V2",
+      "fw_repo": "Paltro-SD01/FW-B2V2",
+      "mcu_target": "B2V2 Control Unit",
+      "version": "FW-v1.4.0",
+      "protocol": "Serial / DAQ",
+      "checksum": "CRC-19B8",
+      "date": "2026-10-12",
+      "status": "RELEASED",
+      "notes": "Baseline production firmware for WO 2470"
+    },
+    {
+      "id": "FW-AIRJET",
+      "rig": "AIRJET",
+      "fw_repo": "Paltro-SD01/FW-AIRJET",
+      "mcu_target": "Airjet Erosion Controller",
+      "version": "FW-v4.0.2",
+      "protocol": "High-Speed Counter / DAQ",
+      "checksum": "CRC-E401",
+      "date": "2026-10-15",
+      "status": "RELEASED",
+      "notes": "Synchronized with Erosion Tester Software v24"
+    }
+  ],
+  "release_links": [
+    {
+      "link_id": "REL-LINK-01",
+      "rig": "HFRR-ADV",
+      "sw_repo": "HFRR-ADV",
+      "sw_wo": "WO 2472",
+      "sw_version": "v44",
+      "fw_id": "FW-HFRR-ADV",
+      "fw_version": "FW-v3.2.0",
+      "hw_revision": "PCB-Rev-C",
+      "compatibility": "VERIFIED",
+      "verified_by": "Paltro-SD01 (Lead)",
+      "updated_at": "2026-11-12",
+      "notes": "Production release bundle: HFRR-ADV SW v44 + FW-v3.2.0 + Python Wear Scar AI"
+    },
+    {
+      "link_id": "REL-LINK-02",
+      "rig": "HFRR-ADV",
+      "sw_repo": "HFRR-ADV",
+      "sw_wo": "WO 2486",
+      "sw_version": "v07",
+      "fw_id": "FW-HFRR-ADV",
+      "fw_version": "FW-v3.2.0",
+      "hw_revision": "PCB-Rev-C",
+      "compatibility": "TESTING",
+      "verified_by": "Software Engineer 4",
+      "updated_at": "2026-11-11",
+      "notes": "Bench validation with FW-v3.2.0 stroke controller"
+    },
+    {
+      "link_id": "REL-LINK-03",
+      "rig": "BOCLE",
+      "sw_repo": "BOCLE",
+      "sw_wo": "WO 2485",
+      "sw_version": "v03",
+      "fw_id": "FW-BOCLE",
+      "fw_version": "FW-v2.4.1",
+      "hw_revision": "PCB-Rev-B",
+      "compatibility": "VERIFIED",
+      "verified_by": "Software Engineer 2",
+      "updated_at": "2026-10-28",
+      "notes": "Closed milestone validated with BOCLE Firmware v2.4.1"
+    },
+    {
+      "link_id": "REL-LINK-04",
+      "rig": "LAB-IQ-150",
+      "sw_repo": "LAB-IQ-150",
+      "sw_wo": "WO 2476",
+      "sw_version": "v07",
+      "fw_id": "FW-LAB-IQ-150",
+      "fw_version": "FW-v1.9.0",
+      "hw_revision": "PCB-Rev-A",
+      "compatibility": "VERIFIED",
+      "verified_by": "Software Engineer 3",
+      "updated_at": "2026-10-22",
+      "notes": "Validated release package for LAB-IQ 150 WO 2476"
+    },
+    {
+      "link_id": "REL-LINK-05",
+      "rig": "LAB-IQ-350",
+      "sw_repo": "LAB-IQ-350",
+      "sw_wo": "WO 2494",
+      "sw_version": "v01",
+      "fw_id": "FW-LAB-IQ-350",
+      "fw_version": "FW-v2.1.0",
+      "hw_revision": "PCB-Rev-B",
+      "compatibility": "INTEGRATION",
+      "verified_by": "QA & Rig Validation Engineer",
+      "updated_at": "2026-11-05",
+      "notes": "Software v01 + Firmware v2.1.0 joint integration test"
+    },
+    {
+      "link_id": "REL-LINK-06",
+      "rig": "AIRJET",
+      "sw_repo": "AIRJET",
+      "sw_wo": "Erosion Tester",
+      "sw_version": "v24",
+      "fw_id": "FW-AIRJET",
+      "fw_version": "FW-v4.0.2",
+      "hw_revision": "PCB-Rev-D",
+      "compatibility": "VERIFIED",
+      "verified_by": "Paltro-SD01 (Lead)",
+      "updated_at": "2026-10-15",
+      "notes": "Locked production release v24 + FW-v4.0.2"
+    }
+  ]
+}

@@ -344,6 +344,12 @@
           <span>Sparse Downloader</span>
         </button>
 
+        <!-- Multi-PC Team & Cross-Dept Ecosystem Quick Pill -->
+        <button onclick="setActiveTab('ecosystem')" class="flex items-center space-x-1.5 px-3 py-2 rounded-2xl bg-purple-500/15 hover:bg-purple-500/25 text-ios-purple border border-purple-500/30 text-xs font-bold transition-all shadow-sm" title="Multi-PC Team Roster & Software↔Firmware Linked Releases">
+          <i class="fa-solid fa-users-gear text-xs"></i>
+          <span class="hidden md:inline">Team &amp; Depts</span>
+        </button>
+
         <!-- Android App Quick Pill -->
         <button onclick="setActiveTab('android')" class="flex items-center space-x-1.5 px-3 py-2 rounded-2xl bg-emerald-500/15 hover:bg-emerald-500/25 text-ios-green border border-emerald-500/30 text-xs font-bold transition-all shadow-sm" title="Android App & Mobile Preview">
           <i class="fa-brands fa-android text-sm"></i>
@@ -528,6 +534,12 @@
                   class="flex items-center space-x-2 px-4 py-2 rounded-xl font-semibold transition-all text-slate-400 hover:text-white">
             <i class="fa-solid fa-cloud-arrow-down text-cyan-400"></i>
             <span>Sparse Downloader</span>
+          </button>
+
+          <button onclick="setActiveTab('ecosystem')" id="tab-btn-ecosystem" 
+                  class="flex items-center space-x-2 px-4 py-2 rounded-xl font-semibold transition-all text-slate-400 hover:text-white">
+            <i class="fa-solid fa-sitemap text-ios-purple"></i>
+            <span>Team &amp; Dept Releases</span>
           </button>
 
           <button onclick="setActiveTab('android')" id="tab-btn-android" 
@@ -1907,6 +1919,271 @@ Press Enter to open https://github.com/login/device in your browser...
 
     </div>
 
+
+    <!-- ==================================================================== -->
+    <!-- VIEW 10: MULTI-PC TEAM ROSTER & CROSS-DEPARTMENT RELEASE ECOSYSTEM   -->
+    <!-- ==================================================================== -->
+    <div id="view-ecosystem" class="hidden space-y-6">
+
+      <!-- Top Banner -->
+      <div class="fluid-glass rounded-3xl p-6 sm:p-8 relative overflow-hidden border border-purple-500/30 shadow-2xl">
+        <div class="absolute -top-24 -right-24 w-96 h-96 bg-purple-500/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="relative flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div class="space-y-2.5 max-w-3xl">
+            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/15 text-purple-300 border border-purple-500/30 text-xs font-bold">
+              <i class="fa-solid fa-network-wired"></i>
+              <span>UNIFIED MULTI-PC TEAM &amp; MULTI-DEPARTMENT RELEASE ECOSYSTEM</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              Software Dept · Firmware Dept · Hardware &amp; QA Command Hub
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              Manage your 5–6+ engineering workstations across any local drive (<code class="text-ios-teal">D:\</code>, <code class="text-ios-teal">C:\</code>), prevent binary LabVIEW <code class="text-ios-yellow">.vi</code> conflicts by assigning active Work Orders to specific engineers, and link **Software Department Work Order Releases (<code class="text-ios-purple">v01..v44</code>)** directly to **Firmware Department Releases (<code class="text-cyan-400">FW-vX.Y.Z</code>)**. All edits sync automatically to GitHub and every Android App.
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2.5 shrink-0">
+            <a href="paltro_team_setup.ps1" download="paltro_team_setup.ps1" class="inline-flex items-center space-x-2 px-4 py-3 rounded-2xl bg-gradient-to-r from-ios-blue to-ios-indigo hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs shadow-lg shadow-ios-blue/30 transition-all">
+              <i class="fa-solid fa-laptop-code"></i>
+              <span>Download New PC Setup Script (.ps1)</span>
+            </a>
+            <a href="https://github.com/Paltro-SD01/paltro-sd01.github.io/blob/main/TEAM_ECOSYSTEM_AND_RELEASES.md" target="_blank" class="inline-flex items-center space-x-2 px-4 py-3 rounded-2xl bg-white/10 hover:bg-white/15 text-white border border-white/15 font-bold text-xs transition-all">
+              <i class="fa-brands fa-github"></i>
+              <span>GitHub Release Matrix ↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 Department Pillar Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="eco-departments-grid"></div>
+
+      <!-- ================================================================== -->
+      <!-- SECTION A: CROSS-DEPARTMENT LINKED RELEASE MATRIX (SW <-> FW)      -->
+      <!-- ================================================================== -->
+      <div class="fluid-glass rounded-3xl p-6 space-y-5 border border-cyan-500/25 shadow-xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="h-2.5 w-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
+              <h3 class="text-base font-extrabold text-white">Cross-Department Linked Release Matrix (Software ↔ Firmware ↔ Hardware)</h3>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5">Links each Software Department Work Order version (`v01..v44`) to its validated Firmware Department version (`FW-vX.Y.Z`)</p>
+          </div>
+          <button onclick="document.getElementById('add-link-form-box').classList.toggle('hidden')" class="px-4 py-2 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 text-xs font-extrabold flex items-center space-x-1.5 transition-all shrink-0">
+            <i class="fa-solid fa-link"></i>
+            <span>+ Link SW &amp; FW Release</span>
+          </button>
+        </div>
+
+        <!-- Inline Add / Edit Release Link Form -->
+        <div id="add-link-form-box" class="hidden p-4 rounded-2xl bg-black/60 border border-cyan-500/30 space-y-3 text-xs">
+          <div class="font-extrabold text-cyan-300 uppercase tracking-wider text-[11px]">Create or Update Software ↔ Firmware Release Link</div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
+            <div>
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Software Rig Repo</label>
+              <select id="lnk-sw-repo" onchange="onLnkRepoChange()" class="w-full bg-black/80 border border-white/15 rounded-xl px-3 py-2 text-white font-semibold"></select>
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Work Order</label>
+              <select id="lnk-sw-wo" onchange="onLnkWoChange()" class="w-full bg-black/80 border border-white/15 rounded-xl px-3 py-2 text-ios-teal font-mono font-bold"></select>
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">SW Version</label>
+              <input id="lnk-sw-ver" type="text" value="v01" class="w-full bg-black/80 border border-white/15 rounded-xl px-3 py-2 text-purple-300 font-mono font-bold">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Linked Firmware Release</label>
+              <select id="lnk-fw-select" class="w-full bg-black/80 border border-white/15 rounded-xl px-3 py-2 text-cyan-300 font-mono font-bold"></select>
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">HW / PCB Rev</label>
+              <input id="lnk-hw-rev" type="text" value="PCB-Rev-C" class="w-full bg-black/80 border border-white/15 rounded-xl px-3 py-2 text-amber-300 font-mono">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Compatibility</label>
+              <select id="lnk-status" class="w-full bg-black/80 border border-white/15 rounded-xl px-3 py-2 text-white font-bold">
+                <option value="VERIFIED">✅ VERIFIED</option>
+                <option value="INTEGRATION">⚡ INTEGRATION</option>
+                <option value="TESTING">🧪 TESTING</option>
+                <option value="FW-UPGRADE-REQ">⚠️ FW UPGRADE REQ</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Verified By (Engineer)</label>
+              <input id="lnk-verified-by" type="text" value="Paltro-SD01 (Lead)" class="w-full bg-black/80 border border-white/15 rounded-xl px-3 py-2 text-white">
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Integration &amp; Release Notes</label>
+              <div class="flex space-x-2">
+                <input id="lnk-notes" type="text" placeholder="e.g. Validated HFRR stroke PID with FW-v3.2.0 and LabVIEW v44" class="flex-1 bg-black/80 border border-white/15 rounded-xl px-3 py-2 text-white">
+                <button onclick="saveReleaseLink()" class="px-5 py-2 rounded-xl bg-cyan-500 text-black font-extrabold hover:bg-cyan-400 transition-all shrink-0">
+                  Save Link
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Release Links Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="border-b border-white/10 text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                <th class="py-3 px-3">Rig Platform</th>
+                <th class="py-3 px-3">Software Dept (WO &amp; Ver)</th>
+                <th class="py-3 px-3 text-center">Link</th>
+                <th class="py-3 px-3">Firmware Dept Release</th>
+                <th class="py-3 px-3">HW / PCB</th>
+                <th class="py-3 px-3 text-center">Compatibility</th>
+                <th class="py-3 px-3">Verified By</th>
+                <th class="py-3 px-3">Release Notes</th>
+                <th class="py-3 px-3 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="eco-release-links-tbody" class="divide-y divide-white/5"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ================================================================== -->
+      <!-- SECTION B: EDITABLE MULTI-PC TEAM ROSTER & WORKSTATION REGISTRY    -->
+      <!-- ================================================================== -->
+      <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+
+        <!-- Left 7 Cols: Editable Team Roster -->
+        <div class="xl:col-span-7 fluid-glass rounded-3xl p-6 space-y-4 border border-ios-blue/25">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3.5">
+            <div>
+              <h3 class="text-base font-extrabold text-white flex items-center space-x-2">
+                <i class="fa-solid fa-users-gear text-ios-blue"></i>
+                <span>Editable Team Roster &amp; Workstation PC Registry</span>
+              </h3>
+              <p class="text-xs text-slate-400">Click any engineer to edit their Name, Department, PC Hostname, Local Repo Path, or Active Work Order</p>
+            </div>
+            <button onclick="openTeamMemberForm()" class="px-3.5 py-2 rounded-xl bg-ios-blue hover:bg-blue-500 text-white text-xs font-extrabold flex items-center space-x-1.5 shadow-lg shadow-ios-blue/30 shrink-0">
+              <i class="fa-solid fa-user-plus text-[10px]"></i>
+              <span>+ Add Engineer / PC</span>
+            </button>
+          </div>
+
+          <!-- Inline Add / Edit Engineer Form -->
+          <div id="team-member-form-box" class="hidden p-4 rounded-2xl bg-black/60 border border-ios-blue/40 space-y-3 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="font-extrabold text-ios-teal uppercase tracking-wider text-[11px]" id="tm-form-title">Add / Edit Team Member &amp; Workstation</span>
+              <button onclick="document.getElementById('team-member-form-box').classList.add('hidden')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <input type="hidden" id="tm-id">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              <div>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Engineer Name</label>
+                <input id="tm-name" type="text" placeholder="e.g. Rahul Sharma" class="w-full bg-black/80 border border-white/15 rounded-xl px-3 py-2 text-white font-bold">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Role / Specialty</label>
+                <input id="tm-role" type="text" placeholder="e.g. Senior LabVIEW Engineer" class="w-full bg-black/80 border border-white/15 rounded-xl px-3 py-2 text-white">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Department</label>
+                <select id="tm-dept" class="w-full bg-black/80 border border-white/15 rounded-xl px-3 py-2 text-white font-bold">
+                  <option value="SOFTWARE">💻 SOFTWARE DEPT</option>
+                  <option value="FIRMWARE">🔌 FIRMWARE DEPT</option>
+                  <option value="HARDWARE">⚡ HARDWARE / PCB DEPT</option>
+                  <option value="QA_MECH">🛡️ RIG INTEGRATION &amp; QA</option>
+                </select>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              <div>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Workstation PC Name</label>
+                <input id="tm-pc" type="text" placeholder="e.g. SW-PC-02" class="w-full bg-black/80 border border-white/15 rounded-xl px-3 py-2 text-ios-teal font-mono font-bold">
+              </div>
+              <div class="sm:col-span-2">
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Local Repo Root Path on That PC</label>
+                <input id="tm-path" type="text" placeholder="e.g. D:\Projects\Software Repo or C:\Projects\Software Repo" class="w-full bg-black/80 border border-white/15 rounded-xl px-3 py-2 text-amber-300 font-mono">
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              <div>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">GitHub Username</label>
+                <input id="tm-git" type="text" placeholder="e.g. Paltro-SD01" class="w-full bg-black/80 border border-white/15 rounded-xl px-3 py-2 text-white font-mono">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Assigned Rig Repo</label>
+                <input id="tm-repo" type="text" placeholder="e.g. HFRR-ADV" class="w-full bg-black/80 border border-white/15 rounded-xl px-3 py-2 text-white font-mono">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Active Work Order (Lock)</label>
+                <div class="flex space-x-2">
+                  <input id="tm-wo" type="text" placeholder="e.g. WO 2472" class="flex-1 bg-black/80 border border-white/15 rounded-xl px-3 py-2 text-ios-green font-mono font-bold">
+                  <button onclick="saveTeamMember()" class="px-4 py-2 rounded-xl bg-ios-green text-black font-extrabold hover:bg-emerald-400 shrink-0">Save</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Team Roster Cards List -->
+          <div id="eco-team-roster-list" class="space-y-2.5"></div>
+        </div>
+
+        <!-- Right 5 Cols: Editable Firmware Department Releases + Multi-PC Setup Guide -->
+        <div class="xl:col-span-5 space-y-6">
+
+          <!-- Editable Firmware Department Releases Card -->
+          <div class="fluid-glass rounded-3xl p-6 space-y-4 border border-purple-500/25">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+              <div>
+                <h3 class="text-sm font-extrabold text-white flex items-center space-x-2">
+                  <i class="fa-solid fa-microchip text-ios-purple"></i>
+                  <span>Firmware Department Releases</span>
+                </h3>
+                <p class="text-[11px] text-slate-400">MCU / PLC / Embedded releases available to link with Software WOs</p>
+              </div>
+              <button onclick="document.getElementById('fw-release-form-box').classList.toggle('hidden')" class="px-3 py-1.5 rounded-xl bg-purple-500/20 text-purple-300 border border-purple-500/30 text-[11px] font-bold">
+                + Add / Edit FW
+              </button>
+            </div>
+
+            <!-- Add/Edit Firmware Release Form -->
+            <div id="fw-release-form-box" class="hidden p-3.5 rounded-2xl bg-black/60 border border-purple-500/30 space-y-2.5 text-xs">
+              <div class="grid grid-cols-2 gap-2">
+                <input id="fw-rig" type="text" placeholder="Rig (e.g. HFRR-ADV)" class="bg-black/80 border border-white/15 rounded-xl px-2.5 py-1.5 text-white font-bold">
+                <input id="fw-ver" type="text" placeholder="Version (e.g. FW-v3.3.0)" class="bg-black/80 border border-white/15 rounded-xl px-2.5 py-1.5 text-cyan-300 font-mono font-bold">
+                <input id="fw-mcu" type="text" placeholder="MCU / PLC Target" class="bg-black/80 border border-white/15 rounded-xl px-2.5 py-1.5 text-white">
+                <input id="fw-crc" type="text" placeholder="Checksum (e.g. CRC-9F2A)" class="bg-black/80 border border-white/15 rounded-xl px-2.5 py-1.5 text-amber-300 font-mono">
+              </div>
+              <div class="flex space-x-2">
+                <input id="fw-notes" type="text" placeholder="Firmware release notes..." class="flex-1 bg-black/80 border border-white/15 rounded-xl px-2.5 py-1.5 text-white">
+                <button onclick="saveFirmwareRelease()" class="px-4 py-1.5 rounded-xl bg-ios-purple text-white font-extrabold">Save FW</button>
+              </div>
+            </div>
+
+            <div id="eco-firmware-list" class="space-y-2.5 max-h-96 overflow-y-auto pr-1"></div>
+          </div>
+
+          <!-- 1-Command Multi-PC Onboarding Card -->
+          <div class="fluid-glass rounded-3xl p-6 space-y-3 border border-emerald-500/25">
+            <h3 class="text-sm font-extrabold text-white flex items-center space-x-2">
+              <i class="fa-solid fa-terminal text-ios-green"></i>
+              <span>Onboard Any Team PC in 1 Command</span>
+            </h3>
+            <p class="text-[11px] text-slate-400 leading-relaxed">
+              Run this in PowerShell on any of your 5–6 team PCs. It clones all 6 Software Department repos to that PC's drive (`D:\` or `C:\`), configures path-independent changelog scripts, and registers the PC in the live roster:
+            </p>
+            <div class="bg-black/80 border border-white/10 rounded-2xl p-3 font-mono text-[11px] text-ios-green flex items-center justify-between">
+              <span id="team-onboard-cmd" class="break-all">irm https://paltro-sd01.github.io/paltro_team_setup.ps1 | iex</span>
+              <button onclick="copyElementText('team-onboard-cmd')" class="text-slate-400 hover:text-white ml-2 p-1 shrink-0"><i class="fa-regular fa-copy"></i></button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
     <!-- ========================================== -->
     <!-- VIEW 9: ANDROID APP & MOBILE RESOLUTION HUB -->
     <!-- ========================================== -->
@@ -2188,6 +2465,22 @@ Press Enter to open https://github.com/login/device in your browser...
 
     <!-- Drawer Body -->
     <div class="flex-1 overflow-y-auto p-6 space-y-5">
+      <!-- Team Engineer / Workstation PC & Linked Firmware Release -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 rounded-2xl bg-purple-500/10 border border-purple-500/25">
+        <div>
+          <label class="block text-[10px] font-bold text-purple-300 mb-1 uppercase tracking-wider" for="suiteEngineerSelect">
+            <i class="fa-solid fa-user-Astronaut mr-1"></i>Engineer / Team PC
+          </label>
+          <select id="suiteEngineerSelect" onchange="onSuiteEngineerChange()" class="w-full bg-black/70 border border-white/15 text-slate-200 text-xs rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ios-purple font-medium"></select>
+        </div>
+        <div>
+          <label class="block text-[10px] font-bold text-cyan-300 mb-1 uppercase tracking-wider" for="suiteFwSelect">
+            <i class="fa-solid fa-microchip mr-1"></i>Linked Firmware Release
+          </label>
+          <select id="suiteFwSelect" onchange="generateSuiteScript()" class="w-full bg-black/70 border border-white/15 text-cyan-300 text-xs rounded-xl px-3 py-2 font-mono focus:outline-none focus:ring-2 focus:ring-ios-teal"></select>
+        </div>
+      </div>
+
       <!-- Target Repository (auto-listed from tracked repos) -->
       <div>
         <div class="flex items-center justify-between mb-1.5">
@@ -2362,7 +2655,403 @@ Press Enter to open https://github.com/login/device in your browser...
       });
     });
 
+
+    // =========================================================================
+    // MULTI-PC TEAM ROSTER & CROSS-DEPARTMENT RELEASE ECOSYSTEM ENGINE
+    // =========================================================================
+    const ECOSYSTEM_SYNC_URL = 'https://ntfy.sh/paltro_sd01_ecosystem_sync_84f29a1c';
+
+    function getEcosystemState() {
+      try {
+        const local = localStorage.getItem('paltro_team_ecosystem');
+        if (local) {
+          const parsed = JSON.parse(local);
+          if (parsed && Array.isArray(parsed.team_roster)) return parsed;
+        }
+      } catch (e) {}
+      if (typeof TEAM_ECOSYSTEM_DATA !== 'undefined' && TEAM_ECOSYSTEM_DATA) {
+        return JSON.parse(JSON.stringify(TEAM_ECOSYSTEM_DATA));
+      }
+      return { departments: [], team_roster: [], firmware_releases: [], release_links: [] };
+    }
+
+    let ECO_STATE = getEcosystemState();
+
+    async function persistEcosystemState(reason) {
+      ECO_STATE.updated_at = new Date().toISOString().replace('T', ' ').slice(0, 19);
+      localStorage.setItem('paltro_team_ecosystem', JSON.stringify(ECO_STATE));
+      window.TEAM_ECOSYSTEM_DATA = ECO_STATE;
+      renderEcosystemView();
+      populateSuiteTeamAndFwSelectors();
+      renderWorkOrdersTable(document.getElementById('wo-repo-filter') ? document.getElementById('wo-repo-filter').value : 'ALL');
+      try {
+        await fetch(ECOSYSTEM_SYNC_URL, {
+          method: 'POST',
+          body: JSON.stringify(ECO_STATE)
+        });
+      } catch (e) {}
+      showToast(reason || 'Ecosystem synced across all PCs & GitHub!');
+    }
+
+    async function pullLatestEcosystemFromCloud() {
+      try {
+        const res = await fetch(ECOSYSTEM_SYNC_URL + '/json?poll=1&since=48h', { cache: 'no-store' });
+        if (!res.ok) return;
+        const txt = await res.text();
+        let newest = null;
+        let newestTs = String(ECO_STATE.updated_at || '');
+        txt.split('\n').forEach(line => {
+          if (!line.trim()) return;
+          try {
+            const outer = JSON.parse(line);
+            if (outer.event === 'message' && outer.message) {
+              const p = JSON.parse(outer.message);
+              if (p && Array.isArray(p.team_roster) && String(p.updated_at || '') > newestTs) {
+                newestTs = String(p.updated_at);
+                newest = p;
+              }
+            }
+          } catch (e) {}
+        });
+        if (newest) {
+          ECO_STATE = newest;
+          localStorage.setItem('paltro_team_ecosystem', JSON.stringify(ECO_STATE));
+          window.TEAM_ECOSYSTEM_DATA = ECO_STATE;
+          renderEcosystemView();
+          populateSuiteTeamAndFwSelectors();
+        }
+      } catch (e) {}
+    }
+
+    function getWoLinkedFwBadge(repoId, woName) {
+      if (!ECO_STATE || !Array.isArray(ECO_STATE.release_links)) return '';
+      const lnk = ECO_STATE.release_links.find(l => l.sw_repo === repoId && l.sw_wo === woName);
+      if (!lnk) return '';
+      return `<span onclick="setActiveTab('ecosystem')" class="cursor-pointer px-1.5 py-0.5 rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 font-mono text-[9px] font-bold" title="Linked Firmware Release (${escapeHtml(lnk.compatibility)})">🔌 ${escapeHtml(lnk.fw_version)}</span>`;
+    }
+
+    function getWoAssignedEngBadge(repoId, woName) {
+      if (!ECO_STATE || !Array.isArray(ECO_STATE.team_roster)) return '';
+      const eng = ECO_STATE.team_roster.find(m => m.active_repo === repoId && m.active_wo === woName);
+      if (!eng) return '';
+      return `<span onclick="setActiveTab('ecosystem')" class="cursor-pointer px-1.5 py-0.5 rounded bg-emerald-500/15 text-ios-green border border-emerald-500/30 font-sans text-[9px] font-bold" title="Checked out on ${escapeHtml(eng.pc_name)}">👨‍💻 ${escapeHtml(eng.name.split(' ')[0])}</span>`;
+    }
+
+    function populateSuiteTeamAndFwSelectors() {
+      const engSel = suiteEl('suiteEngineerSelect');
+      if (engSel && ECO_STATE && Array.isArray(ECO_STATE.team_roster)) {
+        engSel.innerHTML = ECO_STATE.team_roster.map(m =>
+          `<option value="${escapeHtml(m.id)}">${escapeHtml(m.name)} · ${escapeHtml(m.pc_name)} (${escapeHtml(m.department)})</option>`
+        ).join('');
+      }
+      const fwSel = suiteEl('suiteFwSelect');
+      if (fwSel && ECO_STATE && Array.isArray(ECO_STATE.firmware_releases)) {
+        fwSel.innerHTML = `<option value="">None (Software Only)</option>` +
+          ECO_STATE.firmware_releases.map(fw =>
+            `<option value="${escapeHtml(fw.version)}">${escapeHtml(fw.rig)} · ${escapeHtml(fw.version)} (${escapeHtml(fw.checksum || 'FW')})</option>`
+          ).join('');
+      }
+    }
+
+    function getSelectedSuiteEngineer() {
+      const engSel = suiteEl('suiteEngineerSelect');
+      if (!engSel || !ECO_STATE || !Array.isArray(ECO_STATE.team_roster)) return null;
+      return ECO_STATE.team_roster.find(m => m.id === engSel.value) || null;
+    }
+
+    function getEffectiveEngineerRepoPath(defaultRepoPath, engObj) {
+      if (!engObj || !engObj.repo_root) return defaultRepoPath;
+      const stdRoot = 'D:\\Projects\\Software Repo';
+      if (defaultRepoPath.toLowerCase().startsWith(stdRoot.toLowerCase())) {
+        const suffix = defaultRepoPath.slice(stdRoot.length);
+        return engObj.repo_root.replace(/[\\/]+$/, '') + suffix;
+      }
+      return defaultRepoPath;
+    }
+
+    function onSuiteEngineerChange() {
+      generateSuiteScript();
+    }
+
+    function renderEcosystemView() {
+      const deptGrid = document.getElementById('eco-departments-grid');
+      if (!deptGrid) return;
+
+      const deptColors = {
+        SOFTWARE: 'border-blue-500/35 from-blue-500/15 to-transparent text-ios-blue',
+        FIRMWARE: 'border-purple-500/35 from-purple-500/15 to-transparent text-ios-purple',
+        HARDWARE: 'border-amber-500/35 from-amber-500/15 to-transparent text-ios-orange',
+        QA_MECH:  'border-emerald-500/35 from-emerald-500/15 to-transparent text-ios-green'
+      };
+      const deptIcons = {
+        SOFTWARE: 'fa-laptop-code',
+        FIRMWARE: 'fa-microchip',
+        HARDWARE: 'fa-bolt',
+        QA_MECH:  'fa-clipboard-check'
+      };
+
+      deptGrid.innerHTML = (ECO_STATE.departments || []).map(d => {
+        const cls = deptColors[d.id] || deptColors.SOFTWARE;
+        const ic = deptIcons[d.id] || 'fa-layer-group';
+        const membersCount = (ECO_STATE.team_roster || []).filter(m => m.department === d.id).length;
+        return `
+          <div class="fluid-glass rounded-3xl p-5 bg-gradient-to-br ${cls} border space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-0.5 rounded-lg bg-white/10 text-white font-mono text-[10px] font-extrabold">${escapeHtml(d.code)} DEPT</span>
+              <i class="fa-solid ${ic} text-lg"></i>
+            </div>
+            <div>
+              <h4 class="text-sm font-extrabold text-white">${escapeHtml(d.name)}</h4>
+              <p class="text-[11px] text-slate-300 mt-0.5 leading-snug">${escapeHtml(d.stack)}</p>
+            </div>
+            <div class="pt-2 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-slate-300">
+              <span><i class="fa-solid fa-users mr-1"></i>${membersCount} workstation${membersCount === 1 ? '' : 's'}</span>
+              <span>${d.repos_count || 6} repos</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Populate Link Builder dropdowns
+      const lnkRepo = document.getElementById('lnk-sw-repo');
+      if (lnkRepo && !lnkRepo.options.length && typeof REPOS_DATA !== 'undefined') {
+        lnkRepo.innerHTML = REPOS_DATA.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
+        onLnkRepoChange();
+      }
+      const lnkFw = document.getElementById('lnk-fw-select');
+      if (lnkFw) {
+        lnkFw.innerHTML = (ECO_STATE.firmware_releases || []).map(f =>
+          `<option value="${escapeHtml(f.version)}" data-fwid="${escapeHtml(f.id)}">${escapeHtml(f.rig)} · ${escapeHtml(f.version)} (${escapeHtml(f.checksum)})</option>`
+        ).join('');
+      }
+
+      // Render Cross-Department Release Links Table
+      const linksTbody = document.getElementById('eco-release-links-tbody');
+      if (linksTbody) {
+        linksTbody.innerHTML = (ECO_STATE.release_links || []).map((l, idx) => {
+          let stBadge = 'badge-closed';
+          if (l.compatibility === 'TESTING' || l.compatibility === 'INTEGRATION') stBadge = 'badge-testing';
+          else if (l.compatibility === 'FW-UPGRADE-REQ') stBadge = 'badge-discontinued';
+          return `
+            <tr class="hover:bg-white/5 transition-colors">
+              <td class="py-3 px-3 font-extrabold text-white">${escapeHtml(l.rig)}</td>
+              <td class="py-3 px-3 font-mono">
+                <span class="text-ios-teal font-bold">${escapeHtml(l.sw_wo)}</span>
+                <span class="ml-1.5 px-2 py-0.5 rounded bg-ios-purple/20 text-ios-purple border border-ios-purple/30 text-[10px] font-bold">${escapeHtml(l.sw_version)}</span>
+              </td>
+              <td class="py-3 px-3 text-center text-cyan-400"><i class="fa-solid fa-arrows-left-right"></i></td>
+              <td class="py-3 px-3 font-mono">
+                <span class="px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 font-bold text-[11px]">🔌 ${escapeHtml(l.fw_version)}</span>
+                <span class="text-[10px] text-slate-400 ml-1">${escapeHtml(l.fw_id)}</span>
+              </td>
+              <td class="py-3 px-3 font-mono text-amber-300 text-[11px]">${escapeHtml(l.hw_revision || 'PCB-Std')}</td>
+              <td class="py-3 px-3 text-center">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${stBadge}">${escapeHtml(l.compatibility)}</span>
+              </td>
+              <td class="py-3 px-3 text-slate-300 font-semibold">${escapeHtml(l.verified_by || '-')}</td>
+              <td class="py-3 px-3 text-slate-300 max-w-xs">${escapeHtml(l.notes || '-')}</td>
+              <td class="py-3 px-3 text-right">
+                <button onclick="deleteReleaseLink(${idx})" class="text-slate-500 hover:text-ios-red p-1" title="Remove Link"><i class="fa-solid fa-trash-can text-xs"></i></button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // Render Editable Team Roster
+      const rosterBox = document.getElementById('eco-team-roster-list');
+      if (rosterBox) {
+        rosterBox.innerHTML = (ECO_STATE.team_roster || []).map((m, idx) => `
+          <div class="p-3.5 rounded-2xl bg-black/50 border border-white/10 hover:border-ios-blue/40 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="space-y-1 min-w-0">
+              <div class="flex items-center flex-wrap gap-2">
+                <span class="px-2 py-0.5 rounded bg-ios-blue/20 text-ios-teal font-mono text-[10px] font-extrabold">${escapeHtml(m.id)}</span>
+                <span class="text-sm font-extrabold text-white">${escapeHtml(m.name)}</span>
+                <span class="px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 text-[10px] font-bold">${escapeHtml(m.department)}</span>
+                <span class="text-[11px] text-slate-400">· ${escapeHtml(m.role)}</span>
+              </div>
+              <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] font-mono text-slate-300">
+                <span><i class="fa-solid fa-desktop text-ios-blue mr-1"></i><b>${escapeHtml(m.pc_name)}</b></span>
+                <span class="text-amber-300 truncate max-w-xs"><i class="fa-solid fa-folder-tree mr-1"></i>${escapeHtml(m.repo_root)}</span>
+                <span class="text-ios-green font-bold"><i class="fa-solid fa-lock mr-1"></i>Active: ${escapeHtml(m.active_repo || '-')} / ${escapeHtml(m.active_wo || '-')}</span>
+              </div>
+            </div>
+            <div class="flex items-center space-x-1.5 shrink-0">
+              <button onclick="editTeamMember(${idx})" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold border border-white/10">
+                <i class="fa-solid fa-pen-to-square mr-1"></i>Edit
+              </button>
+              <button onclick="deleteTeamMember(${idx})" class="p-1.5 rounded-xl bg-white/5 hover:bg-ios-red/20 text-slate-400 hover:text-ios-red border border-white/10" title="Remove">
+                <i class="fa-solid fa-trash-can text-xs"></i>
+              </button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Render Firmware Department Releases
+      const fwBox = document.getElementById('eco-firmware-list');
+      if (fwBox) {
+        fwBox.innerHTML = (ECO_STATE.firmware_releases || []).map((fw, idx) => `
+          <div class="p-3 rounded-2xl bg-black/50 border border-white/10 flex items-start justify-between gap-2 text-xs">
+            <div class="space-y-1">
+              <div class="flex items-center flex-wrap gap-2">
+                <span class="font-extrabold text-white">${escapeHtml(fw.rig)}</span>
+                <span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-mono font-bold text-[11px]">${escapeHtml(fw.version)}</span>
+                <span class="px-1.5 py-0.5 rounded bg-white/10 text-amber-300 font-mono text-[10px]">${escapeHtml(fw.checksum)}</span>
+              </div>
+              <div class="text-[11px] text-slate-400 font-mono">${escapeHtml(fw.mcu_target)} · ${escapeHtml(fw.protocol)}</div>
+              <div class="text-[11px] text-slate-300">${escapeHtml(fw.notes)}</div>
+            </div>
+            <button onclick="deleteFirmwareRelease(${idx})" class="text-slate-500 hover:text-ios-red p-1"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+        `).join('');
+      }
+    }
+
+    function onLnkRepoChange() {
+      const repoId = document.getElementById('lnk-sw-repo').value;
+      const repo = REPOS_DATA.find(r => r.id === repoId);
+      const woSel = document.getElementById('lnk-sw-wo');
+      if (!woSel || !repo) return;
+      woSel.innerHTML = repo.work_orders.map(w => `<option value="${escapeHtml(w.name)}" data-ver="${escapeHtml(w.version || 'v01')}">${escapeHtml(w.name)} (${escapeHtml(w.version || 'v01')})</option>`).join('');
+      onLnkWoChange();
+    }
+
+    function onLnkWoChange() {
+      const woSel = document.getElementById('lnk-sw-wo');
+      const opt = woSel && woSel.options[woSel.selectedIndex];
+      if (opt && opt.getAttribute('data-ver')) {
+        document.getElementById('lnk-sw-ver').value = opt.getAttribute('data-ver');
+      }
+    }
+
+    function saveReleaseLink() {
+      const rig = document.getElementById('lnk-sw-repo').value;
+      const swWo = document.getElementById('lnk-sw-wo').value;
+      const swVer = document.getElementById('lnk-sw-ver').value.trim() || 'v01';
+      const fwVer = document.getElementById('lnk-fw-select').value;
+      const hwRev = document.getElementById('lnk-hw-rev').value.trim() || 'PCB-Rev-A';
+      const compat = document.getElementById('lnk-status').value;
+      const by = document.getElementById('lnk-verified-by').value.trim() || 'Paltro-SD01';
+      const notes = document.getElementById('lnk-notes').value.trim() || 'Cross-department linked release';
+
+      const existingIdx = (ECO_STATE.release_links || []).findIndex(l => l.sw_repo === rig && l.sw_wo === swWo);
+      const entry = {
+        link_id: existingIdx >= 0 ? ECO_STATE.release_links[existingIdx].link_id : `REL-LINK-0${(ECO_STATE.release_links || []).length + 1}`,
+        rig,
+        sw_repo: rig,
+        sw_wo: swWo,
+        sw_version: swVer,
+        fw_id: `FW-${rig}`,
+        fw_version: fwVer,
+        hw_revision: hwRev,
+        compatibility: compat,
+        verified_by: by,
+        updated_at: new Date().toISOString().slice(0, 10),
+        notes
+      };
+      if (existingIdx >= 0) ECO_STATE.release_links[existingIdx] = entry;
+      else ECO_STATE.release_links.unshift(entry);
+
+      document.getElementById('add-link-form-box').classList.add('hidden');
+      persistEcosystemState(`Linked ${rig} ${swWo} (${swVer}) ↔ ${fwVer}!`);
+    }
+
+    function deleteReleaseLink(idx) {
+      ECO_STATE.release_links.splice(idx, 1);
+      persistEcosystemState('Release link removed');
+    }
+
+    function openTeamMemberForm() {
+      document.getElementById('tm-id').value = '';
+      document.getElementById('tm-name').value = '';
+      document.getElementById('tm-role').value = 'LabVIEW / Software Engineer';
+      document.getElementById('tm-dept').value = 'SOFTWARE';
+      document.getElementById('tm-pc').value = `SW-PC-0${(ECO_STATE.team_roster || []).length + 1}`;
+      document.getElementById('tm-path').value = 'D:\\Projects\\Software Repo';
+      document.getElementById('tm-git').value = '';
+      document.getElementById('tm-repo').value = 'HFRR-ADV';
+      document.getElementById('tm-wo').value = 'WO 2472';
+      document.getElementById('team-member-form-box').classList.remove('hidden');
+    }
+
+    function editTeamMember(idx) {
+      const m = ECO_STATE.team_roster[idx];
+      if (!m) return;
+      document.getElementById('tm-id').value = m.id;
+      document.getElementById('tm-name').value = m.name;
+      document.getElementById('tm-role').value = m.role;
+      document.getElementById('tm-dept').value = m.department;
+      document.getElementById('tm-pc').value = m.pc_name;
+      document.getElementById('tm-path').value = m.repo_root;
+      document.getElementById('tm-git').value = m.git_user || '';
+      document.getElementById('tm-repo').value = m.active_repo || '';
+      document.getElementById('tm-wo').value = m.active_wo || '';
+      document.getElementById('team-member-form-box').classList.remove('hidden');
+    }
+
+    function saveTeamMember() {
+      const id = document.getElementById('tm-id').value || `ENG-0${(ECO_STATE.team_roster || []).length + 1}`;
+      const entry = {
+        id,
+        name: document.getElementById('tm-name').value.trim() || 'Team Engineer',
+        role: document.getElementById('tm-role').value.trim() || 'Engineer',
+        department: document.getElementById('tm-dept').value,
+        pc_name: document.getElementById('tm-pc').value.trim() || 'WORKSTATION',
+        repo_root: document.getElementById('tm-path').value.trim() || 'D:\\Projects\\Software Repo',
+        git_user: document.getElementById('tm-git').value.trim() || 'Paltro-SD01',
+        active_repo: document.getElementById('tm-repo').value.trim(),
+        active_wo: document.getElementById('tm-wo').value.trim(),
+        status: 'ONLINE'
+      };
+      const existingIdx = (ECO_STATE.team_roster || []).findIndex(x => x.id === id);
+      if (existingIdx >= 0) ECO_STATE.team_roster[existingIdx] = entry;
+      else ECO_STATE.team_roster.push(entry);
+
+      document.getElementById('team-member-form-box').classList.add('hidden');
+      persistEcosystemState(`Saved ${entry.name} (${entry.pc_name}) to Team Roster!`);
+    }
+
+    function deleteTeamMember(idx) {
+      ECO_STATE.team_roster.splice(idx, 1);
+      persistEcosystemState('Team member removed');
+    }
+
+    function saveFirmwareRelease() {
+      const rig = document.getElementById('fw-rig').value.trim().toUpperCase() || 'HFRR-ADV';
+      const ver = document.getElementById('fw-ver').value.trim() || 'FW-v1.0.0';
+      const mcu = document.getElementById('fw-mcu').value.trim() || 'Embedded Controller';
+      const crc = document.getElementById('fw-crc').value.trim() || 'CRC-OK';
+      const notes = document.getElementById('fw-notes').value.trim() || 'Firmware release';
+
+      const entry = {
+        id: `FW-${rig}`,
+        rig,
+        fw_repo: `Paltro-SD01/FW-${rig}`,
+        mcu_target: mcu,
+        version: ver,
+        protocol: 'Modbus / Serial / DAQ',
+        checksum: crc,
+        date: new Date().toISOString().slice(0, 10),
+        status: 'RELEASED',
+        notes
+      };
+      const existingIdx = (ECO_STATE.firmware_releases || []).findIndex(f => f.rig === rig && f.version === ver);
+      if (existingIdx >= 0) ECO_STATE.firmware_releases[existingIdx] = entry;
+      else ECO_STATE.firmware_releases.unshift(entry);
+
+      document.getElementById('fw-release-form-box').classList.add('hidden');
+      persistEcosystemState(`Added Firmware Release ${rig} ${ver}!`);
+    }
+
+    function deleteFirmwareRelease(idx) {
+      ECO_STATE.firmware_releases.splice(idx, 1);
+      persistEcosystemState('Firmware release removed');
+    }
+
     function initDashboard() {
+      renderEcosystemView();
+      pullLatestEcosystemFromCloud();
       renderKPIs();
       renderMainAnalyticsChart();
       renderWODoughnut();
@@ -2388,7 +3077,7 @@ Press Enter to open https://github.com/login/device in your browser...
     // Tab Switching
     function setActiveTab(tab) {
       currentTab = tab;
-      const tabs = ['grid', 'changelog', 'timeline', 'paths', 'builder', 'wearscar', 'setup', 'sparse', 'android'];
+      const tabs = ['grid', 'changelog', 'timeline', 'paths', 'builder', 'wearscar', 'setup', 'sparse', 'ecosystem', 'android'];
       tabs.forEach(t => {
         const view = document.getElementById(`view-${t}`);
         const btn = document.getElementById(`tab-btn-${t}`);
@@ -2911,9 +3600,13 @@ Press Enter to open https://github.com/login/device in your browser...
               </div>
             </td>
             <td class="py-3 px-4 text-center">
-              <span class="px-2 py-0.5 rounded-lg bg-ios-purple/20 text-ios-purple border border-ios-purple/30 font-mono font-bold text-[11px]">
-                ${wo.version || 'v01'}
-              </span>
+              <div class="flex flex-col items-center gap-1">
+                <span class="px-2 py-0.5 rounded-lg bg-ios-purple/20 text-ios-purple border border-ios-purple/30 font-mono font-bold text-[11px]">
+                  ${wo.version || 'v01'}
+                </span>
+                ${getWoLinkedFwBadge(wo.repo_id, wo.name)}
+                ${getWoAssignedEngBadge(wo.repo_id, wo.name)}
+              </div>
             </td>
             <td class="py-3 px-4 text-center">
               <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${badgeClass}">
@@ -3158,6 +3851,7 @@ Press Enter to open https://github.com/login/device in your browser...
     }
 
     function initSuiteForm() {
+      populateSuiteTeamAndFwSelectors();
       // Categories
       const catSel = suiteEl('suiteChangeType');
       if (catSel && !catSel.options.length) {
@@ -3256,13 +3950,19 @@ Press Enter to open https://github.com/login/device in your browser...
       else if (stage === 'testing') stageTag = '[TESTING]';
       else if (stage === 'integration') stageTag = '[INTEGRATION]';
 
+      const fwSel = suiteEl('suiteFwSelect');
+      const fwTag = (fwSel && fwSel.value) ? ` [FW:${fwSel.value}]` : '';
+      const engSel = suiteEl('suiteEngineerSelect');
+      const engObj = getSelectedSuiteEngineer();
+      const effectiveRepoPath = getEffectiveEngineerRepoPath(repoPath, engObj);
+
       const woScopeStr = wo ? `(${wo})` : '';
       const stageTagStr = stageTag ? ` ${stageTag}` : '';
-      const subject = `${type}${woScopeStr}:${stageTagStr} ${first}`;
+      const subject = `${type}${woScopeStr}:${stageTagStr}${fwTag} ${first}`;
 
       suiteEl('suiteLiveCommitPreview').innerText = [subject, ...rest].join('\n');
 
-      let ps = `Set-Location ${psq(repoPath)}\n`;
+      let ps = `# Engineer: ${engObj ? engObj.name + ' (' + engObj.pc_name + ')' : 'Local Workstation'}\nSet-Location ${psq(effectiveRepoPath)}\n`;
       ps += `git checkout main\n`;
       ps += `git pull origin main --rebase --autostash\n`;
       ps += `git add .\n`;

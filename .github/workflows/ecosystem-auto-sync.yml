@@ -1,0 +1,40 @@
+name: Paltro-SD01 Multi-PC & Cross-Dept Ecosystem Cloud Sync
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [repo-updated, firmware-released, team-updated]
+  schedule:
+    - cron: '*/15 * * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  cloud-ecosystem-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Command Center Repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Sync Cloud Device Logs & Team Ecosystem Matrix
+        run: |
+          python -c "import refresh_data; refresh_data.sync_team_ecosystem(); refresh_data.sync_device_logs()"
+
+      - name: Commit & Deploy Updated Ecosystem Telemetry
+        run: |
+          git config user.name "Paltro-SD01-Cloud-Bot"
+          git config user.email "paltro-sd01@users.noreply.github.com"
+          git add device_access_log.json DEVICE_ACCESS_LOG.md team_ecosystem.json TEAM_ECOSYSTEM_AND_RELEASES.md
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(cloud-sync): auto-sync multi-PC team roster, release links & device logs [skip ci]"
+            git push origin main
+            git push origin main:gh-pages --force
+          fi

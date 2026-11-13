@@ -12,58 +12,98 @@ if hasattr(sys.stderr, 'reconfigure'):
     sys.stderr.reconfigure(encoding='utf-8')
 
 DASHBOARD_DIR = os.path.dirname(os.path.abspath(__file__))
+
+def resolve_repo_root():
+    """Finds the local Software Department repository root on ANY team PC or CI runner."""
+    env_root = os.environ.get("PALTRO_REPO_ROOT")
+    if env_root and os.path.isdir(env_root):
+        return env_root
+    local_cfg = os.path.join(DASHBOARD_DIR, "team_local_config.json")
+    if os.path.exists(local_cfg):
+        try:
+            with open(local_cfg, "r", encoding="utf-8") as cf:
+                c = json.load(cf)
+                if c.get("repo_root") and os.path.isdir(c["repo_root"]):
+                    return c["repo_root"]
+        except Exception:
+            pass
+    for candidate in [
+        os.path.join(os.path.dirname(DASHBOARD_DIR), "Software Repo"),
+        r"D:\Projects\Software Repo",
+        r"C:\Projects\Software Repo",
+        os.path.dirname(DASHBOARD_DIR),
+    ]:
+        if os.path.isdir(candidate):
+            return candidate
+    return r"D:\Projects\Software Repo"
+
+REPO_ROOT = resolve_repo_root()
+
+def resolve_single_repo(rel_candidates):
+    for rel in rel_candidates:
+        p = os.path.join(REPO_ROOT, rel)
+        if os.path.isdir(p):
+            return p
+    return os.path.join(REPO_ROOT, rel_candidates[0])
+
 REPOS_CONFIG = [
     {
         'id': 'LAB-IQ-150',
         'name': 'LAB-IQ-150',
+        'department': 'SOFTWARE',
         'category': 'Tribology / Reciprocating Rig',
         'description': 'High-frequency reciprocating multi-axis test rig control software (Heave, Sway, Surge, Traction, Load Cell FGV).',
-        'local_path': r'D:\Projects\Software Repo\LAB-IQ 150',
+        'local_path': resolve_single_repo(['LAB-IQ 150', 'LAB-IQ-150']),
         'github_url': 'https://github.com/Paltro-SD01/LAB-IQ-150',
-        'work_order_folders': ['WO 2476']
+        'work_order_folders': ['WO 2476', 'WO 2487']
     },
     {
         'id': 'BOCLE',
         'name': 'BOCLE',
+        'department': 'SOFTWARE',
         'category': 'Lubricity Evaluation Rig',
         'description': 'Ball-on-Cylinder Lubricity Evaluator Testing Rig automation, real-time DAQ, calibration, and test reporting.',
-        'local_path': r'D:\Projects\Software Repo\BOCLE',
+        'local_path': resolve_single_repo(['BOCLE']),
         'github_url': 'https://github.com/Paltro-SD01/BOCLE',
         'work_order_folders': ['WO 2411', 'WO 2414', 'WO 2418 & 2419', 'WO 2427', 'WO 2427  internal', 'WO 2442', 'WO 2443', 'WO 2446 Discontinued', 'WO 2446 Replacement Machine', 'WO 2451', 'WO 2452', 'WO 2453', 'WO 2462', 'WO 2467', 'WO 2479', 'WO 2482', 'WO 2485']
     },
     {
         'id': 'HFRR-ADV',
         'name': 'HFRR-ADV',
+        'department': 'SOFTWARE',
         'category': 'High-Precision Wear Rig',
         'description': 'High Frequency Reciprocating Rig Advanced control suite, stroke point calibration and multi-stage testing.',
-        'local_path': r'D:\Projects\Software Repo\LAB-IQ\HFRR Adv',
+        'local_path': resolve_single_repo([os.path.join('LAB-IQ', 'HFRR Adv'), 'HFRR-ADV', 'HFRR Adv']),
         'github_url': 'https://github.com/Paltro-SD01/HFRR-ADV',
-        'work_order_folders': ['WO 2465', 'WO 2472', 'WO 2480']
+        'work_order_folders': ['WO 2465', 'WO 2472', 'WO 2480', 'WO 2486']
     },
     {
         'id': 'LAB-IQ-350',
         'name': 'LAB-IQ-350',
+        'department': 'SOFTWARE',
         'category': 'Multi-Parameter Tribometer',
         'description': 'Industrial mechanical test platform with RS-485 load cell communication and automated PDF reporting.',
-        'local_path': r'D:\Projects\Software Repo\LAB-IQ 350',
+        'local_path': resolve_single_repo(['LAB-IQ 350', 'LAB-IQ-350']),
         'github_url': 'https://github.com/Paltro-SD01/LAB-IQ-350',
-        'work_order_folders': ['WO 2203', 'WO 2394']
+        'work_order_folders': ['WO 2203', 'WO 2394', 'WO 2494']
     },
     {
         'id': 'B2V2',
         'name': 'B2V2',
+        'department': 'SOFTWARE',
         'category': 'Automation & Motion Control',
         'description': 'Multi-axis high-speed synchronized motion controller with real-time tracking loops.',
-        'local_path': r'D:\Projects\Software Repo\LAB-IQ\B2V2',
+        'local_path': resolve_single_repo([os.path.join('LAB-IQ', 'B2V2'), 'B2V2']),
         'github_url': 'https://github.com/Paltro-SD01/B2V2',
         'work_order_folders': ['WO 2470']
     },
     {
         'id': 'AIRJET',
         'name': 'AIRJET',
+        'department': 'SOFTWARE',
         'category': 'Erosion Testing Rig',
         'description': 'Solid particle air-jet erosion tester with particle velocity monitoring and erosion resistance quantification.',
-        'local_path': r'D:\Projects\Software Repo\LAB-IQ\Airjet',
+        'local_path': resolve_single_repo([os.path.join('LAB-IQ', 'Airjet'), 'AIRJET', 'Airjet']),
         'github_url': 'https://github.com/Paltro-SD01/AIRJET',
         'work_order_folders': ['Erosion Tester']
     }
@@ -306,9 +346,13 @@ def refresh_data():
         "total_work_orders": sum(len(r["work_orders"]) for r in repos_data),
     }
 
+    # Sync Team Roster, Multi-Department Repos & Software<->Firmware Release Links
+    ecosystem_data, _ = sync_team_ecosystem(repos_data=repos_data, now_str=now_str)
+
     # Output JS
     js_content = (
         "var DATA_SYNC_META = " + json.dumps(sync_meta, ensure_ascii=False) + ";\n"
+        "var TEAM_ECOSYSTEM_DATA = " + json.dumps(ecosystem_data, ensure_ascii=False) + ";\n"
         "var REPOS_DATA = " + json.dumps(repos_data, ensure_ascii=False) + ";\n"
     )
     data_js_path = os.path.join(DASHBOARD_DIR, 'data.js')
@@ -322,6 +366,131 @@ def refresh_data():
 
 
 RELAY_TOPIC_URL = "https://ntfy.sh/paltro_sd01_device_log_84f29a1c"
+ECOSYSTEM_TOPIC_URL = "https://ntfy.sh/paltro_sd01_ecosystem_sync_84f29a1c"
+
+
+def sync_team_ecosystem(repos_data=None, now_str=None):
+    """Syncs team_ecosystem.json with any live edits broadcast from Dashboard/Android UI,
+    auto-detects [FW:...] tags from commits, and writes TEAM_ECOSYSTEM_AND_RELEASES.md."""
+    import urllib.request
+    eco_path = os.path.join(DASHBOARD_DIR, "team_ecosystem.json")
+    try:
+        with open(eco_path, "r", encoding="utf-8") as ef:
+            eco = json.load(ef)
+    except Exception:
+        eco = {"departments": [], "team_roster": [], "firmware_releases": [], "release_links": []}
+
+    original_dump = json.dumps(eco, sort_keys=True)
+
+    # Check if a newer ecosystem payload was saved via Web Dashboard / Android App
+    try:
+        req = urllib.request.Request(
+            f"{ECOSYSTEM_TOPIC_URL}/json?poll=1&since=48h",
+            headers={"User-Agent": "Paltro-SD01-Ecosystem-Sync/1.0"}
+        )
+        latest_cloud = None
+        latest_ts = str(eco.get("updated_at", ""))
+        with urllib.request.urlopen(req, timeout=8) as resp:
+            for raw_line in resp.read().decode("utf-8", errors="ignore").splitlines():
+                if not raw_line.strip():
+                    continue
+                try:
+                    outer = json.loads(raw_line)
+                    if outer.get("event") == "message" and outer.get("message"):
+                        p = json.loads(outer["message"])
+                        if isinstance(p, dict) and "team_roster" in p and "release_links" in p:
+                            ts = str(p.get("updated_at", ""))
+                            if ts >= latest_ts:
+                                latest_ts = ts
+                                latest_cloud = p
+                except Exception:
+                    pass
+        if latest_cloud:
+            eco = latest_cloud
+    except Exception:
+        pass
+
+    # Auto-detect [FW:...] tags from Software Work Order commits and keep sw_version in sync
+    if repos_data:
+        links = eco.setdefault("release_links", [])
+        for r in repos_data:
+            for w in r.get("work_orders", []):
+                # Update sw_version on existing links for this repo + wo
+                for lnk in links:
+                    if lnk.get("sw_repo") == r["id"] and lnk.get("sw_wo") == w["name"]:
+                        if w.get("version"):
+                            lnk["sw_version"] = w["version"]
+                # Check if summary has [FW:...] tag
+                text_blob = (w.get("summary") or "") + " " + " ".join(w.get("details") or [])
+                m_fw = re.search(r"\[FW:([^\]]+)\]", text_blob, re.I)
+                if m_fw:
+                    fw_ver = m_fw.group(1).strip()
+                    exists = any(l.get("sw_repo") == r["id"] and l.get("sw_wo") == w["name"] and l.get("fw_version") == fw_ver for l in links)
+                    if not exists:
+                        links.insert(0, {
+                            "link_id": f"REL-AUTO-{len(links)+1:02d}",
+                            "rig": r["id"],
+                            "sw_repo": r["id"],
+                            "sw_wo": w["name"],
+                            "sw_version": w.get("version", "v01"),
+                            "fw_id": f"FW-{r['id']}",
+                            "fw_version": fw_ver,
+                            "hw_revision": "PCB-Std",
+                            "compatibility": "VERIFIED" if w.get("status") == "CLOSED" else "INTEGRATION",
+                            "verified_by": "Auto-Linked from Commit",
+                            "updated_at": (now_str or datetime.now().strftime('%Y-%m-%d'))[:10],
+                            "notes": w.get("summary", "Linked via commit tag")
+                        })
+
+    changed = json.dumps(eco, sort_keys=True) != original_dump
+    if changed or not os.path.exists(os.path.join(DASHBOARD_DIR, "TEAM_ECOSYSTEM_AND_RELEASES.md")):
+        with open(eco_path, "w", encoding="utf-8") as ef:
+            json.dump(eco, ef, indent=2, ensure_ascii=False)
+
+        md = [
+            "# 🌐 Paltro-SD01 — Multi-PC Team Roster & Cross-Department Release Matrix",
+            "",
+            f"> **Last Updated:** `{eco.get('updated_at', now_str or '-')}`  ",
+            "> **Departments Covered:** Software Dept (`SW`) · Firmware Dept (`FW`) · Electronics/Hardware (`HW`) · Rig QA (`QA`)  ",
+            "",
+            "## 👨‍💻 Active Engineering Team & Workstation Roster",
+            "",
+            "| ID | Engineer Name | Role | Department | Workstation PC | Local Repo Root | Active Repo / WO | Status |",
+            "| :---: | :--- | :--- | :---: | :---: | :--- | :---: | :---: |",
+        ]
+        for m in eco.get("team_roster", []):
+            md.append(
+                f"| `{m.get('id','-')}` | **{m.get('name','-')}** | {m.get('role','-')} | `{m.get('department','-')}` | `{m.get('pc_name','-')}` | `{m.get('repo_root','-')}` | `{m.get('active_repo','-')} / {m.get('active_wo','-')}` | `{m.get('status','ONLINE')}` |"
+            )
+
+        md.extend([
+            "",
+            "## 🔗 Cross-Department Linked Release Matrix (Software Release ↔ Firmware Release)",
+            "",
+            "| Link ID | Rig / Platform | Software Work Order | SW Version | Linked Firmware Repo | Firmware Version | HW / PCB Rev | Compatibility | Verified By | Notes |",
+            "| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- | :--- |",
+        ])
+        for l in eco.get("release_links", []):
+            md.append(
+                f"| `{l.get('link_id','-')}` | **{l.get('rig','-')}** | `{l.get('sw_wo','-')}` | `{l.get('sw_version','-')}` | `{l.get('fw_id','-')}` | **`{l.get('fw_version','-')}`** | `{l.get('hw_revision','-')}` | `{l.get('compatibility','VERIFIED')}` | {l.get('verified_by','-')} | {l.get('notes','-')} |"
+            )
+
+        md.extend([
+            "",
+            "## 🔌 Firmware Department Releases Registry",
+            "",
+            "| Firmware ID | Target Rig | MCU / Controller | Firmware Version | Protocol | Checksum | Status | Release Notes |",
+            "| :---: | :---: | :--- | :---: | :--- | :---: | :---: | :--- |",
+        ])
+        for fw in eco.get("firmware_releases", []):
+            md.append(
+                f"| `{fw.get('id','-')}` | **{fw.get('rig','-')}** | {fw.get('mcu_target','-')} | **`{fw.get('version','-')}`** | `{fw.get('protocol','-')}` | `{fw.get('checksum','-')}` | `{fw.get('status','RELEASED')}` | {fw.get('notes','-')} |"
+            )
+
+        with open(os.path.join(DASHBOARD_DIR, "TEAM_ECOSYSTEM_AND_RELEASES.md"), "w", encoding="utf-8") as mf:
+            mf.write("\n".join(md) + "\n")
+
+    return eco, changed
 
 
 def fetch_cloud_relay_logs():
